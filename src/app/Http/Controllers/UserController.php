@@ -18,6 +18,17 @@ class UserController extends Controller
     }
 
     /**
+     * Returns information about the user identified by their ID
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUser(string $id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json($user, 200);
+    }
+
+    /**
      * Create a new user. It should be noted that any newly created user
      * is NOT an admin. For a user to become an admin, the site owner must
      * change their admin status manually. This route requires the following
