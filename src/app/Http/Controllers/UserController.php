@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,6 +24,7 @@ class UserController extends Controller
      * data: 'username' and 'password'
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function createUser(Request $request)
     {
@@ -53,5 +54,24 @@ class UserController extends Controller
     {
         User::findOrFail($id)->delete();
         return response()->json([], 204);
+    }
+
+    /**
+     * Update an existing user based upon their ID
+     * @param string $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function updateUser(string $id, Request $request)
+    {
+        $this->validate($request, [
+            'username' => 'nullable|unique:users',
+            'password' => 'nullable'
+        ]);
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+
+        return response()->json($user, 200);
     }
 }
