@@ -5,3 +5,5 @@ Homestead.yaml
 src/.env
 .phpunit.result.cache
 /docker/nginx/logs/
+*.sqlite
+*.log
