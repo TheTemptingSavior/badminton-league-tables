@@ -15,11 +15,12 @@ use Illuminate\Support\Facades\DB;
 
 $router->group(['prefix' => 'api'], function() use ($router) {
     $router->get('/', function() use ($router) {
-        // TODO: This query doesn't return the correct number of teams
+        // Get the number of teams that haven't retired from the league yet
         $teams = DB::table('teams')
-            ->whereNotNull('retired_on')
-            ->select("*")
-            ->count("*");
+            ->whereNull('retired_on')
+            ->get()
+            ->count();
+
         return response()->json(
             [
                 'league' => LEAGUE_NAME,
@@ -103,8 +104,8 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     $router->group(['prefix' => 'teams', 'middleware' => 'auth'], function() use ($router) {
         // Create a new team
         $router->post('/', ['as' => 'team-create', 'uses' => 'TeamController@createTeam']);
-//        // Retire a team
-//        $router->post('/{id}/retire', ['as' => 'team-retire', 'uses' => 'TeamContoller@retireTeam']);
+        // Retire a team
+        $router->post('/{id}/retire', ['as' => 'team-retire', 'uses' => 'TeamContoller@retireTeam']);
 //        // Update a teams information
 //        $router->put('/{id}', ['as' => 'team-update', 'uses' => 'TeamController@retireTeam']);
     });
