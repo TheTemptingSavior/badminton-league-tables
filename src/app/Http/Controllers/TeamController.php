@@ -56,4 +56,27 @@ class TeamController extends Controller
 
         return response()->json($newTeam, 201);
     }
+
+    /**
+     * Retires a team in the league, removing it from options in games
+     * and removing them from future league tables
+     * @param string $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function retireTeam(string $id, Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'retired' => 'required'
+            ]
+        );
+        $team = Team::findOrFail($id);
+        $team->retired_on = $request->retired;
+        $team->save();
+
+        return response()->json($team, 200);
+    }
 }
