@@ -8,7 +8,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./src:/usr/share/nginx/html
+      - ./src:/usr/share/nginx/html:rw
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./docker/nginx/sites:/etc/nginx/sites-available
@@ -18,11 +18,11 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./src:/usr/share/nginx/html
+      - ./src:/usr/share/nginx/html:rw
     working_dir: /usr/share/nginx/html
 
-  composer:
-    image: composer
-    working_dir: /app
-    volumes:
-      - ./src:/app
+#  composer:
+#    image: composer
+#    working_dir: /app
+#    volumes:
+#      - ./src:/app
