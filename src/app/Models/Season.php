@@ -28,4 +28,13 @@ class Season extends Model
      * @var bool
      */
     public $timestamps = true;
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_at', 'updated_at',
+    ];
 }
