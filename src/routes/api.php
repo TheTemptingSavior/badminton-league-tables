@@ -9,7 +9,9 @@
 |
 */
 
-$router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
+// Removed temporarily so error messages are shown correctly in browser
+//$router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
+$router->group(['prefix' => 'api'], function() use ($router) {
     $router->get('/', function() use ($router) {
         return Array("league" => LEAGUE_NAME);
     });
@@ -20,7 +22,7 @@ $router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use
     |--------------------------------------------------------------------------
     |
     | Routes to do with authentication e.g. logging in, logging out and
-    | identifying users
+    | identifying users.
     |
     */
     $router->group(['prefix' => 'auth'], function() use ($router) {
@@ -38,7 +40,8 @@ $router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use
     | User Routes
     |--------------------------------------------------------------------------
     |
-    | User management routes. Creating, deleting and updating
+    | User management routes. Creating, deleting and updating. All the user
+    | routes require the user to have a valid token.
     |
     */
     $router->group(['prefix' => 'users', 'middleware' => 'auth'], function() use ($router) {
@@ -52,5 +55,24 @@ $router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use
         $router->delete('/{id}', ['as' => 'user-delete', 'uses' => 'UserController@deleteUser']);
         // Update an existing user
         $router->put('/{id}', ['as' => 'user-update', 'uses' => 'UserController@updateUser']);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Season Routes
+    |--------------------------------------------------------------------------
+    |
+    | Season management routes. Seasons are created automatically and cannot be
+    | deleted. If a season has no games played it will not be show (hence why
+    | there is no delete function)
+    |
+    */
+    $router->group(['prefix' => 'seasons'], function() use ($router) {
+        // Get all the seasons registered in this league
+        $router->get('/', ['as' => 'season-list', 'uses' => 'SeasonController@listSeasons']);
+        // Get information on a specific season
+        $router->get('/{id}', ['as' => 'season-detail', 'uses' => 'SeasonController@getSeason']);
+        // Get the teams playing in the season
+        $router->get('/{id}/teams', ['as' => 'season-teams', 'uses' => 'SeasonController@getTeams']);
     });
 });
