@@ -9,7 +9,7 @@
 |
 */
 
-$router->group(['prefix' => 'api'], function() use ($router) {
+$router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
     $router->get('/', function() use ($router) {
         return Array("league" => LEAGUE_NAME);
     });
