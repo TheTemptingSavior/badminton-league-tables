@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66007452d03eb04f41c2b1769f1bd304",
+    "content-hash": "6c1de52f13e93d77e94bf076d7195182",
     "packages": [
         {
             "name": "brick/math",
@@ -4843,6 +4843,50 @@
             "time": "2020-08-17T07:42:30+00:00"
         },
         {
+            "name": "thedevsaddam/lumen-route-list",
+            "version": "2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thedevsaddam/lumen-route-list.git",
+                "reference": "198633b7e9c23a12290dbee80f4a4d011b855207"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thedevsaddam/lumen-route-list/zipball/198633b7e9c23a12290dbee80f4a4d011b855207",
+                "reference": "198633b7e9c23a12290dbee80f4a4d011b855207",
+                "shasum": ""
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "Thedevsaddam\\LumenRouteList\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Saddam Hossain",
+                    "email": "thedevsaddam@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Display all the registered route list like laravel",
+            "homepage": "https://github.com/thedevsaddam/lumen-route-list",
+            "keywords": [
+                "lumen",
+                "lumen routes list",
+                "lumen-route-list",
+                "route-list",
+                "routes",
+                "thedevsaddam"
+            ],
+            "abandoned": true,
+            "time": "2017-09-24T05:18:44+00:00"
+        },
+        {
             "name": "tymon/jwt-auth",
             "version": "dev-develop",
             "source": {
@@ -6733,7 +6777,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2.5"
+        "php": "^7.2.5",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"
