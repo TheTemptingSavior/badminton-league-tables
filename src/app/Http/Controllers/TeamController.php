@@ -44,9 +44,7 @@ class TeamController extends Controller
             ]
         );
         $name = $request->name;
-        // convert the name to lower and replace all spaces with a hyphen
-        // TODO: Strip for special chars too
-        $slug = strtolower(str_replace(" ", "-", $name));
+        $slug = str_slug($name, "-");
 
         $newTeam = new Team;
         $newTeam->name = $name;
@@ -78,5 +76,34 @@ class TeamController extends Controller
         $team->save();
 
         return response()->json($team, 200);
+    }
+
+    /**
+     * Update a teams name based on their ID
+     * @param string $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function updateTeam(string $id, Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'name' => 'unique:teams'
+            ]
+        );
+
+        $team = Team::findOrFail($id);
+
+        if ($request->name) {
+            $team->name = $request->name;
+            $team->slug = str_slug($request->name, "-");
+            $team->save();
+
+            return response()->json($team, 200);
+        }
+
+        return response()->json(['error' => 'Team name must be present in request and unique'], 400);
     }
 }
