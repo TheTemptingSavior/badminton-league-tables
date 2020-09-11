@@ -162,7 +162,7 @@ class APIUserTest extends TestCase
         $deleteMe = factory('App\Models\User')->make();
         $uid = $deleteMe->id;
         $this->actingAs($user)
-            ->json('DELETE', '/api/users/'.$uid)
+            ->delete('/api/users/'.$uid)
             ->seeStatusCode(204);
 
         $deleted = DB::table('users')
@@ -230,10 +230,15 @@ class APIUserTest extends TestCase
     public function testUpdateUser()
     {
         $user = factory('App\Models\User')->state('admin')->make();
+
         $result = $this->actingAs($user)
-            ->json('PUT', '/api/users/'.$user->id, ['username' => 'NewUsername'])
+            ->put('/api/users/'.$user->id, ['username' => 'NewUsername'])
             ->seeStatusCode(200)
-            ->seeJsonContains(["username" => "NewUsername"]);
+            ->seeJsonContains(['username' => 'NewUsername']);
+//        $result = $this->actingAs($user)
+//            ->json('PUT', '/api/users/'.$user->id, ['username' => 'NewUsername'])
+//            ->seeStatusCode(200)
+//            ->seeJsonContains(["username" => "NewUsername"]);
         $data = json_decode($result->response->content());
         $this->assertNotNull($data['updated_on']);
     }
