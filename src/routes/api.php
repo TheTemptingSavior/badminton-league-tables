@@ -106,8 +106,8 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->post('/', ['as' => 'team-create', 'uses' => 'TeamController@createTeam']);
         // Retire a team
         $router->post('/{id}/retire', ['as' => 'team-retire', 'uses' => 'TeamContoller@retireTeam']);
-//        // Update a teams information
-//        $router->put('/{id}', ['as' => 'team-update', 'uses' => 'TeamController@retireTeam']);
+        // Update a teams information
+        $router->put('/{id}', ['as' => 'team-update', 'uses' => 'TeamController@updateTeam']);
     });
     $router->group(['prefix' => 'teams'], function() use ($router) {
         $router->get('/', ['as' => 'team-list', 'uses' => 'TeamController@listTeams']);
