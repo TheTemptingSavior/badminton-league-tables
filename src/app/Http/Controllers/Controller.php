@@ -7,17 +7,14 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     /**
-     * Returns a JSON Web Token to the requester
-     * @param $token
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Info(
+     *     title="League Tables API",
+     *     version="0.1",
+     *     description="Provides access to league table information via JSON APIs",
+     *     @OA\Contact(
+     *         email="ethancotterell@gmail.com",
+     *         name="Ethan Cotterell"
+     *     )
+     * )
      */
-    public function respondWithToken($token)
-    {
-        // TODO: Figure out a way to state when the token will expire
-        return response()->json([
-            'token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => 3600
-        ], 200);
-    }
 }
