@@ -87,6 +87,12 @@ class UserController extends Controller
      */
     public function updateUser(string $id, Request $request)
     {
+        $currentUser = auth()->user();
+        if (!$currentUser->admin) {
+            if ($currentUser->id != $id) {
+                return response()->json(['error' => 'Only admins can edit other users'], 403);
+            }
+        }
         $this->validate($request, [
             'username' => 'nullable|unique:users',
             'password' => 'nullable'
