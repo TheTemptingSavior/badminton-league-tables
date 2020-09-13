@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__.'/const.php';
 require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/const.php';
+
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
@@ -76,6 +77,7 @@ $app->configure('swagger-lume');
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'jsonheader' => App\Http\Middleware\JsonHeaderMiddleware::class,
+    'admin' => App\Http\Middleware\AdminOnly::class,
 ]);
 
 /*
