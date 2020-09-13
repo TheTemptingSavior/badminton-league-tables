@@ -1,17 +1,14 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where all the routes relating to the API are stored
-|
-*/
+use Illuminate\Support\Facades\DB;
+use OpenApi\Annotations as OA;
+
+/**
+ * @OA\Info(title="League Tables API", version="0.1")
+ */
 
 // Removed temporarily so error messages are shown correctly in browser
 //$router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
-use Illuminate\Support\Facades\DB;
 
 $router->group(['prefix' => 'api'], function() use ($router) {
     $router->get('/', function() use ($router) {
@@ -26,6 +23,9 @@ $router->group(['prefix' => 'api'], function() use ($router) {
                 'league' => LEAGUE_NAME,
                 'active_teams' => $teams
             ], 200);
+    });
+    $router->get('/docs', function() use ($router) {
+        // Some way to return the swagger documentation here
     });
 
     /*
