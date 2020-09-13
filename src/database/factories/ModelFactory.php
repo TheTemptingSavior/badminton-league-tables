@@ -6,6 +6,7 @@ use App\Models\Season;
 use App\Models\Team;
 use App\Models\User;
 use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ use Faker\Generator as Faker;
 $factory->define(User::class, function (Faker $faker) {
     return [
         'username' => $faker->userName,
-        'password' => $faker->password,
+        'password' => Hash::make($faker->password),
     ];
 });
 
@@ -30,7 +31,7 @@ $factory->define(User::class, function (Faker $faker) {
 $factory->state(User::class, 'admin', function ($faker) {
     return [
         'username' => $faker->userName,
-        'password' => $faker->password,
+        'password' => Hash::make($faker->password),
         'admin' => true,
     ];
 });
