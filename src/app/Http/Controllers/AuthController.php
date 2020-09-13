@@ -16,6 +16,21 @@ class AuthController extends Controller
     }
 
     /**
+     * Returns a JSON Web Token to the requester
+     * @param $token
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function respondWithToken($token)
+    {
+        // TODO: Figure out a way to state when the token will expire
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => 3600
+        ], 200);
+    }
+
+    /**
      * Get a JWT via given credentials.
      *
      * @param Request $request
@@ -49,8 +64,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Get user details.
-     *
+     * @OA\Get(
+     *     path="/auth/me",
+     *     description="Get current user details",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Identifies the user of the JSON web token used",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Bearer authentication required to access this route"
+     *     )
+     * )
      * @return \Illuminate\Http\JsonResponse
      */
     public function me()
