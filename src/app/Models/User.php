@@ -12,55 +12,21 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class User
+ * TODO: Fill in the extra schema properties
  * @OA\Schema
+ *
+ * @OA\Property(
+ *     name="id",
+ *     type="integer"
+ *     format="int64"
+ * )
+ *
  * @package App\Models
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable;
 
-    /**
-     * @OA\Property()
-     * @var string
-     */
-    public $username;
-    /**
-     * @OA\Property(
-     *     type="string",
-     *     format="password"
-     * )
-     * @var string
-     */
-    public $password;
-    /**
-     * @OA\Property()
-     * @var boolean
-     */
-    public $admin;
-    /**
-     * @OA\Property(
-     *     type="string",
-     *     format="date-time"
-     * )
-     * @var string
-     */
-    public $added;
-    /**
-     * @OA\Property(
-     *     type="string",
-     *     format="date-time"
-     * )
-     * @var string
-     */
-    public $created_at;
-    /**
-     * @OA\Property(
-     *     type="string",
-     *     format="date-time"
-     * )
-     * @var string
-     */
-    public $updated_at;
 
     /**
      * The table associated with the model.
