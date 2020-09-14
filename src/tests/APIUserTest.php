@@ -226,7 +226,7 @@ class APIUserTest extends TestCase
 
     /**
      * Update a users information
-     *
+     * TODO: Fails due to the $data var not being a proper array
      * @return void
      */
     public function testUpdateUser()
@@ -234,15 +234,12 @@ class APIUserTest extends TestCase
         $user = factory('App\Models\User')->state('admin')->create();
 
         $result = $this->actingAs($user)
-            ->put('/api/users/'.$user->id, ['username' => 'NewUsername'])
+            ->json('PUT', '/api/users/'.$user->id, ['username' => 'NewUsername'])
             ->seeStatusCode(200)
-            ->seeJsonContains(['username' => 'NewUsername']);
-//        $result = $this->actingAs($user)
-//            ->json('PUT', '/api/users/'.$user->id, ['username' => 'NewUsername'])
-//            ->seeStatusCode(200)
-//            ->seeJsonContains(["username" => "NewUsername"]);
+            ->seeJsonContains(["username" => "NewUsername"]);
+
         $data = json_decode($result->response->content());
-        $this->assertNotNull($data['updated_on']);
+        $this->assertNotNull($data->updated_at);
     }
 
     /**

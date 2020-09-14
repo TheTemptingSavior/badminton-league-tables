@@ -45,4 +45,17 @@ class SeasonController extends Controller
 
         return response()->json($teams, 200);
     }
+
+    /**
+     * Returns a season with the given slug
+     * @param string $slug
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFromSlug(string $slug)
+    {
+        $season = DB::table('seasons')
+            ->where('slug', $slug)
+            ->first();
+        return response()->json($season, 200);
+    }
 }
