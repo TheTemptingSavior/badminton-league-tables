@@ -83,6 +83,8 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->get('/{id}', ['as' => 'season-detail', 'uses' => 'SeasonController@getSeason']);
         // Get the teams playing in the season
         $router->get('/{id}/teams', ['as' => 'season-teams', 'uses' => 'SeasonController@getTeams']);
+        // Get a season by its slug
+        $router->get('/fromslug/{slug}', ['as' => 'season-slug', 'uses' => 'SeasonController@getFromSlug']);
     });
 
 

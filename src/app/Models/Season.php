@@ -19,7 +19,7 @@ class Season extends Model
      * @var array
      */
     protected $fillable = [
-        'start', 'end',
+        'start', 'end', 'slug'
     ];
 
     /**
