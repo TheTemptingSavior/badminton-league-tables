@@ -60,14 +60,14 @@ class TeamController extends Controller
      */
     public function retireTeam(string $id, Request $request)
     {
-        $this->validate(
-            $request,
-            [
-                'retired' => 'required'
-            ]
-        );
+        $this->validate($request, ['retired' => 'required|boolean']);
+
         $team = Team::findOrFail($id);
-        $team->retired_on = $request->retired;
+        if ($request->retired) {
+            $team->retired_on = date('Y-m-d');
+        } else {
+            $team->retired_on = null;
+        }
         $team->save();
 
         return response()->json($team, 200);
