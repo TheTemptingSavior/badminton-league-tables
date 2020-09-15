@@ -102,7 +102,7 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     */
     $router->group(['prefix' => 'teams', 'middleware' => 'auth'], function() use ($router) {
         // Create a new team
-        $router->post('/', ['as' => 'team-create', 'uses' => 'TeamController@createTeam']);
+        $router->post('/', ['as' => 'team-create', 'uses' => 'TeamController@createTeam', 'middleware' => 'admin']);
         // Retire a team
         $router->post('/{id}/retire', ['as' => 'team-retire', 'uses' => 'TeamContoller@retireTeam']);
         // Update a teams information

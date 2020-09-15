@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Helpers\GenericHelpers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 
 class TeamController extends Controller
@@ -37,14 +37,9 @@ class TeamController extends Controller
      */
     public function createTeam(Request $request)
     {
-        $this->validate(
-            $request,
-            [
-                'name' => 'required|unique:teams',
-            ]
-        );
+        $this->validate($request, ['name' => 'required|unique:teams']);
         $name = $request->name;
-        $slug = str_slug($name, "-");
+        $slug = GenericHelpers::slugify($name);
 
         $newTeam = new Team;
         $newTeam->name = $name;
