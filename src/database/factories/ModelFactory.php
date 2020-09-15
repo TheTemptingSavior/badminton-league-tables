@@ -46,3 +46,11 @@ $factory->define(Season::class, function (Faker $faker) {
         'slug' => $faker->slug
     ];
 });
+
+
+$factory->define(Team::class, function (Faker $faker) {
+    return [
+        'name' => $faker->userName,
+        'slug' => $faker->slug,
+    ];
+});
