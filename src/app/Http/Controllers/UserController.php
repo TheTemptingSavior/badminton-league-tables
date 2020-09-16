@@ -50,7 +50,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Only an admin may create user accounts'], 403);
         }
 
-        request()->validate(['username' => 'required|unique:users', 'password' => 'required',]);
+        $this->validate($request, ['username' => 'required|unique:users', 'password' => 'required',]);
         $newUser = new User;
         $newUser->username = $request->username;
         $newUser->password = Hash::make($request->password);
@@ -87,7 +87,7 @@ class UserController extends Controller
                 return response()->json(['error' => 'Only admins can edit other users'], 403);
             }
         }
-        request()->validate(['username' => 'nullable|unique:users', 'password' => 'nullable']);
+        $this->validate($request, ['username' => 'nullable|unique:users', 'password' => 'nullable']);
         $user = User::findOrFail($id);
         $user->update($request->all());
 
