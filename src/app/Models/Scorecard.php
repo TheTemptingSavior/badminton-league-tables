@@ -4,8 +4,46 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Game extends Model
+class Scorecard extends Model
 {
+    protected static $EMPTY_SCORECARD = [
+        'home_team' => null, 'away_team' => null, 'date_played' => null, 'home_points' => null, 'away_points' => null,
+        'home_player_1' => null, 'home_player_2' => null, 'home_player_3' => null, 'home_player_4' => null,
+        'home_player_5' => null, 'home_player_6' => null, 'away_player_1' => null, 'away_player_2' => null,
+        'away_player_3' => null, 'away_player_4' => null, 'away_player_5' => null, 'away_player_6' => null,
+        'game_one_v_one_home_one' => null, 'game_one_v_one_away_one' => null, 'game_one_v_one_home_two' => null,
+        'game_one_v_one_away_two' => null, 'game_one_v_one_home_three' => null, 'game_one_v_one_away_three' => null,
+        'game_one_v_two_home_one' => null, 'game_one_v_two_away_one' => null, 'game_one_v_two_home_two' => null,
+        'game_one_v_two_away_two' => null, 'game_one_v_two_home_three' => null, 'game_one_v_two_away_three' => null,
+        'game_one_v_three_home_one' => null, 'game_one_v_three_away_one' => null, 'game_one_v_three_home_two' => null,
+        'game_one_v_three_away_two' => null, 'game_one_v_three_home_three' => null,
+        'game_one_v_three_away_three' => null, 'game_two_v_one_home_one' => null, 'game_two_v_one_away_one' => null,
+        'game_two_v_one_home_two' => null, 'game_two_v_one_away_two' => null, 'game_two_v_one_home_three' => null,
+        'game_two_v_one_away_three' => null, 'game_two_v_two_home_one' => null, 'game_two_v_two_away_one' => null,
+        'game_two_v_two_home_two' => null, 'game_two_v_two_away_two' => null, 'game_two_v_two_home_three' => null,
+        'game_two_v_two_away_three' => null, 'game_two_v_three_home_one' => null, 'game_two_v_three_away_one' => null,
+        'game_two_v_three_home_two' => null, 'game_two_v_three_away_two' => null, 'game_two_v_three_home_three' => null,
+        'game_two_v_three_away_three' => null, 'game_three_v_one_home_one' => null, 'game_three_v_one_away_one' => null,
+        'game_three_v_one_home_two' => null, 'game_three_v_one_away_two' => null, 'game_three_v_one_home_three' => null,
+        'game_three_v_one_away_three' => null, 'game_three_v_two_home_one' => null, 'game_three_v_two_away_one' => null,
+        'game_three_v_two_home_two' => null, 'game_three_v_two_away_two' => null, 'game_three_v_two_home_three' => null,
+        'game_three_v_two_away_three' => null, 'game_three_v_three_home_one' => null,
+        'game_three_v_three_away_one' => null, 'game_three_v_three_home_two' => null,
+        'game_three_v_three_away_two' => null, 'game_three_v_three_home_three' => null,
+        'game_three_v_three_away_three' => null
+    ];
+
+    /**
+     * Takes a scorecard and adds keys for all the missing values.
+     * Any added keys default to null
+     * @param array $data
+     * @return array
+     */
+    public static function PAD_SCORECARD(array $data)
+    {
+        return array_merge(self::$EMPTY_SCORECARD, $data);
+    }
+
     /**
      * Returns a set of validation rules to be run against all the
      * required data to create a game. This includes the teams that
@@ -25,18 +63,18 @@ class Game extends Model
             'home_points' => 'required|numeric|different:away_points|between:0,9',
             'away_points' => 'required|numeric|different:home_points|between:0,9',
             // Can be null or a string with between 0 and 200 characters
-            'home_player_1' => 'string|nullable|digits_between:1,200',
-            'home_player_2' => 'string|nullable|digits_between:1,200',
-            'home_player_3' => 'string|nullable|digits_between:1,200',
-            'home_player_4' => 'string|nullable|digits_between:1,200',
-            'home_player_5' => 'string|nullable|digits_between:1,200',
-            'home_player_6' => 'string|nullable|digits_between:1,200',
-            'away_player_1' => 'string|nullable|digits_between:1,200',
-            'away_player_2' => 'string|nullable|digits_between:1,200',
-            'away_player_3' => 'string|nullable|digits_between:1,200',
-            'away_player_4' => 'string|nullable|digits_between:1,200',
-            'away_player_5' => 'string|nullable|digits_between:1,200',
-            'away_player_6' => 'string|nullable|digits_between:1,200',
+            'home_player_1' => 'string|nullable|between:1,200',
+            'home_player_2' => 'string|nullable|between:1,200',
+            'home_player_3' => 'string|nullable|between:1,200',
+            'home_player_4' => 'string|nullable|between:1,200',
+            'home_player_5' => 'string|nullable|between:1,200',
+            'home_player_6' => 'string|nullable|between:1,200',
+            'away_player_1' => 'string|nullable|between:1,200',
+            'away_player_2' => 'string|nullable|between:1,200',
+            'away_player_3' => 'string|nullable|between:1,200',
+            'away_player_4' => 'string|nullable|between:1,200',
+            'away_player_5' => 'string|nullable|between:1,200',
+            'away_player_6' => 'string|nullable|between:1,200',
             // Can be null or a numeric between 0 and 30
             'game_one_v_one_game_home_one' => 'numeric|nullable|between:0,30',
             'game_one_v_one_game_away_one' => 'numeric|nullable|between:0,30',
@@ -202,7 +240,7 @@ class Game extends Model
      *
      * @var string
      */
-    protected $table = 'games';
+    protected $table = 'scorecards';
 
     /**
      * The attributes that are mass assignable.

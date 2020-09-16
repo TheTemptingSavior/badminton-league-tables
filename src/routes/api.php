@@ -117,24 +117,24 @@ $router->group(['prefix' => 'api'], function() use ($router) {
 
     /*
     |--------------------------------------------------------------------------
-    | Game Routes
+    | Scorecard Routes
     |--------------------------------------------------------------------------
     |
-    | Game management. Allows the use to create, delete and edit scorecards in
+    | Scorecard management. Allows the use to create, delete and edit scorecards in
     | the database. Retrieval operations are the only ones supported without
     | providing an authentication token
     |
     */
-    $router->group(['prefix' => 'games'], function() use ($router) {
+    $router->group(['prefix' => 'scorecards'], function() use ($router) {
         // Get information on a specific game
-        $router->get('/{id}', ['as' => 'games-detail', 'uses' => 'GamesController@getGame']);
+        $router->get('/{id}', ['as' => 'scorecards-detail', 'uses' => 'ScorecardController@getGame']);
     });
-    $router->group(['prefix' => 'games', 'middleware' => 'auth'], function() use ($router) {
+    $router->group(['prefix' => 'scorecards', 'middleware' => ['auth', 'admin']], function() use ($router) {
         // Create a score cards
-        $router->post('/', ['as' => 'games-create', 'uses' => 'GamesController@createGame']);
+        $router->post('/', ['as' => 'scorecards-create', 'uses' => 'ScorecardController@createGame']);
         // Update a scorecard
-        $router->put('/{id}', ['as' => 'games-update', 'uses' => 'GamesController@updateGame']);
+        $router->put('/{id}', ['as' => 'scorecards-update', 'uses' => 'ScorecardController@updateGame']);
         // Delete a game
-        $router->delete('/{id}', ['as' => 'games-delete', 'uses' => 'GamesContoller@deleteGame']);
+        $router->delete('/{id}', ['as' => 'scorecards-delete', 'uses' => 'ScorecardController@deleteGame']);
     });
 });

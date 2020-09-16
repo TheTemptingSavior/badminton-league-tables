@@ -4,10 +4,10 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\Game;
+use App\Models\Scorecard;
 use Illuminate\Http\Request;
 
-class GamesController extends Controller
+class ScorecardController extends Controller
 {
     /**
      * Get a scorecard based upon its ID
@@ -16,7 +16,7 @@ class GamesController extends Controller
      */
     public function getGame(string $id)
     {
-        $game = Game::findOrFail($id);
+        $game = Scorecard::findOrFail($id);
 
         return response()->json($game, 200);
     }
@@ -32,16 +32,28 @@ class GamesController extends Controller
     {
         $this->validate(
             $request,
-            Game::getValidationRules()
+            Scorecard::getValidationRules()
         );
-        $errors = Game::validateData($request->toArray());
-        if ($errors !== false) { return response()->json(["errors" => $errors], 400); }
+        // Before running any validations against the data
+        // ensure all the required keys are present
+        $data = Scorecard::PAD_SCORECARD($request->toArray());
+        $errors = Scorecard::validateData($data);
+        if ($errors !== true) { return response()->json(["errors" => $errors], 400); }
 
-        $warnings = Game::checkData($request->toArray());
+        $scorecard = Scorecard::create($data);
+        $warnings = Scorecard::checkData($data);
+
+
         if (sizeof($warnings) == 0) {
-            return response()->json(["message" => "Game created"], 201);
+            return response()->json(
+                ['message' => 'Scorecard created', 'id' => $scorecard->id, 'warnings' => null],
+                201
+            );
         } else {
-            return response()->json(["message" => "Game created", "warnings" => $warnings], 201);
+            return response()->json(
+                ['message' => 'Scorecard created', 'id' => $scorecard->id, 'warnings' => $warnings],
+                201
+            );
         }
     }
 
@@ -53,7 +65,7 @@ class GamesController extends Controller
      */
     public function updateGame(string $id)
     {
-        $game = Game::findOrFail($id);
+        $game = Scorecard::findOrFail($id);
 
         // Update the game
         return response()->json($game, 200);
@@ -66,7 +78,7 @@ class GamesController extends Controller
      */
     public function deleteGame(string $id)
     {
-        Game::findOrFail($id)->delete();
+        Scorecard::findOrFail($id)->delete();
 
         return response()->json([], 204);
     }
