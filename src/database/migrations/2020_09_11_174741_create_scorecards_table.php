@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateScorecardsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('scorecards', function (Blueprint $table) {
@@ -112,11 +107,6 @@ class CreateScorecardsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('scorecards');

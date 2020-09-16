@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Models\Season;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class APISeasonTest extends TestCase
@@ -12,15 +11,15 @@ class APISeasonTest extends TestCase
      * Create two example seasons that are stored in the database
      * @return array Season IDs
      */
-    public function createSeasons()
+    function createSeasons()
     {
-        $season17_18 = new \App\Models\Season;
+        $season17_18 = new Season;
         $season17_18->start = strtotime("2017-09-01");
         $season17_18->end = strtotime("2018-08-31");
         $season17_18->slug = "17-18";
         $season17_18->save();
 
-        $season18_19 = new \App\Models\Season;
+        $season18_19 = new Season;
         $season18_19->start = strtotime("2018-09-01");
         $season18_19->end = strtotime("2019-08-31");
         $season18_19->slug = "18-19";
@@ -28,7 +27,7 @@ class APISeasonTest extends TestCase
 
         return [
             $season17_18->id,
-            $season18_19->id
+            $season18_19->id,
         ];
     }
 
@@ -39,7 +38,7 @@ class APISeasonTest extends TestCase
      *
      * @return void
      */
-    public function testListSeasons()
+    function testListSeasons()
     {
         factory('App\Models\Season', 3)->create();
 
@@ -54,11 +53,11 @@ class APISeasonTest extends TestCase
      *
      * @return void
      */
-    public function testGetSeason()
+    function testGetSeason()
     {
         $ids = $this->createSeasons();
 
-        $result = $this->json('GET', '/api/seasons/'.$ids[0])
+        $result = $this->json('GET', '/api/seasons/' . $ids[0])
             ->seeStatusCode(200)
             ->seeJson(['id' => $ids[0]])
             ->seeJsonStructure(['id', 'start', 'end', 'slug']);
@@ -75,7 +74,7 @@ class APISeasonTest extends TestCase
      *
      * @return void
      */
-    public function testGetSeasonNonExist()
+    function testGetSeasonNonExist()
     {
         $this->json('GET', '/api/seasons/999')
             ->seeStatusCode(404);
@@ -86,7 +85,7 @@ class APISeasonTest extends TestCase
      *
      * @return  void
      */
-    public function testGetSeasonBadId()
+    function testGetSeasonBadId()
     {
         $this->json('GET', '/api/seasons/helloworld')
             ->seeStatusCode(404);
@@ -97,10 +96,10 @@ class APISeasonTest extends TestCase
      *
      * @return void
      */
-    public function testGetSeasonFromSlug()
+    function testGetSeasonFromSlug()
     {
         $season = factory('App\Models\Season')->create();
-        $this->json('GET', '/api/seasons/fromslug/'.$season->slug)
+        $this->json('GET', '/api/seasons/fromslug/' . $season->slug)
             ->seeJsonStructure(['id', 'start', 'end', 'slug'])
             ->seeJson(['slug' => $season->slug])
             ->seeStatusCode(200);

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Team;
 use App\Helpers\GenericHelpers;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
 
@@ -37,7 +37,7 @@ class TeamController extends Controller
      */
     public function createTeam(Request $request)
     {
-        $this->validate($request, ['name' => 'required|unique:teams']);
+        request()->validate(['name' => 'required|unique:teams']);
         $name = $request->name;
         $slug = GenericHelpers::slugify($name);
 
@@ -60,7 +60,7 @@ class TeamController extends Controller
      */
     public function retireTeam(string $id, Request $request)
     {
-        $this->validate($request, ['retired' => 'required|boolean']);
+        request()->validate(['retired' => 'required|boolean']);
 
         $team = Team::findOrFail($id);
         if ($request->retired) {
@@ -82,12 +82,7 @@ class TeamController extends Controller
      */
     public function updateTeam(string $id, Request $request)
     {
-        $this->validate(
-            $request,
-            [
-                'name' => 'unique:teams'
-            ]
-        );
+        request()->validate(['name' => 'unique:teams']);
 
         $team = Team::findOrFail($id);
 

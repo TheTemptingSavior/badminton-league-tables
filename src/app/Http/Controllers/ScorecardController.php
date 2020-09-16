@@ -30,10 +30,8 @@ class ScorecardController extends Controller
      */
     public function createGame(Request $request)
     {
-        $this->validate(
-            $request,
-            Scorecard::getValidationRules()
-        );
+        request()->validate(Scorecard::getValidationRules());
+
         // Before running any validations against the data
         // ensure all the required keys are present
         $data = Scorecard::PAD_SCORECARD($request->toArray());

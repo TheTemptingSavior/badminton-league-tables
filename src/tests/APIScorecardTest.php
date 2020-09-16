@@ -11,13 +11,13 @@ class APIScorecardTest extends TestCase
      *
      * @return void
      */
-    public function testGetGame()
+    function testGetGame()
     {
         // Create 6 teams for the game to choose from
         factory('App\Models\Team', 6)->create();
         $scorecard = factory('App\Models\Scorecard')->create();
 
-        $this->json('GET', '/api/scorecards/'.$scorecard->id)
+        $this->json('GET', '/api/scorecards/' . $scorecard->id)
             ->seeStatusCode(200)
             ->seeJsonStructure(['id', 'home_team', 'away_team', 'date_played', 'home_points', 'away_points']);
     }
@@ -27,7 +27,7 @@ class APIScorecardTest extends TestCase
      *
      * @return void
      */
-    public function testCreateGame()
+    function testCreateGame()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $homeTeam = factory('App\Models\Team')->create();
@@ -37,7 +37,7 @@ class APIScorecardTest extends TestCase
             'away_team' => $awayTeam->id,
             'date_played' => '2018-11-11',
             'home_points' => 6,
-            'away_points' => 3
+            'away_points' => 3,
         ];
 
         $result = $this->actingAs($user)
@@ -46,10 +46,10 @@ class APIScorecardTest extends TestCase
             ->seeJsonStructure(['message', 'warnings']);
         $data = json_decode($result->response->content());
 
-        $result = $this->json('GET', '/api/scorecards/'.$data->id)
+        $result = $this->json('GET', '/api/scorecards/' . $data->id)
             ->seeStatusCode(200)
-            ->seeJson(['home_team' => ''.$homeTeam->id.''])
-            ->seeJson(['away_team' => ''.$awayTeam->id.'']);
+            ->seeJson(['home_team' => '' . $homeTeam->id . ''])
+            ->seeJson(['away_team' => '' . $awayTeam->id . '']);
         $data = json_decode($result->response->content());
 
         $this->assertNull($data->home_player_1);
@@ -64,7 +64,7 @@ class APIScorecardTest extends TestCase
      *
      * @return void
      */
-    public function testCreateGamePartialOptionalData()
+    function testCreateGamePartialOptionalData()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         factory('App\Models\Team', 6)->create();

@@ -11,7 +11,7 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testListTeams()
+    function testListTeams()
     {
         factory('App\Models\Team', 10)->create();
 
@@ -28,10 +28,10 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testGetTeam()
+    function testGetTeam()
     {
         $team = factory('App\Models\Team')->create();
-        $this->json('GET', '/api/teams/'.$team->id)
+        $this->json('GET', '/api/teams/' . $team->id)
             ->seeStatusCode(200)
             ->seeJsonStructure(['id', 'name', 'slug'])
             ->seeJson(['id' => $team->id])
@@ -43,7 +43,7 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testGetTeamNonExist()
+    function testGetTeamNonExist()
     {
         $this->json('GET', '/api/team/999')
             ->seeStatusCode(404);
@@ -54,7 +54,7 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testGetTeamBadId()
+    function testGetTeamBadId()
     {
         $this->json('GET', '/api/team/helloworld')
             ->seeStatusCode(404);
@@ -65,7 +65,7 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testCreateTeam()
+    function testCreateTeam()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $result = $this->actingAs($user)
@@ -83,7 +83,7 @@ class APITeamsTest extends TestCase
      * TODO: Should return a 400 but returns a 422
      * @return void
      */
-    public function testCreateTeamBadData()
+    function testCreateTeamBadData()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $this->actingAs($user)
@@ -96,7 +96,7 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testCreateTeamNonUnique()
+    function testCreateTeamNonUnique()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $team = factory('App\Models\Team')->create();
@@ -111,7 +111,7 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testCreateTeamNoAuth()
+    function testCreateTeamNoAuth()
     {
         $this->json('POST', '/api/teams', ['name' => 'Hello World'])
             ->seeStatusCode(401);
@@ -123,7 +123,7 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testCreateTeamNonAdmin()
+    function testCreateTeamNonAdmin()
     {
         $user = factory('App\Models\User')->create();
 
@@ -137,13 +137,13 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testRetireTeam()
+    function testRetireTeam()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $team = factory('App\Models\Team')->create();
 
         $result = $this->actingAs($user)
-            ->json('PUT', '/api/teams/'.$team->id.'/retire', ['retired' => true])
+            ->json('PUT', '/api/teams/' . $team->id . '/retire', ['retired' => true])
             ->seeStatusCode(200)
             ->seeJsonStructure(['id', 'name', 'slug', 'retired_on', 'created_at', 'updated_at']);
 
@@ -156,11 +156,11 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testRetireTeamNoAuth()
+    function testRetireTeamNoAuth()
     {
         $team = factory('App\Models\Team')->create();
 
-        $this->json('PUT', '/api/teams/'.$team->id.'/retire', ['retired' => true])
+        $this->json('PUT', '/api/teams/' . $team->id . '/retire', ['retired' => true])
             ->seeStatusCode(401);
     }
 
@@ -169,13 +169,13 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testRetireTeamNoAdmin()
+    function testRetireTeamNoAdmin()
     {
         $user = factory('App\Models\User')->create();
         $team = factory('App\Models\Team')->create();
 
         $this->actingAs($user)
-            ->json('PUT', '/api/teams/'.$team->id.'/retire', ['retired' => true])
+            ->json('PUT', '/api/teams/' . $team->id . '/retire', ['retired' => true])
             ->seeStatusCode(403);
     }
 
@@ -184,13 +184,13 @@ class APITeamsTest extends TestCase
      *
      * @return void
      */
-    public function testRetireTeamBadData()
+    function testRetireTeamBadData()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $team = factory('App\Models\Team')->create();
 
         $this->actingAs($user)
-            ->json('PUT', '/api/teams/'.$team->id.'/retire', ['baddata' => true])
+            ->json('PUT', '/api/teams/' . $team->id . '/retire', ['baddata' => true])
             ->seeStatusCode(400);
     }
 }
