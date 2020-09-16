@@ -30,7 +30,61 @@ class Scorecard extends Model
         'game_three_v_two_away_three' => null, 'game_three_v_three_home_one' => null,
         'game_three_v_three_away_one' => null, 'game_three_v_three_home_two' => null,
         'game_three_v_three_away_two' => null, 'game_three_v_three_home_three' => null,
-        'game_three_v_three_away_three' => null
+        'game_three_v_three_away_three' => null,
+    ];
+
+
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
+
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'scorecards';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'home_team', 'away_team', 'date_played', 'home_points', 'away_points',
+        'home_player_1', 'home_player_2', 'home_player_3', 'home_player_4', 'home_player_5', 'home_player_6',
+        'away_player_1', 'away_player_2', 'away_player_3', 'away_player_4', 'away_player_5', 'away_player_6',
+        'game_one_v_one_home_one', 'game_one_v_one_away_one', 'game_one_v_one_home_two', 'game_one_v_one_away_two',
+        'game_one_v_one_home_three', 'game_one_v_one_away_three', 'game_one_v_two_home_one', 'game_one_v_two_away_one',
+        'game_one_v_two_home_two', 'game_one_v_two_away_two', 'game_one_v_two_home_three', 'game_one_v_two_away_three',
+        'game_one_v_three_home_one', 'game_one_v_three_away_one', 'game_one_v_three_home_two',
+        'game_one_v_three_away_two', 'game_one_v_three_home_three', 'game_one_v_three_away_three',
+        'game_two_v_one_home_one', 'game_two_v_one_away_one', 'game_two_v_one_home_two', 'game_two_v_one_away_two',
+        'game_two_v_one_home_three', 'game_two_v_one_away_three', 'game_two_v_two_home_one', 'game_two_v_two_away_one',
+        'game_two_v_two_home_two', 'game_two_v_two_away_two', 'game_two_v_two_home_three', 'game_two_v_two_away_three',
+        'game_two_v_three_home_one', 'game_two_v_three_away_one', 'game_two_v_three_home_two',
+        'game_two_v_three_away_two', 'game_two_v_three_home_three', 'game_two_v_three_away_three',
+        'game_three_v_one_home_one', 'game_three_v_one_away_one', 'game_three_v_one_home_two',
+        'game_three_v_one_away_two', 'game_three_v_one_home_three', 'game_three_v_one_away_three',
+        'game_three_v_two_home_one', 'game_three_v_two_away_one', 'game_three_v_two_home_two',
+        'game_three_v_two_away_two', 'game_three_v_two_home_three', 'game_three_v_two_away_three',
+        'game_three_v_three_home_one', 'game_three_v_three_away_one', 'game_three_v_three_home_two',
+        'game_three_v_three_away_two', 'game_three_v_three_home_three', 'game_three_v_three_away_three',
+    ];
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+
     ];
 
     /**
@@ -208,10 +262,16 @@ class Scorecard extends Model
 
         foreach ($games as $game) {
             if ($data[$game[0]] == null and $data[$game[1]] != null) {
-                array_push($warnings, "The scores do not add up for '".$game[0]."' and '".$game[1]."'");
+                array_push(
+                    $warnings,
+                    "The scores do not add up for '" . $game[0] . "' and '" . $game[1] . "'"
+                );
                 continue;
             } else if ($data[$game[0]] != null and $data[$game[1]] == null) {
-                array_push($warnings, "The scores do not add up for '".$game[0]."' and '".$game[1]."'");
+                array_push(
+                    $warnings,
+                    "The scores do not add up for '" . $game[0] . "' and '" . $game[1] . "'"
+                );
                 continue;
             }
             // One of the values is null so ignore it
@@ -230,51 +290,11 @@ class Scorecard extends Model
             if ($data[$game[0]] == ($data[$game[1]] + 2)) { continue; }
 
             // Failed the above validations so it must be incorrect
-            array_push($warnings, "The scores do not add up for '".$game[0]."' and '".$game[1]."'");
+            array_push(
+                $warnings,
+                "The scores do not add up for '" . $game[0] . "' and '" . $game[1] . "'");
         }
 
         return $warnings;
     }
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'scorecards';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'home_team', 'away_team', 'date_played', 'home_points', 'away_points',
-        'home_player_1', 'home_player_2', 'home_player_3', 'home_player_4', 'home_player_5', 'home_player_6',
-        'away_player_1', 'away_player_2', 'away_player_3', 'away_player_4', 'away_player_5', 'away_player_6',
-        'game_one_v_one_home_one', 'game_one_v_one_away_one', 'game_one_v_one_home_two', 'game_one_v_one_away_two', 'game_one_v_one_home_three', 'game_one_v_one_away_three',
-        'game_one_v_two_home_one', 'game_one_v_two_away_one', 'game_one_v_two_home_two', 'game_one_v_two_away_two', 'game_one_v_two_home_three', 'game_one_v_two_away_three',
-        'game_one_v_three_home_one', 'game_one_v_three_away_one', 'game_one_v_three_home_two', 'game_one_v_three_away_two', 'game_one_v_three_home_three', 'game_one_v_three_away_three',
-        'game_two_v_one_home_one', 'game_two_v_one_away_one', 'game_two_v_one_home_two', 'game_two_v_one_away_two', 'game_two_v_one_home_three', 'game_two_v_one_away_three',
-        'game_two_v_two_home_one', 'game_two_v_two_away_one', 'game_two_v_two_home_two', 'game_two_v_two_away_two', 'game_two_v_two_home_three', 'game_two_v_two_away_three',
-        'game_two_v_three_home_one', 'game_two_v_three_away_one', 'game_two_v_three_home_two', 'game_two_v_three_away_two', 'game_two_v_three_home_three', 'game_two_v_three_away_three',
-        'game_three_v_one_home_one', 'game_three_v_one_away_one', 'game_three_v_one_home_two', 'game_three_v_one_away_two', 'game_three_v_one_home_three', 'game_three_v_one_away_three',
-        'game_three_v_two_home_one', 'game_three_v_two_away_one', 'game_three_v_two_home_two', 'game_three_v_two_away_two', 'game_three_v_two_home_three', 'game_three_v_two_away_three',
-        'game_three_v_three_home_one', 'game_three_v_three_away_one', 'game_three_v_three_home_two', 'game_three_v_three_away_two', 'game_three_v_three_home_three', 'game_three_v_three_away_three',
-    ];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-
-    ];
 }
