@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-use OpenApi\Annotations as OA;
 
 /**
  * @OA\Info(title="League Tables API", version="0.1")
@@ -21,7 +20,7 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         return response()->json(
             [
                 'league' => LEAGUE_NAME,
-                'active_teams' => $teams
+                'active_teams' => $teams,
             ], 200);
     });
 

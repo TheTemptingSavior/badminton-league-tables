@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Season;
-use App\Models\SeasonTeams;
 use Illuminate\Support\Facades\DB;
 
 
