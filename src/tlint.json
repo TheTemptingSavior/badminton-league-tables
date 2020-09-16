@@ -1,6 +1,6 @@
 {
     "preset": "laravel",
-    "disabled": ["ClassThingsOrder", "OneLineBetweenClassVisibilityChanges"],
+    "disabled": ["ClassThingsOrder", "OneLineBetweenClassVisibilityChanges", "RequestValidation"],
     "excluded": [
         "tests/",
         "vendor/"

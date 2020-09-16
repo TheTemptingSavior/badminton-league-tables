@@ -7,3 +7,4 @@ src/.env
 /docker/nginx/logs/
 *.sqlite
 *.log
+src/.reports/
