@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Models\Scorecard;
 use App\Models\Season;
 use App\Models\Team;
 use App\Models\User;
@@ -52,5 +53,33 @@ $factory->define(Team::class, function (Faker $faker) {
     return [
         'name' => $faker->userName,
         'slug' => $faker->slug,
+    ];
+});
+
+$factory->define(Scorecard::class, function (Faker $faker) {
+    $home = Team::all()->random()->id;
+    $away = Team::all()->random()->id;
+    while ($home == $away) {
+        $away = Team::all()->random()->id;
+    }
+    $points = $faker->numberBetween(0, 9);
+    return [
+        'home_team' => $home,
+        'away_team' => $away,
+        'date_played' => $faker->date('Y-m-d'),
+        'home_points' => $points,
+        'away_points' => (9 - $points),
+        'home_player_1' => ($faker->boolean ? $faker->name : null),
+        'home_player_2' => ($faker->boolean ? $faker->name : null),
+        'home_player_3' => ($faker->boolean ? $faker->name : null),
+        'home_player_4' => ($faker->boolean ? $faker->name : null),
+        'home_player_5' => ($faker->boolean ? $faker->name : null),
+        'home_player_6' => ($faker->boolean ? $faker->name : null),
+        'away_player_1' => ($faker->boolean ? $faker->name : null),
+        'away_player_2' => ($faker->boolean ? $faker->name : null),
+        'away_player_3' => ($faker->boolean ? $faker->name : null),
+        'away_player_4' => ($faker->boolean ? $faker->name : null),
+        'away_player_5' => ($faker->boolean ? $faker->name : null),
+        'away_player_6' => ($faker->boolean ? $faker->name : null),
     ];
 });
