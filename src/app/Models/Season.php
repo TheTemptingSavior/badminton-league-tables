@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Season extends Model
 {
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
      * The table associated with the model.
      *
      * @var string
@@ -21,13 +28,6 @@ class Season extends Model
     protected $fillable = [
         'start', 'end', 'slug'
     ];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = true;
 
     /**
      * The attributes excluded from the model's JSON form.

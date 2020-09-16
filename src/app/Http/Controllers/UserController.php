@@ -44,19 +44,13 @@ class UserController extends Controller
     public function createUser(Request $request)
     {
         // Ensure the user attempting to make the account is an admin
-        if (!auth()->user()->admin) {
+        if (! auth()->user()->admin) {
             Log::error('User is not an admin');
             Log::error(auth()->user());
             return response()->json(['error' => 'Only an admin may create user accounts'], 403);
         }
 
-        $this->validate(
-            $request,
-            [
-                'username' => 'required|unique:users',
-                'password' => 'required',
-            ]
-        );
+        request()->validate(['username' => 'required|unique:users', 'password' => 'required',]);
         $newUser = new User;
         $newUser->username = $request->username;
         $newUser->password = Hash::make($request->password);
@@ -88,15 +82,12 @@ class UserController extends Controller
     public function updateUser(string $id, Request $request)
     {
         $currentUser = auth()->user();
-        if (!$currentUser->admin) {
+        if (! $currentUser->admin) {
             if ($currentUser->id != $id) {
                 return response()->json(['error' => 'Only admins can edit other users'], 403);
             }
         }
-        $this->validate($request, [
-            'username' => 'nullable|unique:users',
-            'password' => 'nullable'
-        ]);
+        request()->validate(['username' => 'nullable|unique:users', 'password' => 'nullable']);
         $user = User::findOrFail($id);
         $user->update($request->all());
 

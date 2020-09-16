@@ -44,7 +44,7 @@ $factory->define(Season::class, function (Faker $faker) {
     return [
         'start' => $faker->dateTimeThisCentury(),
         'end' => $faker->dateTimeThisCentury(),
-        'slug' => $faker->slug
+        'slug' => $faker->slug,
     ];
 });
 

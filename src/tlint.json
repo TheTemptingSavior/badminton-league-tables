@@ -1,0 +1,8 @@
+{
+    "preset": "laravel",
+    "disabled": ["ClassThingsOrder", "OneLineBetweenClassVisibilityChanges"],
+    "excluded": [
+        "tests/",
+        "vendor/"
+    ]
+}

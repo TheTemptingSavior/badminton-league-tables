@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
@@ -13,7 +12,7 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testListUsers()
+    function testListUsers()
     {
         $user = factory('App\Models\User')->state('admin')->create();
 
@@ -30,7 +29,7 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testListUsersMany()
+    function testListUsersMany()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         factory('App\Models\User', 10)->create();
@@ -49,7 +48,7 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testListUsersNoAuth()
+    function testListUsersNoAuth()
     {
         $this->json('GET', '/api/users')
             ->seeStatusCode(401);
@@ -60,12 +59,12 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testGetUser()
+    function testGetUser()
     {
         $user = factory('App\Models\User')->state('admin')->create();
 
         $this->actingAs($user)
-            ->json('GET', '/api/users/'.$user->id)
+            ->json('GET', '/api/users/' . $user->id)
             ->seeStatusCode(200)
             ->seeJson(["id" => $user->id])
             ->seeJson(["username" => $user->username]);
@@ -76,11 +75,11 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testGetUserNotExist()
+    function testGetUserNotExist()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $this->actingAs($user)
-            ->json('GET', '/api/users/'.($user->id+1))
+            ->json('GET', '/api/users/' . ($user->id+1))
             ->seeStatusCode(404);
     }
 
@@ -90,7 +89,7 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testGetUserBadId()
+    function testGetUserBadId()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $this->actingAs($user)
@@ -104,11 +103,11 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testGetUserNoAuth()
+    function testGetUserNoAuth()
     {
         $user = factory('App\Models\User')->make();
 
-        $this->json('GET', '/api/users/'.$user->id)
+        $this->json('GET', '/api/users/' . $user->id)
             ->seeStatusCode(401);
     }
 
@@ -117,7 +116,7 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testCreateUser()
+    function testCreateUser()
     {
         $user = factory('App\Models\User')->state('admin')->make();
         $this->actingAs($user)
@@ -132,7 +131,7 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testCreateUserNoAuth()
+    function testCreateUserNoAuth()
     {
         $this->json('POST', '/api/users', ['username' => 'test', 'password' => 'test'])
             ->seeStatusCode(401);
@@ -144,7 +143,7 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testCreateUserNoAdmin()
+    function testCreateUserNoAdmin()
     {
         $user = factory('App\Models\User')->make();
         $this->actingAs($user)
@@ -157,14 +156,14 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testDeleteUser()
+    function testDeleteUser()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $deleteMe = factory('App\Models\User')->create();
         $uid = $deleteMe->id;
 
         $this->actingAs($user)
-            ->delete('/api/users/'.$uid)
+            ->delete('/api/users/' . $uid)
             ->seeStatusCode(204);
 
         $deleted = DB::table('users')
@@ -179,17 +178,17 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testDeleteUserNoAuth()
+    function testDeleteUserNoAuth()
     {
         $deleteMe = factory('App\Models\User')->create();
-        $this->json('DELETE', 'api/users/'.$deleteMe->id)
+        $this->json('DELETE', 'api/users/' . $deleteMe->id)
             ->seeStatusCode(401);
     }
 
     /**
      * Attempt to delete a user that doesn't exist
      */
-    public function testDeleteUserNonExist()
+    function testDeleteUserNonExist()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $this->actingAs($user)
@@ -202,7 +201,7 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testDeleteUserBadId()
+    function testDeleteUserBadId()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $this->actingAs($user)
@@ -215,12 +214,12 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testDeleteUserNonAdmin()
+    function testDeleteUserNonAdmin()
     {
         $user = factory('App\Models\User')->create();
         $deleteMe = factory('App\Models\User')->create();
         $this->actingAs($user)
-            ->json('DELETE', '/api/users/'.$deleteMe->id)
+            ->json('DELETE', '/api/users/' . $deleteMe->id)
             ->seeStatusCode(403);
     }
 
@@ -229,12 +228,12 @@ class APIUserTest extends TestCase
      * TODO: Fails due to the $data var not being a proper array
      * @return void
      */
-    public function testUpdateUser()
+    function testUpdateUser()
     {
         $user = factory('App\Models\User')->state('admin')->create();
 
         $result = $this->actingAs($user)
-            ->json('PUT', '/api/users/'.$user->id, ['username' => 'NewUsername'])
+            ->json('PUT', '/api/users/' . $user->id, ['username' => 'NewUsername'])
             ->seeStatusCode(200)
             ->seeJsonContains(["username" => "NewUsername"]);
 
@@ -247,13 +246,13 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testUpdateOtherUser()
+    function testUpdateOtherUser()
     {
         $user = factory('App\Models\User')->create();
         $updateMe = factory('App\Models\User')->create();
 
         $this->actingAs($user)
-            ->json('PUT', '/api/users/'.$updateMe->id, ['username' => 'NewUsername'])
+            ->json('PUT', '/api/users/' . $updateMe->id, ['username' => 'NewUsername'])
             ->seeStatusCode(403);
     }
 
@@ -262,13 +261,13 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testUpdateOtherUserAsAdmin()
+    function testUpdateOtherUserAsAdmin()
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $updateMe = factory('App\Models\User')->create();
 
         $this->actingAs($user)
-            ->json('PUT', '/api/users/'.$updateMe->id, ['username' => 'NewUsername'])
+            ->json('PUT', '/api/users/' . $updateMe->id, ['username' => 'NewUsername'])
             ->seeStatusCode(200)
             ->seeJsonContains(['username' => 'NewUsername']);
     }
@@ -279,14 +278,14 @@ class APIUserTest extends TestCase
      *
      * @return void
      */
-    public function testUpdateUserDuplicateData()
+    function testUpdateUserDuplicateData()
     {
         $user = factory('App\Models\User')->create();
         $userTwo = factory('App\Models\User')->create();
 
         // TODO: Should return 400 bad request NOT 422 "unprocessable entity"
         $this->actingAs($user)
-            ->json('PUT', '/api/users/'.$user->id, ['username' => $userTwo->username])
+            ->json('PUT', '/api/users/' . $user->id, ['username' => $userTwo->username])
             ->seeStatusCode(400);
     }
 
@@ -294,11 +293,11 @@ class APIUserTest extends TestCase
      * Attempt to update a user account without providing any
      * authentication
      */
-    public function testUpdateUserNoAuth()
+    function testUpdateUserNoAuth()
     {
         $user = factory('App\Models\User')->create();
 
-        $this->json('PUT', '/api/users/'.$user->id, ['username' => 'NewUsername'])
+        $this->json('PUT', '/api/users/' . $user->id, ['username' => 'NewUsername'])
             ->seeStatusCode(401);
     }
 }

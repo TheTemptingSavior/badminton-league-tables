@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class AddTeamRetireDate extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::table('teams', function(Blueprint $table) {
@@ -20,11 +15,6 @@ class AddTeamRetireDate extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         //

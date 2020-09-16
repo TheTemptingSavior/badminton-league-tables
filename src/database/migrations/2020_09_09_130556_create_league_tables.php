@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateLeagueTables extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         // Create a table for the teams in the league
@@ -40,11 +35,6 @@ class CreateLeagueTables extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::disableForeignKeyConstraints();
