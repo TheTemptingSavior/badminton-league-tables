@@ -3,14 +3,34 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Scorecard;
 use Illuminate\Http\Request;
 
 class ScorecardController extends Controller
 {
     /**
-     * Get a scorecard based upon its ID
+     * @OA\Get(
+     *     path="/api/scorecards/{id}",
+     *     description="Get a scorecard based upon its ID",
+     *     tags={"scorecards"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the scorecard to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Scorecard with the given ID",
+     *         @OA\JsonContent(ref="#/components/schemas/Scorecard")
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Scorecard with the given ID does not exist",
+     *         @OA\JsonContent(ref="#/components/schemas/Scorecard")
+     *     )
+     * )
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -22,14 +42,48 @@ class ScorecardController extends Controller
     }
 
     /**
-     * Create a new scorecard in the system
-     * TODO: Describe the responses
+     * @OA\Post(
+     *     path="/api/scorecards",
+     *     description="Create a new scorecard in the system",
+     *     tags={"scorecards"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Response(
+     *         response="201",
+     *         description="Scorecard created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", format="int64"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="warnings", type="array", @OA\Items(type="string"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request data",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Authorized access only",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Only admins can perform this action",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response="409",
+     *         description="Scorecard with this data already exists",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
+     *     )
+     * )
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
     public function createGame(Request $request)
     {
+        // TODO: Describe the responses
         $this->validate($request, Scorecard::getValidationRules());
 
         // Before running any validations against the data
@@ -56,13 +110,58 @@ class ScorecardController extends Controller
     }
 
     /**
-     * Update a game based upon its ID
-     * TODO: Implement this
+     * @OA\Put(
+     *     path="/api/scorecards/{id}",
+     *     description="Update a game based upon its ID",
+     *     tags={"scorecards"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the scorecard to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Scorecard data to update",
+     *         @OA\JsonContent(ref="#/components/schemas/Scorecard")
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Scorecard updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", format="int64"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="warnings", type="array", @OA\Items(type="string"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Not authorized to perform this action",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Only admins may perform this action",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Scorecard with the specified ID not found",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     ),
+     *     @OA\Response(
+     *         response="409",
+     *         description="Conflict in the scorecard data",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
+     *     )
+     * )
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function updateGame(string $id)
     {
+        // TODO: Implement this
         $game = Scorecard::findOrFail($id);
 
         // Update the game
@@ -70,7 +169,38 @@ class ScorecardController extends Controller
     }
 
     /**
-     * Deletes a scorecard from the system
+     * @OA\Delete(
+     *     path="/api/scorecards/{id}",
+     *     description="Deletes a scorecard from the system",
+     *     tags={"scorecards"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the scorecard to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response="204",
+     *         description="Scorecard deleted"
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Not authorized to perform this action",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Only admins may perform this action",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Scorecard with the specified ID not found",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     )
+     * )
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
