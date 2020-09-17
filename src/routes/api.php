@@ -61,6 +61,8 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->post('/', ['as' => 'user-create', 'uses' => 'UserController@createUser']);
         // Delete an existing user
         $router->delete('/{id}', ['as' => 'user-delete', 'uses' => 'UserController@deleteUser', 'middleware' => 'admin']);
+        // Update a users admin status
+        $router->put('/{id}/admin', ['as' => 'user-admin', 'uses' => 'UserController@makeAdmin', 'middleware' => 'admin']);
         // Update an existing user
         $router->put('/{id}', ['as' => 'user-update', 'uses' => 'UserController@updateUser']);
     });

@@ -4,6 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     title="SeasonTeam",
+ *     @OA\Property(
+ *         property="id",
+ *         type="numeric",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="season",
+ *         type="numeric",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="team",
+ *         type="numeric",
+ *         format="int64"
+ *     )
+ * )
+ */
 class SeasonTeams extends Model
 {
     /**
