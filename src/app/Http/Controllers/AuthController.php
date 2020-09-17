@@ -65,7 +65,8 @@ class AuthController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/auth/me",
+     *     path="/api/auth/me",
+     *     tags={"auth"},
      *     description="Get current user details",
      *     @OA\Response(
      *         response=200,
@@ -74,7 +75,7 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="Bearer authentication required to access this route"
+     *         description="Bearer authentication required to access this route",
      *     )
      * )
      * @return \Illuminate\Http\JsonResponse

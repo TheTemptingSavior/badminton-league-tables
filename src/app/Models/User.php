@@ -9,24 +9,39 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-
+// TODO: Fill in the extra schema properties
 /**
- * Class User
- * TODO: Fill in the extra schema properties
- * @OA\Schema
- *
- * @OA\Property(
- *     name="id",
- *     type="integer"
- *     format="int64"
+ * @OA\Schema(
+ *     title="User",
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="username",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="added",
+ *         type="string",
+ *         format="datetime"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="datetime"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at",
+ *         type="string",
+ *         format="datetime"
+ *     )
  * )
- *
- * @package App\Models
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable;
-
 
     /**
      * The table associated with the model.

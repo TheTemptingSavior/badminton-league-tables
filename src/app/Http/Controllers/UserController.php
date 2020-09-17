@@ -10,19 +10,64 @@ use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
     /**
-     * List all users that have an account with the site
-     *
-     * TODO: This needs to be paginated
+     * @OA\Get(
+     *     path="/api/users",
+     *     description="List all users that have an account with the site",
+     *     tags={"users"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns the user object with given ID",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/User")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized to access users",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     )
+     * )
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function listUsers()
     {
+        // TODO: This needs to be paginated
         return response()->json(User::all());
     }
 
     /**
-     * Returns information about the user identified by their ID
+     * @OA\Get(
+     *     path="/api/users/{id}",
+     *     description="Returns information about the user identified by their ID",
+     *     tags={"users"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the user to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns the user object with given ID",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized to access user information",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Requested user does not exist",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     )
+     * )
+     *
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -33,10 +78,41 @@ class UserController extends Controller
     }
 
     /**
-     * Create a new user. It should be noted that any newly created user
-     * is NOT an admin. For a user to become an admin, the site owner must
-     * change their admin status manually. This route requires the following
-     * data: 'username' and 'password'
+     * @OA\Post(
+     *     path="/api/users",
+     *     description="Create a new user. It should be noted that any newly created user is NOT an admin.",
+     *     tags={"users"},
+     *     security={"jwt_auth": ""},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="New user information",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="username", type="string"),
+     *             @OA\Property(property="password", type="string", format="password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="User created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Incorrect data provided",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized to create new users",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="409",
+     *         description="There was a conflict when attempting to create the user",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
+     *     )
+     * )
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
@@ -61,8 +137,39 @@ class UserController extends Controller
     }
 
     /**
-     * Delete a user with the given ID. This action can only be performed by
-     * an admin. Returns no response on a successful delete
+     * @OA\Delete(
+     *     path="/api/users/{id}",
+     *     description="Delete a user with the given ID. This action can only be performed be an admin. Returns no response on a successful delete",
+     *     tags={"users"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the user to delete",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response="204",
+     *         description="User deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad user ID provided",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized to delete this resource",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Only admins can delete users",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     )
+     * )
+     *
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -73,7 +180,52 @@ class UserController extends Controller
     }
 
     /**
-     * Update an existing user based upon their ID
+     * @OA\Put(
+     *     path="/api/users/{id}",
+     *     description="Update an existing user based upon their ID",
+     *     tags={"users"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the user to update",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Information to update for the user",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="username", type="string"),
+     *             @OA\Property(property="password", type="string", format="password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Updated user object",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad data provided",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized to perform this action",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Access denied to editing this user",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response="409",
+     *         description="Conflict in updating the user",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
+     *     )
+     * )
+     *
      * @param string $id
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -90,6 +242,70 @@ class UserController extends Controller
         $this->validate($request, ['username' => 'nullable|unique:users', 'password' => 'nullable']);
         $user = User::findOrFail($id);
         $user->update($request->all());
+
+        return response()->json($user, 200);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/users/{id}/admin",
+     *     description="Change a users admin status",
+     *     tags={"users"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the user to update",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Information to update for the user",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="admin", type="boolean"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successfully changed the users admin status",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad data provided",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized to perform this action",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Only admins can change the admin status of other users",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="User with the given ID could not be found",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     ),
+     * )
+     * @param string $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function makeAdmin(string $id, Request $request)
+    {
+        $this->validate(
+            $request,
+            ['admin' => 'required|boolean']
+        );
+
+        $user = User::findOrFail($id);
+        $user->admin = $request->admin;
+        $user->save();
 
         return response()->json($user, 200);
     }
