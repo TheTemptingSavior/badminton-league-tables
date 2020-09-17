@@ -4,6 +4,40 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     title="Season",
+ *     @OA\Property(
+ *         property="id",
+ *         type="numeric",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="start",
+ *         type="string",
+ *         format="datetime"
+ *     ),
+ *     @OA\Property(
+ *         property="end",
+ *         type="string",
+ *         format="datetime"
+ *     ),
+ *     @OA\Property(
+ *         property="slug",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="datetime"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at",
+ *         type="string",
+ *         format="datetime"
+ *     )
+ * )
+ */
 class Season extends Model
 {
     /**
