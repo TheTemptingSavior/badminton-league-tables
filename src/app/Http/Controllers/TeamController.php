@@ -10,7 +10,19 @@ use Illuminate\Http\Request;
 class TeamController extends Controller
 {
     /**
-     * List all teams that exist
+     * @OA\Get(
+     *     path="/api/teams",
+     *     description="List all teams that exist",
+     *     tags={"teams"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="List of teams in the league",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Team")
+     *         )
+     *     )
+     * )
      * @return \Illuminate\Http\JsonResponse
      */
     public function listTeams()
@@ -19,7 +31,28 @@ class TeamController extends Controller
     }
 
     /**
-     * Returns information about the team identified by its ID
+     * @OA\Get(
+     *     path="/api/teams/{id}",
+     *     description="Returns information about the team identified by its ID",
+     *     tags={"teams"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the team to edit the retire status of",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Team data",
+     *         @OA\JsonContent(ref="#/components/schemas/Team")
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Not team with the given ID could be found",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     )
+     * )
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -30,7 +63,42 @@ class TeamController extends Controller
     }
 
     /**
-     * Create a new team for the league
+     * @OA\Post(
+     *     path="/api/teams",
+     *     description="Create a new team for the league",
+     *     tags={"teams"},
+     *     security={"jwt_auth": ""},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="New team information",
+     *         @OA\Property(property="name", type="string")
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Team created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Team")
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request data provided",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized access to create a team",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Only admins can create new teams",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response="409",
+     *         description="Team already exists with this name",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
+     *     )
+     * )
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
@@ -52,21 +120,17 @@ class TeamController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/team/{id}",
+     *     path="/api/teams/{id}/retire",
      *     description="Retires a team in the league, removing it from options in games and removing them from future league tables",
      *     tags={"teams"},
      *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="application/json",
-     *             @OA\Schema(
-     *                 @OA\Property(
-     *                     property="retired",
-     *                     type="boolean"
-     *                 )
-     *             )
+     *         required=true,
+     *         description="Team retirement status",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="retired", type="boolean")
      *         )
      *     ),
-    *      @OA\Parameter(
+     *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="ID of the team to edit the retire status of",
@@ -100,7 +164,51 @@ class TeamController extends Controller
     }
 
     /**
-     * Update a teams name based on their ID
+     * @OA\Put(
+     *     path="/api/teams/{id}",
+     *     description="Update a teams name based on their ID",
+     *     tags={"teams"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the team to edit",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="New information for the team",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successfully edited team",
+     *         @OA\JsonContent(ref="#/components/schemas/Team")
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request data",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized to perform this action",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Only admins may edit team data",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response="409",
+     *         description="Conflict in team name",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
+     *     )
+     * )
      * @param string $id
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
