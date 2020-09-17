@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *     title="Team",
  *     @OA\Property(
  *         property="id",
- *         type="numeric",
+ *         type="integer",
  *         format="int64"
  *     ),
  *     @OA\Property(

@@ -31,7 +31,38 @@ class AuthController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     description="Get a JWT via given credentials",
+     *     tags={"auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Login credentials",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="username", type="string"),
+     *             @OA\Property(property="password", type="string", format="password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successfull login",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string"),
+     *             @OA\Property(property="token_type", type="string"),
+     *             @OA\Property(property="expires_in", type="integer", format="int64")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad data provided",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Incorrect login details provided",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     * )
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -52,8 +83,20 @@ class AuthController extends Controller
     }
 
     /**
-     * Adds the users current token to a black list forcing them to
-     * re-login to the application
+     * @OA\Get(
+     *     path="/api/auth/logout",
+     *     description="Adds the users current token to a black list forcing them to re-login to the application",
+     *     tags={"auth"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Response(
+     *         response="204",
+     *         description="Successfull logout operation",
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Bearer authentication required to access this route",
+     *     )
+     * )
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout()
@@ -67,14 +110,15 @@ class AuthController extends Controller
      * @OA\Get(
      *     path="/api/auth/me",
      *     tags={"auth"},
-     *     description="Get current user details",
+     *     description="Get current user details identified by the bearer token used",
+     *     security={"jwt_auth": ""},
      *     @OA\Response(
-     *         response=200,
+     *         response="200",
      *         description="Identifies the user of the JSON web token used",
      *         @OA\JsonContent(ref="#/components/schemas/User")
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response="401",
      *         description="Bearer authentication required to access this route",
      *     )
      * )
