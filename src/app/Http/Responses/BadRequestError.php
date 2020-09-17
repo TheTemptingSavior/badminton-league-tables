@@ -18,4 +18,10 @@ class BadRequestError
      * @var string
      */
     public $message;
+
+    /**
+     * @OA\Property(@OA\Items(type="string"))
+     * @var array
+     */
+    public $errors;
 }
