@@ -95,7 +95,7 @@ class SeasonController extends Controller
         $teams = DB::table('season_teams')
             ->where('season_id', '=', $id)
             ->join('teams', 'season_teams.team_id', 'teams.id')
-            ->select('teams.id', 'teams.name', 'teams.slug', 'teams.retired', 'teams.created_at', 'teams.updated_at')
+            ->select('teams.id', 'teams.name', 'teams.slug', 'teams.retired_on', 'teams.created_at', 'teams.updated_at')
             ->get();
 
         return response()->json($teams, 200);
