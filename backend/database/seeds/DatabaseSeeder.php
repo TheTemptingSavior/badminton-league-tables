@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             'TeamSeeder',
             'SeasonSeeder',
             'SeasonTeamsSeeder',
+            'ScorecardSeeder'
         ]);
     }
 }
