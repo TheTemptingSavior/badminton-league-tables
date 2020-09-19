@@ -38,6 +38,15 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *         format="datetime"
  *     )
  * )
+ * @property integer $id
+ * @property string $username
+ * @property string $password
+ * @property string $added
+ * @property boolean $admin
+ * @property string $created_at
+ * @property string $updated_at
+ * @method static findOrFail(string $id)
+ * @method static simplePaginate(integer $per_page)
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
