@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @OA\Schema(
+ *     title="Scoreboard",
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="team",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="season",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="played",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="points",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="wins",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="losses",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="for",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="against",
+ *         type="integer",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="datetime"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at",
+ *         type="string",
+ *         format="datetime"
+ *     )
+ * )
+ */
+class Scoreboard extends Model
+{
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'scoreboards';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'team', 'season', 'played', 'points', 'wins', 'losses', 'for', 'against'
+    ];
+}
