@@ -2,14 +2,9 @@
 
 use Illuminate\Support\Facades\DB;
 
-/**
- * @OA\Info(title="League Tables API", version="0.1")
- */
-
 // Removed temporarily so error messages are shown correctly in browser
-//$router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
-
-$router->group(['prefix' => 'api'], function() use ($router) {
+$router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
+//$router->group(['prefix' => 'api'], function() use ($router) {
     $router->get('/', function() use ($router) {
         // Get the number of teams that haven't retired from the league yet
         $teams = DB::table('teams')
@@ -137,5 +132,20 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->put('/{id}', ['as' => 'scorecards-update', 'uses' => 'ScorecardController@updateGame']);
         // Delete a game
         $router->delete('/{id}', ['as' => 'scorecards-delete', 'uses' => 'ScorecardController@deleteGame']);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scoreboard Routes
+    |--------------------------------------------------------------------------
+    |
+    | Description
+    |
+    */
+    $router->group(['prefix' => 'scoreboard'], function() use ($router) {
+        // Get all the seasons available in the league
+        $router->get('/all', ['as' => 'scoreboard-get-all', 'uses' => 'ScoreboardController@getAll']);
+        // Get a scoreboard from the season slug
+        $router->get('/{slug}', ['as' => 'scoreboard-get', 'uses' => 'ScoreboardController@getScoreboard']);
     });
 });
