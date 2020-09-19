@@ -63,6 +63,18 @@ use Illuminate\Database\Eloquent\Model;
  *         format="datetime"
  *     )
  * )
+ * @property integer $team
+ * @property integer $season
+ * @property integer $played
+ * @property integer $points
+ * @property integer $wins
+ * @property integer $losses
+ * @property integer $for
+ * @property integer $against
+ * @property string $created_at
+ * @property string $updated_at
+ * @method static findOrFail(string $id)
+ * @method static simplePaginate(integer $per_page)
  */
 class Scoreboard extends Model
 {

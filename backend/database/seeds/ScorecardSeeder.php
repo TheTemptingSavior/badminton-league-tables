@@ -13,8 +13,6 @@ class ScorecardSeeder extends Seeder
     public function run()
     {
         // Create a complete season
-
-        // All the games for home team 1
         DB::table('scorecards')->insert(['home_team' => 1, 'away_team' => 2, 'date_played' => '2017-11-12', 'home_points' => 6, 'away_points' => 3]);
         DB::table('scorecards')->insert(['home_team' => 1, 'away_team' => 3, 'date_played' => '2017-11-26', 'home_points' => 4, 'away_points' => 5]);
         DB::table('scorecards')->insert(['home_team' => 1, 'away_team' => 4, 'date_played' => '2017-12-01', 'home_points' => 7, 'away_points' => 2]);
@@ -30,5 +28,11 @@ class ScorecardSeeder extends Seeder
         DB::table('scorecards')->insert(['home_team' => 4, 'away_team' => 1, 'date_played' => '2018-02-18', 'home_points' => 8, 'away_points' => 1]);
         DB::table('scorecards')->insert(['home_team' => 4, 'away_team' => 2, 'date_played' => '2018-03-04', 'home_points' => 6, 'away_points' => 3]);
         DB::table('scorecards')->insert(['home_team' => 4, 'away_team' => 3, 'date_played' => '2018-04-10', 'home_points' => 3, 'away_points' => 6]);
+
+        // Season 18-19
+        DB::table('scorecards')->insert(['home_team' => 1, 'away_team' => 2, 'date_played' => '2018-11-11', 'home_points' => 3, 'away_points' => 6]);
+        DB::table('scorecards')->insert(['home_team' => 2, 'away_team' => 1, 'date_played' => '2018-12-11', 'home_points' => 3, 'away_points' => 6]);
+        DB::table('scorecards')->insert(['home_team' => 3, 'away_team' => 1, 'date_played' => '2018-11-11', 'home_points' => 3, 'away_points' => 6]);
+        DB::table('scorecards')->insert(['home_team' => 3, 'away_team' => 2, 'date_played' => '2018-11-11', 'home_points' => 3, 'away_points' => 6]);
     }
 }

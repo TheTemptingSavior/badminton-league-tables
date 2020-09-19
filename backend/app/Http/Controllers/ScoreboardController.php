@@ -12,6 +12,7 @@ class ScoreboardController extends Controller
     /**
      * @OA\Get(
      *     path="/api/scoreboards/{slug}",
+     *     summary="Get a scoreboard",
      *     description="Get a scoreboard for a specific season based on the season slug",
      *     tags={"scoreboards"},
      *     @OA\Parameter(
@@ -46,6 +47,7 @@ class ScoreboardController extends Controller
     /**
      * @OA\Get(
      *     path="/api/scoreboards/all",
+     *     summary="Get all scoreboard",
      *     description="List the available scoreboards (by season)",
      *     tags={"scoreboards"},
      *     @OA\Response(

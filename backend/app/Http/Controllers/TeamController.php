@@ -12,6 +12,7 @@ class TeamController extends Controller
     /**
      * @OA\Get(
      *     path="/api/teams",
+     *     summary="List teams",
      *     description="List all teams that exist",
      *     tags={"teams"},
      *     @OA\Response(
@@ -33,6 +34,7 @@ class TeamController extends Controller
     /**
      * @OA\Get(
      *     path="/api/teams/{id}",
+     *     summary="Get team info",
      *     description="Returns information about the team identified by its ID",
      *     tags={"teams"},
      *     @OA\Parameter(
@@ -65,6 +67,7 @@ class TeamController extends Controller
     /**
      * @OA\Post(
      *     path="/api/teams",
+     *     summary="Create a team",
      *     description="Create a new team for the league",
      *     tags={"teams"},
      *     security={"jwt_auth": ""},
@@ -121,6 +124,7 @@ class TeamController extends Controller
     /**
      * @OA\Post(
      *     path="/api/teams/{id}/retire",
+     *     summary="Retire team from the league",
      *     description="Retires a team in the league, removing it from options in games and removing them from future league tables",
      *     tags={"teams"},
      *     @OA\RequestBody(
@@ -166,6 +170,7 @@ class TeamController extends Controller
     /**
      * @OA\Put(
      *     path="/api/teams/{id}",
+     *     summary="Update a team",
      *     description="Update a teams name based on their ID",
      *     tags={"teams"},
      *     security={"jwt_auth": ""},
