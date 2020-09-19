@@ -122,6 +122,8 @@ $router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use
     |
     */
     $router->group(['prefix' => 'scorecards'], function() use ($router) {
+        // Get all the scorecards but with a reduced amount of data
+        $router->get('/', ['as' => 'scorecards-all', 'uses' => 'ScorecardController@getAll']);
         // Get information on a specific game
         $router->get('/{id}', ['as' => 'scorecards-detail', 'uses' => 'ScorecardController@getGame']);
     });

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *     title="Season",
  *     @OA\Property(
  *         property="id",
- *         type="numeric",
+ *         type="integer",
  *         format="int64"
  *     ),
  *     @OA\Property(
@@ -37,6 +37,14 @@ use Illuminate\Database\Eloquent\Model;
  *         format="datetime"
  *     )
  * )
+ * @property integer $id
+ * @property string $start
+ * @property string $end
+ * @property string $slug
+ * @property string $created_at
+ * @property string $updated_at
+ * @method static findOrFail(string $id)
+ * @method static simplePaginate(integer $per_page)
  */
 class Season extends Model
 {

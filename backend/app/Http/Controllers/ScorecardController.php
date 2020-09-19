@@ -5,12 +5,76 @@ namespace App\Http\Controllers;
 
 use App\Models\Scorecard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ScorecardController extends Controller
 {
     /**
      * @OA\Get(
+     *     path="/api/scorecards",
+     *     summary="Get all scorecards",
+     *     description="Get a list of all the scorecards in the system. By default this is ordered by date played",
+     *     tags={"scorecards"},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="path",
+     *         description="Page of results to retrieve",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="path",
+     *         description="Number of results to retrieve per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Reduced scorecard data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="first_page_url", type="string", format="url"),
+     *             @OA\Property(property="from", type="integer"),
+     *             @OA\Property(property="next_page_url", type="string", format="url"),
+     *             @OA\Property(property="path", type="string", format="url"),
+     *             @OA\Property(property="per_page", type="integer"),
+     *             @OA\Property(property="prev_page_url", type="string", format="url"),
+     *             @OA\Property(property="to", type="string", format="int64"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", format="int64"),
+     *                     @OA\Property(property="home_team", type="string"),
+     *                     @OA\Property(property="away_team", type="string"),
+     *                     @OA\Property(property="date_played", type="string", format="date"),
+     *                     @OA\Property(property="home_points", type="integer", format="int64"),
+     *                     @OA\Property(property="away_points", type="integer", format="int64")
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAll(Request $request)
+    {
+        // Page parameter isn't needed as it happens automatically
+        $per_page = $request->get('per_page', '15');
+        $data = DB::table('scorecards')
+            ->orderBy('date_played')
+            ->select(['id', 'home_team', 'away_team', 'date_played', 'home_points', 'away_points'])
+            ->simplePaginate($per_page);
+
+        return response()->json($data, 200);
+    }
+
+    /**
+     * @OA\Get(
      *     path="/api/scorecards/{id}",
+     *     summary="Get a single scorecard",
      *     description="Get a scorecard based upon its ID",
      *     tags={"scorecards"},
      *     @OA\Parameter(
@@ -44,6 +108,7 @@ class ScorecardController extends Controller
     /**
      * @OA\Post(
      *     path="/api/scorecards",
+     *     summary="Create scorecard",
      *     description="Create a new scorecard in the system",
      *     tags={"scorecards"},
      *     security={"jwt_auth": ""},
@@ -112,6 +177,7 @@ class ScorecardController extends Controller
     /**
      * @OA\Put(
      *     path="/api/scorecards/{id}",
+     *     summary="Update scorecard",
      *     description="Update a game based upon its ID",
      *     tags={"scorecards"},
      *     security={"jwt_auth": ""},
@@ -171,6 +237,7 @@ class ScorecardController extends Controller
     /**
      * @OA\Delete(
      *     path="/api/scorecards/{id}",
+     *     summary="Delete a scorecard",
      *     description="Deletes a scorecard from the system",
      *     tags={"scorecards"},
      *     security={"jwt_auth": ""},
