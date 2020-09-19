@@ -8,3 +8,6 @@ src/.env
 *.sqlite
 *.log
 src/.reports/
+docker/run-kanboard.sh
+node_modules/
+.nuxt/
