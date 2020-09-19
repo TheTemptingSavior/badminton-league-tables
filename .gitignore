@@ -1,13 +1,14 @@
-/src/vendor
+/backend/vendor
 .idea
 Homestead.json
 Homestead.yaml
-src/.env
+backend/.env
 .phpunit.result.cache
 /docker/nginx/logs/
 *.sqlite
 *.log
-src/.reports/
+backend/.reports/
 docker/run-kanboard.sh
 node_modules/
 .nuxt/
+api-docs.json
