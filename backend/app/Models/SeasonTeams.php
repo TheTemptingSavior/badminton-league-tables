@@ -23,6 +23,13 @@ use Illuminate\Database\Eloquent\Model;
  *         format="int64"
  *     )
  * )
+ * @property integer $id
+ * @property integer $season
+ * @property integer $team
+ * @property string $created_at
+ * @property string $updated_at
+ * @method static findOrFail(string $id)
+ * @method static simplePaginate(integer $per_page)
  */
 class SeasonTeams extends Model
 {

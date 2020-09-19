@@ -35,6 +35,14 @@ use Illuminate\Database\Eloquent\Model;
  *         format="datetime"
  *     )
  * )
+ * @property integer $id
+ * @property string $name
+ * @property string $slug
+ * @property boolean $retired
+ * @property string $created_at
+ * @property string $updated_at
+ * @method static findOrFail(string $id)
+ * @method static simplePaginate(integer $per_page)
  */
 class Team extends Model
 {

@@ -11,6 +11,7 @@ class SeasonController extends Controller
     /**
      * @OA\Get(
      *     path="/api/seasons",
+     *     summary="List seasons",
      *     description="List all seasons that have been played",
      *     tags={"seasons"},
      *     @OA\Response(
@@ -32,6 +33,7 @@ class SeasonController extends Controller
     /**
      * @OA\Get(
      *     path="/api/seasons/{id}",
+     *     summary="Get a single season",
      *     description="Returns information about the season identified by its ID",
      *     tags={"seasons"},
      *     @OA\Parameter(
@@ -64,6 +66,7 @@ class SeasonController extends Controller
     /**
      * @OA\Get(
      *     path="/api/seasons/{id}/teams",
+     *     summary="List teams in a season",
      *     description="Returns a list of the teams playing in the season identified by the given ID",
      *     tags={"seasons"},
      *     @OA\Parameter(
@@ -104,6 +107,7 @@ class SeasonController extends Controller
     /**
      * @OA\Get(
      *     path="/api/seasons/fromslug/{slug}",
+     *     summary="Get season from slug",
      *     description="Returns a season with the given slug",
      *     tags={"seasons"},
      *     @OA\Parameter(
