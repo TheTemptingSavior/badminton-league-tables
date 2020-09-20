@@ -2,9 +2,11 @@ version: "3"
 
 services:
   nginx:
-    image: nginx
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
     depends_on:
-      - php
+      - backend
     ports:
       - "80:80"
     volumes:
@@ -13,16 +15,69 @@ services:
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./docker/nginx/sites:/etc/nginx/sites-available
 
-  php:
-    image: php:fpm-alpine
+  backend:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
     ports:
       - "9000:9000"
+    depends_on:
+      - redis
+      - db
+    working_dir: /usr/share/nginx/html
+
+  db:
+    image: linuxserver/mariadb
+    container_name: mariadb
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_ROOT_PASSWORD=helloworld
+      - TZ=Europe/London
+      - MYSQL_DATABASE=leaguetables
+      - MYSQL_USER=leaguetables
+      - MYSQL_PASSWORD=helloworld
+    volumes:
+      - ./volumes/database:/config
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+
+  redis:
+    image: redis
+    expose:
+      - 6379
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+    command: php artisan queue:work
+    depends_on:
+      - redis
+      - db
     volumes:
       - ./backend:/usr/share/nginx/html:rw
     working_dir: /usr/share/nginx/html
 
-#  composer:
-#    image: composer
-#    working_dir: /app
-#    volumes:
-#      - ./src:/app
+###
+### Development containers
+###
+  phpmyadmin:
+    image: phpmyadmin
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_USER=root
+      - PMA_PASSWORD=helloworld
+
+  kanboard:
+    image: kanboard/kanboard:latest
+    ports:
+      - "8888:80"
+    volumes:
+      - ./volumes/kanboard/data:/var/www/app/data
+      - ./volumes/kanboard/plugins:/var/www/app/plugins
