@@ -1,5 +1,32 @@
 version: "3"
 
+volumes:
+  db:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/volumes/database
+      o: bind
+  code:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/backend
+      o: bind
+  kanboard_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/volumes/kanboard/data
+      o: bind
+
+  kanboard_plugins:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/volumes/kanboard/plugins
+      o: bind
+
 services:
   nginx:
     build:
@@ -10,7 +37,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./backend:/usr/share/nginx/html:rw
+      - code:/usr/share/nginx/html
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./docker/nginx/sites:/etc/nginx/sites-available
@@ -24,11 +51,12 @@ services:
     depends_on:
       - redis
       - db
+    volumes:
+      - code:/usr/share/nginx/html
     working_dir: /usr/share/nginx/html
 
   db:
     image: linuxserver/mariadb
-    container_name: mariadb
     environment:
       - PUID=1000
       - PGID=1000
@@ -38,7 +66,7 @@ services:
       - MYSQL_USER=leaguetables
       - MYSQL_PASSWORD=helloworld
     volumes:
-      - ./volumes/database:/config
+      - db:/config
     ports:
       - 3306:3306
     restart: unless-stopped
@@ -56,8 +84,6 @@ services:
     depends_on:
       - redis
       - db
-    volumes:
-      - ./backend:/usr/share/nginx/html:rw
     working_dir: /usr/share/nginx/html
 
 ###
@@ -79,5 +105,5 @@ services:
     ports:
       - "8888:80"
     volumes:
-      - ./volumes/kanboard/data:/var/www/app/data
-      - ./volumes/kanboard/plugins:/var/www/app/plugins
+      - kanboard_data:/var/www/app/data
+      - kanboard_plugins:/var/www/app/plugins

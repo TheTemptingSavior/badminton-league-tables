@@ -146,7 +146,7 @@ $router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use
     | Description
     |
     */
-    $router->group(['prefix' => 'scoreboard'], function() use ($router) {
+    $router->group(['prefix' => 'scoreboards'], function() use ($router) {
         // Get all the seasons available in the league
         $router->get('/all', ['as' => 'scoreboard-get-all', 'uses' => 'ScoreboardController@getAll']);
         // Get a scoreboard from the season slug
