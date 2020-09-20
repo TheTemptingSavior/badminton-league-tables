@@ -12,3 +12,4 @@ docker/run-kanboard.sh
 node_modules/
 .nuxt/
 api-docs.json
+volumes

@@ -6,6 +6,7 @@ use App\Models\Scoreboard;
 use App\Models\Scorecard;
 use App\Models\Season;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ScoreboardHelper
 {
@@ -19,6 +20,7 @@ class ScoreboardHelper
      */
     public static function calculateScoreboard(int $season)
     {
+        Log::info("Calculating scoreboard for season " . $season);
         $seasonStart = null;
         $seasonEnd = null;
         try {
@@ -72,19 +74,48 @@ class ScoreboardHelper
             }
         }
 
-        foreach (array_keys($processedData) as $key) {
+        // Wrap this as one large transaction to ensure we have
+        // no duplicate entries
+        Log::info("Starting a database transaction for saving the scorecard");
+        DB::beginTransaction();
+        self::deleteOldData($season);
+        Log::info("Old scoreboard data deleted, saving new data");
+        self::saveData($processedData, $season);
+        DB::commit();
+
+        return true;
+    }
+
+    /**
+     * Save the calculated scoreboard to the database
+     * @param $data Scoreboard data
+     * @param $season Season ID
+     */
+    protected static function saveData($data, $season)
+    {
+        Log::info("Saving scoreboard data");
+        foreach (array_keys($data) as $key) {
             $sb = new Scoreboard;
             $sb->team = $key;
             $sb->season = $season;
-            $sb->played = $processedData[$key]['played'];
-            $sb->points = $processedData[$key]['points'];
-            $sb->wins = $processedData[$key]['wins'];
-            $sb->losses = $processedData[$key]['losses'];
-            $sb->for = $processedData[$key]['for'];
-            $sb->against = $processedData[$key]['against'];
+            $sb->played = $data[$key]['played'];
+            $sb->points = $data[$key]['points'];
+            $sb->wins = $data[$key]['wins'];
+            $sb->losses = $data[$key]['losses'];
+            $sb->for = $data[$key]['for'];
+            $sb->against = $data[$key]['against'];
             $sb->save();
         }
+    }
 
-        return true;
+    protected static function deleteOldData(int $season)
+    {
+        Log::info("Deleting old scoreboard data");
+        $data = DB::table('scoreboards')
+            ->where('season', '=', $season)
+            ->get();
+        foreach($data as $d) {
+            $d->delete();
+        }
     }
 }
