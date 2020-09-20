@@ -19,7 +19,6 @@ volumes:
       type: none
       device: $PWD/volumes/kanboard/data
       o: bind
-
   kanboard_plugins:
     driver: local
     driver_opts:
@@ -45,7 +44,10 @@ services:
   backend:
     build:
       context: .
-      dockerfile: docker/api/Dockerfile
+      dockerfile: docker/backend/Dockerfile
+    working_dir: /usr/share/nginx/html
+    environment:
+      CONTAINER_ROLE: app
     ports:
       - "9000:9000"
     depends_on:
@@ -53,6 +55,28 @@ services:
       - db
     volumes:
       - code:/usr/share/nginx/html
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    environment:
+      CONTAINER_ROLE: queue
+    depends_on:
+      - backend
+      - redis
+      - db
+    working_dir: /usr/share/nginx/html
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    environment:
+      CONTAINER_ROLE: scheduler
+    depends_on:
+      - redis
+      - db
     working_dir: /usr/share/nginx/html
 
   db:
@@ -75,16 +99,6 @@ services:
     image: redis
     expose:
       - 6379
-
-  worker:
-    build:
-      context: .
-      dockerfile: docker/api/Dockerfile
-    command: php artisan queue:work
-    depends_on:
-      - redis
-      - db
-    working_dir: /usr/share/nginx/html
 
 ###
 ### Development containers

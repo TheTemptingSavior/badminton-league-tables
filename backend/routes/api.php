@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\DB;
 // Removed temporarily so error messages are shown correctly in browser
 $router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
     $router->get('/test', function() use ($router) {
-        return App\Helpers\ScoreboardHelper::calculateScoreboard(1);
+        $job = new App\Jobs\ExampleJob;
+        $this->dispatch($job);
+
+        print_r($job);
     });
     $router->get('/', function() use ($router) {
         // Get the number of teams that haven't retired from the league yet
