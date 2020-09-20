@@ -3,9 +3,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\UpdateScoreboard;
 use App\Models\Scorecard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 
 class ScorecardController extends Controller
 {
@@ -148,7 +151,6 @@ class ScorecardController extends Controller
      */
     public function createGame(Request $request)
     {
-        // TODO: Describe the responses
         $this->validate($request, Scorecard::getValidationRules());
 
         // Before running any validations against the data
@@ -160,6 +162,8 @@ class ScorecardController extends Controller
         $scorecard = Scorecard::create($data);
         $warnings = Scorecard::checkData($data);
 
+        Log::info("Adding update scoreboard task to the queue");
+        Queue::push(new UpdateScoreboard($scorecard));
 
         if (sizeof($warnings) == 0) {
             return response()->json(
