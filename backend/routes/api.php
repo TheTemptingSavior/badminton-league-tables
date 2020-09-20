@@ -150,6 +150,8 @@ $router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use
     |
     */
     $router->group(['prefix' => 'scoreboards'], function() use ($router) {
+        // Get the current scoreboard
+        $router->get('/', ['as' => 'scoreboard-current', 'uses' => 'ScoreboardController@getCurrent']);
         // Get all the seasons available in the league
         $router->get('/all', ['as' => 'scoreboard-get-all', 'uses' => 'ScoreboardController@getAll']);
         // Get a scoreboard from the season slug
