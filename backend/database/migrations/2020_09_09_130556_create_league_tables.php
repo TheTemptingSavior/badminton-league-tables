@@ -28,8 +28,10 @@ class CreateLeagueTables extends Migration
         // Create a table to keep track of which teams play in each season
         Schema::create('season_teams', function (Blueprint $table) {
             $table->increments('id');
-            $table->foreignId('season_id')->constrained('seasons');
-            $table->foreignId('team_id')->constrained('teams');
+            $table->integer('season_id')->unsigned();
+            $table->integer('team_id')->unsigned();
+            $table->foreign('season_id')->references('id')->on('seasons');
+            $table->foreign('team_id')->references('id')->on('teams');
             $table->timestamps();
         });
 

@@ -11,8 +11,10 @@ class CreateScorecardsTable extends Migration
         Schema::create('scorecards', function (Blueprint $table) {
             $table->increments('id');
             // Match metadata
-            $table->foreignId('home_team')->constrained('teams');
-            $table->foreignId('away_team')->constrained('teams');
+            $table->integer('home_team')->unsigned();
+            $table->integer('away_team')->unsigned();
+            $table->foreign('home_team')->references('id')->on('teams');
+            $table->foreign('away_team')->references('id')->on('teams');
             $table->date('date_played');
             $table->integer('home_points');
             $table->integer('away_points');
