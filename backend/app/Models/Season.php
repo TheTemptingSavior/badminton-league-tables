@@ -79,4 +79,13 @@ class Season extends Model
     protected $hidden = [
         'created_at', 'updated_at',
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'start', 'end'
+    ];
 }

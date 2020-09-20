@@ -15,8 +15,10 @@ class CreateScoreboardsTable extends Migration
     {
         Schema::create('scoreboards', function (Blueprint $table) {
             $table->increments('id');
-            $table->foreignId('team')->constrained('teams');
-            $table->foreignId('season')->constrained('seasons');
+            $table->integer('team')->unsigned();
+            $table->foreign('team')->references('id')->on('teams');
+            $table->integer('season')->unsigned();
+            $table->foreign('season')->references('id')->on('seasons');
             $table->integer('played')->default(0);
             $table->integer('points')->default(0);
             $table->integer('wins')->default(0);
