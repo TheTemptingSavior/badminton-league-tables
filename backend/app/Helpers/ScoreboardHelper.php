@@ -110,11 +110,8 @@ class ScoreboardHelper
     protected static function deleteOldData(int $season)
     {
         Log::info("Deleting old scoreboard data");
-        $data = DB::table('scoreboards')
+        DB::table('scoreboards')
             ->where('season', '=', $season)
-            ->get();
-        foreach($data as $d) {
-            $d->delete();
-        }
+            ->delete();
     }
 }
