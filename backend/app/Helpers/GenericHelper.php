@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class GenericHelpers
+class GenericHelper
 {
     /**
      * Convert a string to its slug form

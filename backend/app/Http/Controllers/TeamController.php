@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\GenericHelpers;
+use App\Helpers\GenericHelper;
 use App\Models\Team;
 use Illuminate\Http\Request;
 
@@ -110,7 +110,7 @@ class TeamController extends Controller
     {
         $this->validate($request, ['name' => 'required|unique:teams']);
         $name = $request->name;
-        $slug = GenericHelpers::slugify($name);
+        $slug = GenericHelper::slugify($name);
 
         $newTeam = new Team;
         $newTeam->name = $name;
