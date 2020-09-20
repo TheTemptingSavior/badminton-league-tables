@@ -11,6 +11,7 @@
         "doctrine/annotations": "^1.10",
         "doctrine/dbal": "^2.10",
         "laravel/lumen-framework": "^7.0",
+        "predis/predis": "^1.1",
         "tymon/jwt-auth": "dev-develop",
         "zircote/swagger-php": "^3.1"
     },
