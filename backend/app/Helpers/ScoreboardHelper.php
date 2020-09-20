@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use App\Models\Scoreboard;
-use App\Models\Scorecard;
 use App\Models\Season;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -34,11 +33,11 @@ class ScoreboardHelper
 
         // Get all scorecards from the season
         $rawData = DB::table('scorecards')
-            ->where('date_played', '>', date('Y-m-d', $seasonStart))
-            ->where('date_played', '<', date('Y-m-d', $seasonEnd))
+            ->where('date_played', '>', $seasonStart)
+            ->where('date_played', '<', $seasonEnd)
             ->select(['home_team', 'away_team', 'date_played', 'home_points', 'away_points'])
             ->get();
-        print_r($rawData);
+
         $processedData = [];
         foreach ($rawData as $card) {
             // Check to ensure both teams on the scorecard
@@ -88,10 +87,10 @@ class ScoreboardHelper
 
     /**
      * Save the calculated scoreboard to the database
-     * @param $data Scoreboard data
-     * @param $season Season ID
+     * @param $data array data
+     * @param $season int ID
      */
-    protected static function saveData($data, $season)
+    protected static function saveData(array $data, int $season)
     {
         Log::info("Saving scoreboard data");
         foreach (array_keys($data) as $key) {

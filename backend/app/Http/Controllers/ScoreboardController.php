@@ -3,9 +3,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Season;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class ScoreboardController extends Controller
 {
@@ -39,9 +41,18 @@ class ScoreboardController extends Controller
      * @param string|null $season
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getScoreboard(string $season = null)
+    public function getScoreboard(string $slug)
     {
-        return response()->json([], 200);
+        $season = DB::table('seasons')
+            ->where('slug', '=', $slug)
+            ->first();
+        if ($season == null) { return response()->json(['error' => 'Season not found'], 404); }
+
+        $data = DB::table('scoreboards')
+            ->where('season', '=', $season->id)
+            ->orderBy('points', 'DESC')
+            ->get();
+        return response()->json($data, 200);
     }
 
     /**

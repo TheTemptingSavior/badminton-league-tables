@@ -84,6 +84,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @method static findOrFail(string $id)
  * @method static simplePaginate(integer $per_page)
+ * @method static create(array $data)
  */
 class Scorecard extends Model
 {
