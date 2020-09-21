@@ -26,7 +26,7 @@
           <br />
           <center>
             <div class='row'>
-              <button type="button" v-on:click="login()" name='btn_login' class='col s12 btn btn-large waves-effect indigo'>Login</button>
+              <button type="button" v-on:click="login()" class="col s12 btn btn-large waves-effect waves-light orange">Login</button>
             </div>
           </center>
         </form>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 export default {
   name: "Login",
   data() {
@@ -48,7 +49,14 @@ export default {
   },
   methods: {
     login() {
-      console.log("Attempting login"); console.log(this.state);
+      Vue.axios.post(
+          "/api/auth/login",
+          {username: this.username, password: this.password}
+      ).then((response) => {
+        console.log(response);
+      }).catch((error) => {
+        console.log(error);
+      })
     }
   }
 }

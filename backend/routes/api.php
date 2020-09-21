@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\DB;
 
 // Removed temporarily so error messages are shown correctly in browser
-$router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
+$router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], function() use ($router) {
+    $router->options('/{any:.*}', ['as' => 'cors-options', function() use ($router) {
+       return response()->json('', 200);
+    }]);
     $router->get('/test', function() use ($router) {
         $job = new App\Jobs\ExampleJob;
         $this->dispatch($job);
