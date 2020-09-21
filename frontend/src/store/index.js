@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import M from "materialize-css";
 
 Vue.use(Vuex)
 
@@ -31,6 +32,7 @@ export default new Vuex.Store({
       Vue.axios.get('/api/scoreboards').then((response) => {
         commit('SET_CURRENT_SCOREBOARD', response.data)
       }).catch((error) => {
+        M.toast({html: "Could not load current scoreboard", classes: "red white-text"})
         throw new Error(`API ${error}`);
       })
     },
@@ -38,6 +40,7 @@ export default new Vuex.Store({
       Vue.axios.get('/api/teams').then((response) => {
         commit('SET_TEAMS', response.data);
       }).catch((error) => {
+        M.toast({html: "Could not load team data", classes: "red white-text"})
         throw new Error(`API ${error}`);
       })
     }
