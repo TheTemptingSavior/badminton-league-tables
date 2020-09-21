@@ -7,7 +7,7 @@ role=${CONTAINER_ROLE:-app}
 
 if [ "$role" = "app" ]; then
   echo "Running PHP application";
-  exec php-fpm
+  exec apache2-foreground
 
 elif [ "$role" = "queue" ]; then
   echo "Running the queue"

@@ -33,48 +33,53 @@ volumes:
       o: bind
 
 services:
-  nginx:
-    build:
-      context: .
-      dockerfile: docker/nginx/Dockerfile
-    depends_on:
-      - backend
+  traefik:
+    image: traefik:v2.2
+    command:
+      - "--api=true"
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker"
+      - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
+      - "8080:8080"
     volumes:
-      - backend:/usr/share/nginx/html
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d
-      - ./docker/nginx/sites:/etc/nginx/sites-available
+      - /var/run/docker.sock:/var/run/docker.sock
 
   backend:
+    image: leaguetables/backend:v1
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
-    working_dir: /usr/share/nginx/html
     environment:
       CONTAINER_ROLE: app
-    ports:
-      - "9000:9000"
     depends_on:
       - redis
       - db
     volumes:
       - backend:/usr/share/nginx/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
 
   worker:
+    image: leaguetables/backend:v1
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
+    working_dir: /var/www/html
     environment:
       CONTAINER_ROLE: queue
     depends_on:
-      - backend
       - redis
       - db
-    working_dir: /usr/share/nginx/html
+    labels:
+      - "traefik.enable=false"
 
   scheduler:
+    image: leaguetables/backend:v1
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
@@ -83,7 +88,8 @@ services:
     depends_on:
       - redis
       - db
-    working_dir: /usr/share/nginx/html
+    labels:
+      - "traefik.enable=false"
 
   db:
     image: linuxserver/mariadb
@@ -100,20 +106,27 @@ services:
     ports:
       - 3306:3306
     restart: unless-stopped
+    labels:
+      - "traefik.enable=false"
 
   redis:
     image: redis
     expose:
       - 6379
+    labels:
+      - "traefik.enable=false"
 
   frontend:
+    image: leaguetables/frontend:v1
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile
-    expose:
-      - 8080
     volumes:
       - frontend:/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
 
 ###
 ### Development containers
@@ -122,17 +135,21 @@ services:
     image: phpmyadmin
     depends_on:
       - db
-    ports:
-      - 8080:80
     environment:
       - PMA_ARBITRARY=1
       - PMA_USER=root
       - PMA_PASSWORD=helloworld
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.entrypoints=web"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.local`)"
 
   kanboard:
     image: kanboard/kanboard:latest
-    ports:
-      - "8888:80"
     volumes:
       - kanboard_data:/var/www/app/data
       - kanboard_plugins:/var/www/app/plugins
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kanboard.entrypoints=web"
+      - "traefik.http.routers.kanboard.rule=Host(`kanboard.local`)"
