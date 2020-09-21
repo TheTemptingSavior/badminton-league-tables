@@ -49,11 +49,13 @@ export default {
   },
   methods: {
     login() {
-      Vue.axios.post(
-          "/api/auth/login",
-          {username: this.username, password: this.password}
-      ).then((response) => {
-        console.log(response);
+      Vue.axios.post("/api/auth/login", {
+        username: this.state.username, password: this.state.password
+      }).then((response) => {
+        if (response.data.token) {
+          this.$store.dispatch('setToken', response.data);
+          this.$router.push('/admin')
+        }
       }).catch((error) => {
         console.log(error);
       })
