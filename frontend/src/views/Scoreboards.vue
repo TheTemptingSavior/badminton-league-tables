@@ -1,15 +1,16 @@
 <template>
   <div class="scoreboards">
-    <SeasonModal id="seasons-modal" />
+    <SeasonModal id="seasons-modal" @seasonChange="changeSeason" />
     <div class="container">
       <h2 class="title orange-text center">
         Current Scoreboard
         <br />
       </h2>
       <div class="container center-align">
-        <a v-on="launchModal()" class="btn waves-effect waves-light">More Seasons</a>
-        &nbsp;
-        <a class="btn waves-effect waves-light">Refresh</a>
+        <button type="button" data-target="seasons-modal" class="btn waves-effect waves-light modal-trigger">
+          More Seasons
+        </button>
+        &nbsp;<a class="btn waves-effect waves-light">Refresh</a>
       </div>
       <hr />
       <ScoreboardTable :data=currentScoreboard :error=error />
@@ -24,7 +25,6 @@
 <script>
 import ScoreboardTable from "@/components/ScoreboardTable";
 import SeasonModal from "@/components/SeasonModal";
-import M from 'materialize-css'
 
 export default {
   name: "Scoreboards",
@@ -53,16 +53,16 @@ export default {
     setError(msg) {
       this.error = msg;
     },
-    launchModal() {
-      M.AutoInit();
-      let instance = document.getElementById('#seasons-modal');
-      console.log(instance);
-      // M.Modal.getInstance(instance).open();
+    changeSeason(sid) {
+      // TODO: Load a new scoreboard here
+      // Potentially launch an Vuex action with an argument
+      alert("About to show scoreboard for season of ID '" + sid + "'");
+      console.log("[Scoreboards] Change of season to " + sid);
     }
   },
   created() {
     this.$store.dispatch('loadTeams');
-    this.$store.dispatch('loadScoreboard');
+    this.$store.dispatch('loadCurrentScoreboard');
   }
 }
 </script>
