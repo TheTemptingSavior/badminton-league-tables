@@ -36,7 +36,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    loadScoreboard({commit}) {
+    loadCurrentScoreboard({commit}) {
       Vue.axios.get('/api/scoreboards').then((response) => {
         commit('SET_CURRENT_SCOREBOARD', response.data)
       }).catch((error) => {
