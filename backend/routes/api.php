@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], function() use ($router) {
     $router->options('/{any:.*}', ['as' => 'cors-options', function() use ($router) {
        return response()->json('', 200);
-    }]);
+    },]);
 
     $router->get('/', function() use ($router) {
         // Get the number of teams that haven't retired from the league yet
