@@ -152,7 +152,6 @@ class ScorecardController extends Controller
     public function createGame(Request $request)
     {
         $this->validate($request, Scorecard::getValidationRules());
-
         // Before running any validations against the data
         // ensure all the required keys are present
         $data = Scorecard::PAD_SCORECARD($request->toArray());
@@ -161,10 +160,8 @@ class ScorecardController extends Controller
 
         $scorecard = Scorecard::create($data);
         $warnings = Scorecard::checkData($data);
-
         Log::info("Adding update scoreboard task to the queue");
         $this->dispatch(new UpdateScoreboard($scorecard));
-
         if (sizeof($warnings) == 0) {
             return response()->json(
                 ['message' => 'Scorecard created', 'id' => $scorecard->id, 'warnings' => null],

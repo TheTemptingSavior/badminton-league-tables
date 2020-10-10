@@ -32,6 +32,12 @@ class APIScorecardTest extends TestCase
         $user = factory('App\Models\User')->state('admin')->create();
         $homeTeam = factory('App\Models\Team')->create();
         $awayTeam = factory('App\Models\Team')->create();
+        // Create a season for the scorecard to go in
+        $season = new \App\Models\Season;
+        $season->start = '2018-09-01';
+        $season->end = '2019-08-31';
+        $season->slug = '18-19';
+        $season->save();
         $gameData = [
             'home_team' => $homeTeam->id,
             'away_team' => $awayTeam->id,
@@ -79,5 +85,16 @@ class APIScorecardTest extends TestCase
 
         $data = json_decode($result->response->content());
         $this->assertNull($data->warnings);
+    }
+
+    /**
+     * Attempt to create a game providing a date that is not in any of the
+     * currently registered seasons
+     *
+     * @return void
+     */
+    function CreateGameBadDate()
+    {
+        return null;
     }
 }

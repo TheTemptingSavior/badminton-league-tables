@@ -6,6 +6,7 @@ use App\Helpers\ScoreboardHelper;
 use App\Helpers\SeasonHelper;
 use App\Models\Scorecard;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdateScoreboard extends Job
 {
@@ -32,9 +33,17 @@ class UpdateScoreboard extends Job
     {
         // Find the season instance
         $seasonId = SeasonHelper::getSeasonFromDate($this->scorecard->date_played);
+        if ($seasonId === null) {
+            Log::critical(
+                "Could not find a season for the data '" .
+                $this->scorecard->date_played .
+                "'. Scorecard ID = " .
+                $this->scorecard->id
+            );
+            return;
+        }
 
         // Not interested in the return value
-
         ScoreboardHelper::calculateScoreboard($seasonId);
     }
 }
