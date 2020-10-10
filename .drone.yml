@@ -16,11 +16,11 @@ steps:
     image: php:7.4
     commands:
       - cd backend/
-      - vendor/bin/tlint --quiet
+      - vendor/bin/tlint
 
   - name: Test
     image: php:7.4
     commands:
-      - pecl install xdebug && docker-php-ext-enable xdebug
+      - pecl install xdebug --quiet 1> /dev/null 2>&1 && docker-php-ext-enable xdebug
       - cd backend/
       - vendor/bin/phpunit --configuration phpunit.xml --coverage-html .reports
