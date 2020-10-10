@@ -30,14 +30,11 @@ class UpdateScoreboard extends Job
      */
     public function handle()
     {
-        echo "Beginning scoreboard calculations";
         // Find the season instance
         $seasonId = SeasonHelper::getSeasonFromDate($this->scorecard->date_played);
 
         // Not interested in the return value
 
         ScoreboardHelper::calculateScoreboard($seasonId);
-
-        echo "Finished calculation scoreboards";
     }
 }
