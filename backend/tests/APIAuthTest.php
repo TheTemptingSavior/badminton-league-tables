@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class APIAuthTest extends TestCase
@@ -8,12 +10,18 @@ class APIAuthTest extends TestCase
 
     function testUserLogin()
     {
-        $user = factory('App\Models\User')->create();
+        // Must manually create a user as otherwise the password
+        // is hashed and inaccessible
+        $user = new \App\Models\User;
+        $user->username = "test-username";
+        $user->password = Hash::make('helloworld');
+        $user->admin = false;
+        $user->save();
 
         $this->json(
                 'POST',
                 '/api/auth/login',
-                ['username' => $user->username, 'password' => $user->password]
+                ['username' => 'test-username', 'password' => 'helloworld']
             )->seeStatusCode(200)
             ->seeJsonStructure(['token', 'token_type', 'expires_in']);
     }
