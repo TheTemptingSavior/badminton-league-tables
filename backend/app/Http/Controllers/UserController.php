@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -155,7 +156,16 @@ class UserController extends Controller
             return response()->json(['error' => 'Only an admin may create user accounts'], 403);
         }
 
-        $this->validate($request, ['username' => 'required|unique:users', 'password' => 'required',]);
+        $validator = Validator::make($request->all(), ['username' => 'required|unique:users', 'password' => 'required']);
+        if ($validator->fails()) {
+            $errors = $validator->errors()->toArray();
+            if (array_key_exists('username', $errors) and strpos(implode(" ", $errors['username']), 'taken')) {
+                $code = 409;
+            } else {
+                $code = 400;
+            }
+            return response()->json($validator->errors(), $code);
+        }
         $newUser = new User;
         $newUser->username = $request->username;
         $newUser->password = Hash::make($request->password);
@@ -270,7 +280,16 @@ class UserController extends Controller
                 return response()->json(['error' => 'Only admins can edit other users'], 403);
             }
         }
-        $this->validate($request, ['username' => 'nullable|unique:users', 'password' => 'nullable']);
+        $validator = Validator::make($request->all(), ['username' => 'nullable|unique:users', 'password' => 'nullable']);
+        if ($validator->fails()) {
+            $errors = $validator->errors()->toArray();
+            if (array_key_exists('username', $errors) and strpos(implode(" ", $errors['username']), 'taken')) {
+                $code = 409;
+            } else {
+                $code = 400;
+            }
+            return response()->json($validator->errors(), $code);
+        }
         $user = User::findOrFail($id);
         $user->update($request->all());
 
