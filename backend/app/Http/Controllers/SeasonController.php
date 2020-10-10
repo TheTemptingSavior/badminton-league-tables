@@ -134,8 +134,61 @@ class SeasonController extends Controller
     public function getFromSlug(string $slug)
     {
         $season = DB::table('seasons')
-            ->where('slug', $slug)
+            ->where('slug', '=', $slug)
             ->first();
         return response()->json($season, 200);
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/seasons/scorecards",
+     *     summary="List scorecards in a season",
+     *     description="List all the scorecards that were registered in a season",
+     *     tags={"seasons"},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="path",
+     *         description="Page of results to retrieve",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="path",
+     *         description="Number of results to retrieve per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="List of scorecards played in the season",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="home_team", type="integer"),
+     *                 @OA\Property(property="away_team", type="integer"),
+     *                 @OA\Property(property="date_played", type="string", format="datetime"),
+     *                 @OA\Property(property="home_points", type="integer"),
+     *                 @OA\Property(property="away_points", type="integer")
+     *             )
+     *         )
+     *     )
+     * )
+     * @param string $slug
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getScorecards(string $slug)
+    {
+        $season = DB::table('seasons')
+            ->where('slug', '=', $slug)
+            ->first();
+
+        $games = DB::table('scorecards')
+            ->whereBetween('date_played', [$season->start, $season->end])
+            ->get();
+
+        return response()->json($games, 200);
     }
 }
