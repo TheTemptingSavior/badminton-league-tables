@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\GenericHelper;
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 
 class TeamController extends Controller
@@ -108,7 +109,17 @@ class TeamController extends Controller
      */
     public function createTeam(Request $request)
     {
-        $this->validate($request, ['name' => 'required|unique:teams']);
+        $validator = Validator::make($request->all(), ['name' => 'required|unique:teams']);
+        if ($validator->fails()) {
+            $errors = $validator->errors()->toArray();
+            if (array_key_exists('name', $errors) and str_contains(implode(" ", $errors['name']), 'taken')) {
+                // Means there is conflicting data in the database
+                $code = 409;
+            } else {
+                $code = 400;
+            }
+            return response()->json($validator->errors(), $code);
+        }
         $name = $request->name;
         $slug = GenericHelper::slugify($name);
 
@@ -154,7 +165,10 @@ class TeamController extends Controller
      */
     public function retireTeam(string $id, Request $request)
     {
-        $this->validate($request, ['retired' => 'required|boolean']);
+        $validator = Validator::make($request->all(), ['retired' => 'required|boolean']);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
 
         $team = Team::findOrFail($id);
         if ($request->retired) {
