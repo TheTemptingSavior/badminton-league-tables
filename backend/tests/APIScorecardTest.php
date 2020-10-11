@@ -74,9 +74,15 @@ class APIScorecardTest extends TestCase
     {
         $user = factory('App\Models\User')->state('admin')->create();
         factory('App\Models\Team', 6)->create();
+        $season = new \App\Models\Season;
+        $season->start = '2018-09-01';
+        $season->end = '2019-08-31';
+        $season->slug = '18-19';
+        $season->save();
 
         // Make a scorecard but do not persist it to the database
         $gameData = factory('App\Models\Scorecard')->make();
+        $gameData->date_played = '2018-11-11';
 
         $result = $this->actingAs($user)
             ->json('POST', '/api/scorecards', $gameData->toArray())
@@ -93,8 +99,16 @@ class APIScorecardTest extends TestCase
      *
      * @return void
      */
-    function CreateGameBadDate()
+    function testCreateGameBadDate()
     {
-        return null;
+        $user = factory('App\Models\User')->state('admin')->create();
+        factory('App\Models\Team', 6)->create();
+
+        // Make a scorecard but do not persist it to the database
+        // The randomly generated date has no season in the database
+        $gameData = factory('App\Models\Scorecard')->make();
+        $this->actingAs($user)
+            ->json('POST', '/api/scorecards', $gameData->toArray())
+            ->seeStatusCode(400);
     }
 }
