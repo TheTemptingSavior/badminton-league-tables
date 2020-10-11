@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Helpers\SeasonHelper;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @OA\Schema(
@@ -282,8 +284,15 @@ class Scorecard extends Model
     {
         $errors = [];
 
+        // Check the away points adds up to 9
         if (($data['home_points'] + $data['away_points']) != 9) {
             array_push($errors, 'The total played games (home points + away points) must total 9');
+        }
+
+        // Check the season exists
+        $seasonId = SeasonHelper::getSeasonFromDate($data['date_played']);
+        if ($seasonId === null) {
+            array_push($errors, 'The provided date does not sit in any of the registered seasons');
         }
 
         if (sizeof($errors) == 0) {
