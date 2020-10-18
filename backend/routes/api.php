@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], function() use ($router) {
     $router->options('/{any:.*}', ['as' => 'cors-options', function() use ($router) {
        return response()->json('', 200);
-    }]);
+    },]);
 
     $router->get('/', function() use ($router) {
         // Get the number of teams that haven't retired from the league yet
@@ -80,6 +80,8 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
         $router->get('/', ['as' => 'season-list', 'uses' => 'SeasonController@listSeasons']);
         // Get information on a specific season
         $router->get('/{id}', ['as' => 'season-detail', 'uses' => 'SeasonController@getSeason']);
+        // Get a list of all the games in the season
+        $router->get('/{id}/scorecards', ['as' => 'season-scorecards', 'uses' => 'SeasonController@getScorecards']);
         // Get the teams playing in the season
         $router->get('/{id}/teams', ['as' => 'season-teams', 'uses' => 'SeasonController@getTeams']);
         // Get a season by its slug

@@ -1,120 +1,19 @@
 version: "3"
 
-volumes:
-  db:
-
-networks:
-  front:
-  back:
-
 services:
-  nginx:
-    image: leaguetables/nginx:v1
-    build:
-      dockerfile: docker/nginx/Dockerfile
-      context: .
-    depends_on:
-      - backend
-      - frontend
-    networks:
-      - front
-    ports:
-      - "80:80"
-
-  frontend:
-    image: leaguetables/frontend:v1
-    build:
-      context: .
-      dockerfile: docker/frontend/Dockerfile
-    expose:
-      - 8080
-    networks:
-      - front
-    volumes:
-      - frontend:/app
-
-  backend:
-    image: leaguetables/backend:v1
-    build:
-      context: .
-      dockerfile: docker/backend/Dockerfile
-    depends_on:
-      - redis
-      - db
-    expose:
-      - 9000
-    networks:
-      - front
-      - back
-    volumes:
-      - backend:/var/www/html
-
-#  worker:
-#    image: leaguetables/backend:v1
-#    build:
-#      context: .
-#      dockerfile: docker/backend/Dockerfile
-#    working_dir: /var/www/html
-#    environment:
-#      CONTAINER_ROLE: queue
+#  phpmyadmin:
+#    image: phpmyadmin
 #    depends_on:
-#      - redis
 #      - db
-#    labels:
-#      - "traefik.enable=false"
-#
-#  scheduler:
-#    image: leaguetables/backend:v1
-#    build:
-#      context: .
-#      dockerfile: docker/backend/Dockerfile
 #    environment:
-#      CONTAINER_ROLE: scheduler
-#    depends_on:
-#      - redis
-#      - db
-#    labels:
-#      - "traefik.enable=false"
-
-  db:
-    image: linuxserver/mariadb
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - MYSQL_ROOT_PASSWORD=helloworld
-      - TZ=Europe/London
-      - MYSQL_DATABASE=leaguetables
-      - MYSQL_USER=leaguetables
-      - MYSQL_PASSWORD=helloworld
-    volumes:
-      - db:/config
-    networks:
-      - back
-    ports:
-      - 3306:3306
-
-  redis:
-    image: redis
-    expose:
-      - 6379
-    networks:
-      - back
-
-###
-### Development containers
-###
-  phpmyadmin:
-    image: phpmyadmin
-    depends_on:
-      - db
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_USER=root
-      - PMA_PASSWORD=helloworld
+#      - PMA_ARBITRARY=1
+#      - PMA_USER=root
+#      - PMA_PASSWORD=helloworld
 
   kanboard:
     image: kanboard/kanboard:latest
+    ports:
+      - 8888:80
     volumes:
-      - kanboard_data:/var/www/app/data
-      - kanboard_plugins:/var/www/app/plugins
+      - ./volumes/kanboard/data:/var/www/app/data
+      - ./volumes/kanboard/plugins:/var/www/app/plugins
