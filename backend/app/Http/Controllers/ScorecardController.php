@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Validator;
 
 class ScorecardController extends Controller
 {
@@ -151,8 +152,10 @@ class ScorecardController extends Controller
      */
     public function createGame(Request $request)
     {
-        $this->validate($request, Scorecard::getValidationRules());
-
+        $validator = Validator::make($request->all(), Scorecard::getValidationRules());
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
         // Before running any validations against the data
         // ensure all the required keys are present
         $data = Scorecard::PAD_SCORECARD($request->toArray());
@@ -161,10 +164,8 @@ class ScorecardController extends Controller
 
         $scorecard = Scorecard::create($data);
         $warnings = Scorecard::checkData($data);
-
         Log::info("Adding update scoreboard task to the queue");
         $this->dispatch(new UpdateScoreboard($scorecard));
-
         if (sizeof($warnings) == 0) {
             return response()->json(
                 ['message' => 'Scorecard created', 'id' => $scorecard->id, 'warnings' => null],

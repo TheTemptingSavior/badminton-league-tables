@@ -45,7 +45,7 @@ class APITeamsTest extends TestCase
      */
     function testGetTeamNonExist()
     {
-        $this->json('GET', '/api/team/999')
+        $this->json('GET', '/api/teams/999')
             ->seeStatusCode(404);
     }
 
@@ -56,7 +56,7 @@ class APITeamsTest extends TestCase
      */
     function testGetTeamBadId()
     {
-        $this->json('GET', '/api/team/helloworld')
+        $this->json('GET', '/api/teams/9i9')
             ->seeStatusCode(404);
     }
 
