@@ -12,8 +12,8 @@ export default new Vuex.Store({
       expiresIn: null
     },
     scoreboards: {
-      current: [],
-      all: []
+      current: {},
+      all: {}
     },
     teams: [],
     seasons: []
@@ -33,12 +33,18 @@ export default new Vuex.Store({
     },
     SET_SEASONS(state, seasons) {
       state.seasons = seasons;
+    },
+    CACHE_SCOREBOARD(state, data) {
+      let seasonId = data.slug;
+      state.scoreboards.all[seasonId] = data;
+
     }
   },
   actions: {
     loadCurrentScoreboard({commit}) {
       Vue.axios.get('/api/scoreboards').then((response) => {
         commit('SET_CURRENT_SCOREBOARD', response.data)
+        commit('CACHE_SCOREBOARD', response.data)
       }).catch((error) => {
         M.toast({html: "Could not load current scoreboard", classes: "red white-text"})
         throw new Error(`API ${error}`);
