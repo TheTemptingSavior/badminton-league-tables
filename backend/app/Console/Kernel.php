@@ -2,8 +2,6 @@
 
 namespace App\Console;
 
-use App\Console\Commands\UpdateScoreboards;
-use App\Jobs\UpdateScoreboard;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -15,8 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        UpdateScoreboards::class,
-        UpdateScoreboard::class,
+        \App\Console\Commands\UpdateScoreboards::class,
+        \App\Console\Commands\UpdateScoreboard::class,
     ];
 
     /**
