@@ -8,59 +8,74 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     title="Scoreboard",
  *     @OA\Property(
- *         property="id",
- *         type="integer",
- *         format="int64"
- *     ),
- *     @OA\Property(
- *         property="team",
- *         type="integer",
- *         format="int64"
- *     ),
- *     @OA\Property(
  *         property="season",
  *         type="integer",
  *         format="int64"
  *     ),
  *     @OA\Property(
- *         property="played",
- *         type="integer",
- *         format="int64"
+ *         property="slug",
+ *         type="string"
  *     ),
  *     @OA\Property(
- *         property="points",
- *         type="integer",
- *         format="int64"
- *     ),
- *     @OA\Property(
- *         property="wins",
- *         type="integer",
- *         format="int64"
- *     ),
- *     @OA\Property(
- *         property="losses",
- *         type="integer",
- *         format="int64"
- *     ),
- *     @OA\Property(
- *         property="for",
- *         type="integer",
- *         format="int64"
- *     ),
- *     @OA\Property(
- *         property="against",
- *         type="integer",
- *         format="int64"
- *     ),
- *     @OA\Property(
- *         property="created_at",
- *         type="string",
- *         format="datetime"
- *     ),
- *     @OA\Property(
- *         property="updated_at",
- *         type="string",
- *         format="datetime"
+ *         property="data",
+ *         type="array",
+ *         @OA\Items(
+ *             @OA\Property(
+ *                 property="id",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="team",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="season",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="played",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="points",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="wins",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="losses",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="for",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="against",
+ *                 type="integer",
+ *                 format="int64"
+ *             ),
+ *             @OA\Property(
+ *                 property="created_at",
+ *                 type="string",
+ *                 format="datetime"
+ *             ),
+ *             @OA\Property(
+ *                 property="updated_at",
+ *                 type="string",
+ *                 format="datetime"
+ *             )
+ *         )
  *     )
  * )
  * @property integer $team
