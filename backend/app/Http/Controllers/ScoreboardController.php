@@ -47,16 +47,16 @@ class ScoreboardController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/scoreboards/{slug}",
+     *     path="/api/scoreboards/{id}",
      *     summary="Get a scoreboard",
-     *     description="Get a scoreboard for a specific season based on the season slug",
+     *     description="Get a scoreboard for a specific season based on the season ID",
      *     tags={"scoreboards"},
      *     @OA\Parameter(
-     *         name="slug",
+     *         name="id",
      *         in="path",
-     *         description="Slug of the season to retrieve",
+     *         description="ID of the season to retrieve",
      *         required=true,
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response="200",
@@ -69,13 +69,13 @@ class ScoreboardController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     )
      * )
-     * @param string|null $season
+     * @param string|null $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getScoreboard(string $slug)
+    public function getScoreboard(string $id)
     {
         $season = DB::table('seasons')
-            ->where('slug', '=', $slug)
+            ->where('id', '=', $id)
             ->first();
         if ($season == null) { return response()->json(['error' => 'Season not found'], 404); }
 
@@ -83,7 +83,14 @@ class ScoreboardController extends Controller
             ->where('season', '=', $season->id)
             ->orderBy('points', 'DESC')
             ->get();
-        return response()->json($data, 200);
+        return response()->json(
+            [
+                'season' => $season->id,
+                'slug' => $season->slug,
+                'data' => $data
+            ],
+            200
+        );
     }
 
     /**

@@ -63,9 +63,9 @@ export default {
       this.error = msg;
     },
     changeSeason(sid) {
-      // Potentially launch an Vuex action with an argument
-      alert("About to show scoreboard for season of ID '" + sid + "'");
-      console.log("[Scoreboards] Change of season to " + sid);
+      this.$store.dispatch('loadScoreboard', {
+        sid: sid
+      });
     },
     refresh() {
       this.$store.dispatch('loadCurrentScoreboard');
