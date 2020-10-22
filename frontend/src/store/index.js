@@ -49,11 +49,14 @@ export default new Vuex.Store({
         throw new Error(`API ${error}`);
       })
     },
-    loadScoreboard({commit}, payload) {
+    loadScoreboard({commit, state}, payload) {
       console.log('[store] Loading scoreboard for season: ' + payload.sid);
-      if (this.state.scoreboards.all.sid !== undefined) {
+      console.log("Local state: ");
+      console.log(state);
+      if (state.scoreboards.all[payload.sid] !== undefined) {
         // We already have the scoreboard so use the cached version (no api calls)
-        commit('SET_CURRENT_SCOREBOARD', this.state.scoreboards.all.sid);
+        console.log("Scoreboard for season")
+        commit('SET_CURRENT_SCOREBOARD', state.scoreboards.all[payload.sid]);
       } else {
         // We do not have the scoreboard so go and get it
         Vue.axios.get('/api/scoreboards/' + payload.sid).then((response) => {

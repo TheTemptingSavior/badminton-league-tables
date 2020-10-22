@@ -11,7 +11,7 @@
         <button type="button" data-target="seasons-modal" class="btn waves-effect waves-light modal-trigger">
           More Seasons
         </button>
-        &nbsp;<button class="btn waves-effect waves-light" v-on:click="refresh">Refresh</button>
+        <!--&nbsp;<button class="btn waves-effect waves-light" v-on:click="refresh">Refresh</button> -->
       </div>
       <hr />
       <ScoreboardTable :data=currentScoreboard :error=error />
@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     currentScoreboard() {
-      if (this.$store.state.scoreboards.current.length === 0 || this.$store.state.teams.length === 0) {
+      if (this.$store.state.scoreboards.current.data === undefined || this.$store.state.teams.length === 0) {
         this.setError("Failed loading scoreboard.");
         return []
       }
