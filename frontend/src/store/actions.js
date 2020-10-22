@@ -72,9 +72,14 @@ const loadSeasons = (context) => {
  * Begin user related actions
  * ------------------------------------------------------
  */
-const setToken = (context, payload) => {
+const loginUser = (context, payload) => {
     context.commit('SET_TOKEN', payload.token);
     context.commit('SET_TOKEN_EXPIRES_IN', payload.expires_in)
+    context.commit('SET_TOKEN_RECEIVE_TIME', Date.now());
+}
+
+const logoutUser = (context) => {
+    context.commit('LOGOUT_USER');
 }
 
 export default {
@@ -82,5 +87,6 @@ export default {
     loadScoreboard,
     loadTeams,
     loadSeasons,
-    setToken
+    loginUser,
+    logoutUser
 }
