@@ -5,6 +5,7 @@ import AdminHome from "@/views/admin/AdminHome";
 import Home from '@/views/Home.vue'
 import Login from "@/views/Login";
 import Scoreboards from "@/views/Scoreboards";
+import NotFound from "@/views/errors/NotFound";
 import store from "@/store/store";
 
 Vue.use(VueRouter)
@@ -58,7 +59,7 @@ const routes = [
   {
     path: '*',
     name: 'NotFound',
-    component: Home,
+    component: NotFound,
     meta: {
       title: 'Page Not Found'
     }
