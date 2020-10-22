@@ -38,7 +38,7 @@ class ScoreboardController extends Controller
             [
                 'season' => $season->id,
                 'slug' => $season->slug,
-                'data' => $data
+                'data' => $data,
             ],
             200
         );
@@ -87,7 +87,7 @@ class ScoreboardController extends Controller
             [
                 'season' => $season->id,
                 'slug' => $season->slug,
-                'data' => $data
+                'data' => $data,
             ],
             200
         );
