@@ -46,7 +46,7 @@ export default {
       return this.$route.name === 'Login';
     },
     isAdmin() {
-      return this.$route.name === 'Admin';
+      return this.$route.name === 'AdminHome';
     },
     user() {
       return this.$store.state.user;
