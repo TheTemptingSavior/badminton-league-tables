@@ -1,50 +1,55 @@
 <template>
-  <div class="nav">
-    <nav class="light-blue">
-      <div class="nav-wrapper">
-        <a href="#" data-target="mobile-demo" class="sidenav-trigger">
-          <i class="material-icons">menu</i>
-        </a>
-        <ul class="right hide-on-med-and-down">
-          <li v-bind:class="{ active: isHome }"><router-link to="/admin">Home</router-link></li>
-          <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">New Scorecard</router-link></li>
-          <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Delete Scorecard</router-link></li>
-          <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Teams</router-link></li>
-          <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Users</router-link></li>
-          <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Analytics</router-link></li>
-          <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Help</router-link></li>
-        </ul>
-      </div>
-    </nav>
+  <div class="row">
+    <div id="outer-col" class="col s12">
+      <ul id="admin-navbar" class="tabs tabs-fixed-width light-blue darken-1">
+        <li class="tab col l3 "><router-link to="/admin/scorecards/new" class="white-text" v-bind:class="{ active: isNewScorecard }">New Scorecard</router-link></li>
+        <li class="tab col l3"><router-link to="/admin/scorecards/manage" class="white-text" v-bind:class="{ active: isManageScorecards }">Manage Scorecards</router-link></li>
+        <li class="tab col l3"><router-link to="/admin/teams" class="white-text" v-bind:class="{ active: isTeams }">Teams</router-link></li>
+        <li class="tab col l3"><router-link to="/admin/analytics" class="white-text" v-bind:class="{ active: isAnalytics }">Analytics</router-link></li>
+        <li class="tab col l3"><router-link to="/admin/users" class="white-text" v-bind:class="{ active: isUsers }">Users</router-link></li>
+        <li class="tab col l3"><router-link to="/admin/help" class="white-text" v-bind:class="{ active: isHelp }">Help</router-link></li>
+      </ul>
+    </div>
 
-    <ul class="sidenav" id="mobile-demo">
-      <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">New Scorecard</router-link></li>
-      <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Delete Scorecard</router-link></li>
-      <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Teams</router-link></li>
-      <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Users</router-link></li>
-      <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Analytics</router-link></li>
-      <li v-bind:class="{ active: isNewScorecard }"><router-link to="/">Help</router-link></li>
-    </ul>
   </div>
 </template>
 
 <script>
+import M from 'materialize-css'
 export default {
   name: "AdminNavBar",
   computed: {
-    isHome() {
-      return this.$route.name === 'AdminHome';
-    },
     isNewScorecard() {
       return this.$route.name === 'AdminNewScorecard';
+    },
+    isManageScorecards() {
+      return this.$route.name === 'AdminManageScorecards';
+    },
+    isTeams() {
+      return this.$route.name === 'AdminTeams';
+    },
+    isAnalytics() {
+      return this.$route.name === 'AdminAnalytics';
+    },
+    isUsers() {
+      return this.$route.name === 'AdminUsers';
+    },
+    isHelp() {
+      return this.$route.name === 'AdminHelp';
     }
   },
-  methods: {
-
+  created() {
+    let element = document.getElementById('admin-navbar');
+    M.Tabs.init(element);
   }
 }
 </script>
 
 <style scoped>
-
+.active {
+  border-bottom: 5px solid #FFFFFF;
+}
+#outer-col {
+  padding: 0;
+}
 </style>

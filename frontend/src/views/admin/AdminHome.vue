@@ -1,6 +1,5 @@
 <template>
   <div id="admin-home">
-    <AdminNavBar />
     <div class="container">
       <h1>Logged in successfully</h1>
       <hr />
@@ -17,10 +16,8 @@
 </template>
 
 <script>
-import AdminNavBar from "@/components/admin/AdminNavBar";
 export default {
 name: "AdminHome",
-  components: {AdminNavBar}
 }
 </script>
 

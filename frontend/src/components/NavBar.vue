@@ -11,8 +11,7 @@
           <li v-bind:class="{ active: isScoreboards }"><router-link to="/scoreboards">Scoreboards</router-link></li>
           <li v-bind:class="{ active: isTracker }"><router-link to="/tracker">Tracker</router-link></li>
 
-          <li v-if="isLoggedIn" v-bind:class="{ active: isAdmin }"><router-link to="/admin">Admin</router-link></li>
-
+          <li v-if="isLoggedIn" v-bind:class="{ adminActive: isAdmin }"><router-link to="/admin">Admin</router-link></li>
           <li v-if="!isLoggedIn" v-bind:class="{ active: isLogin }"><router-link to="/login">Login</router-link></li>
           <li v-else v-on:click="logout"><router-link to="/">Logout</router-link></li>
         </ul>
@@ -23,15 +22,28 @@
       <li v-bind:class="{ active: isHome }"><router-link to="/">Home</router-link></li>
       <li v-bind:class="{ active: isScoreboards }"><router-link to="/scoreboards">Scoreboards</router-link></li>
       <li v-bind:class="{ active: isTracker }"><router-link to="/tracker">Tracker</router-link></li>
-      <li v-bind:class="{ active: isLogin }"><router-link to="/login">Login</router-link></li>
+
+      <li v-if="isLoggedIn" v-bind:class="{ active: isAdmin }"><router-link to="/admin">Admin</router-link></li>
+
+      <li v-if="!isLoggedIn" v-bind:class="{ active: isLogin }"><router-link to="/login">Login</router-link></li>
+      <li v-else v-on:click="logout"><router-link to="/">Logout</router-link></li>
     </ul>
 
+    <AdminNavBar v-if="isLoggedIn" />
   </div>
 </template>
 
 <script>
+import M from 'materialize-css'
+import AdminNavBar from "@/components/admin/AdminNavBar";
 export default {
   name: "NavBar",
+  components: {AdminNavBar},
+  data() {
+    return {
+      dropdownName: "admin-dropdown"
+    }
+  },
   computed: {
     isHome() {
       return this.$route.name === 'Home';
@@ -46,7 +58,7 @@ export default {
       return this.$route.name === 'Login';
     },
     isAdmin() {
-      return this.$route.name === 'AdminHome';
+      return this.$route.name.toLowerCase().startsWith('admin');
     },
     user() {
       return this.$store.state.user;
@@ -63,12 +75,25 @@ export default {
   },
   methods: {
     logout() {
-      // Remove the user state using an action
+      // TODO: Redirect to the home page
       console.log("User logging out");
       this.$store.dispatch('logoutUser');
+    },
+    openDropdown() {
+      let element = document.getElementById(this.dropdownName);
+      console.log(element);
+      let instance = M.Dropdown.getInstance(element);
+      console.log(instance);
+      instance.open();
+
     }
   },
   created() {
+    document.addEventListener('DOMContentLoaded', function() {
+      let element = document.getElementById(this.dropdownName);
+      M.Dropdown.init(element);
+      console.log("Initialized dropdown");
+    })
     this.unwatch = this.$store.watch(
         (state, getters) => getters.user,
         (newValue, oldValue) => {
@@ -94,5 +119,7 @@ export default {
 </script>
 
 <style scoped>
-
+.adminActive {
+  background: #039be5;
+}
 </style>
