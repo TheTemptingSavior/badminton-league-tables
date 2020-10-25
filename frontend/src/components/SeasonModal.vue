@@ -42,8 +42,10 @@ export default {
   },
   created() {
     this.$store.dispatch('loadSeasons');
+  },
+  mounted() {
     let elem = document.getElementById("#" + this.id);
-    M.Modal.init(elem)
+    M.Modal.init(elem);
   }
 }
 </script>
