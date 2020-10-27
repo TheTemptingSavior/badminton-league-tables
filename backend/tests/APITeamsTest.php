@@ -24,6 +24,48 @@ class APITeamsTest extends TestCase
     }
 
     /**
+     * Test listing teams that require multiple pages. Get the first page and
+     * assert that the meta data is correct
+     *
+     * @return void
+     */
+    function testListTeamsPaged()
+    {
+        // TODO: Implement APITeamsTest::testListTeamsPaged
+    }
+
+    /**
+     * List the available teams where a second page of results is required
+     *
+     * @return void
+     */
+    function testListTeamsPageTwo()
+    {
+        // TODO: Implement APITeamsTest::testListTeamsPageTwo
+    }
+
+    /**
+     * List the seasons teams this league and changing the number of season
+     * per page
+     *
+     * @return void
+     */
+    function testListTeamsPageLimit()
+    {
+        // TODO: Implement APITeamsTest::testListTeamsPageLimit
+    }
+
+    /**
+     * Return a list of teams, selecting a page from the middle of the results
+     *
+     * @return void
+     */
+    function testListTeamsMiddlePage()
+    {
+        // TODO: Implement APITeamsTest::testListTeamsMiddlePage
+    }
+
+    /**
      * Get a single team based upon its ID
      *
      * @return void
