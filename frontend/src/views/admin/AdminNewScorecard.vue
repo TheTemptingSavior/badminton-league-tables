@@ -165,7 +165,6 @@
 </template>
 
 <script>
-import M from 'materialize-css'
 import GameModal from "@/components/admin/GameModal";
 export default {
   name: "AdminNewScorecard",
@@ -219,22 +218,13 @@ export default {
       console.log("Open a game modal for " + gameId + ". Titled '" + title  + "'");
       let element = document.getElementById("game-modal");
       console.log(element);
-      let instance = M.Modal.getInstance(element);
-      console.log(instance)
-      instance.open();
     }
   },
   created() {
     this.$store.dispatch('loadTeams');
   },
   mounted() {
-    // Render the home team select box
-    let element = document.getElementById('home-team');
-    M.FormSelect.init(element)
-
-    // Render the away team select box
-    element = document.getElementById('away-team');
-    M.FormSelect.init(element)
+    // Create the select boxes
   }
 }
 </script>

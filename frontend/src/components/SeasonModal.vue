@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import M from 'materialize-css'
 import moment from 'moment'
 export default {
   name: "SeasonModal",
@@ -45,7 +44,8 @@ export default {
   },
   mounted() {
     let elem = document.getElementById("#" + this.id);
-    M.Modal.init(elem);
+    console.log("initialise the modal: ");
+    console.log(elem);
   }
 }
 </script>

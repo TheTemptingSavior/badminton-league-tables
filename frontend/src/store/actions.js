@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import M from "materialize-css";
 
 /*
  * ------------------------------------------------------
@@ -11,7 +10,8 @@ const loadCurrentScoreboard = (context) => {
         context.commit('SET_CURRENT_SCOREBOARD', response.data)
         context.commit('CACHE_SCOREBOARD', response.data)
     }).catch((error) => {
-        M.toast({html: "Could not load current scoreboard", classes: "red white-text"})
+        console.log("Create a toast here to show error");
+        // M.toast({html: "Could not load current scoreboard", classes: "red white-text"})
         throw new Error(`API ${error}`);
     })
 };
@@ -32,7 +32,8 @@ const loadScoreboard = (context, payload) =>  {
             commit('SET_CURRENT_SCOREBOARD', response.data);
             commit('CACHE_SCOREBOARD', response.data)
         }).catch((error) => {
-            M.toast({html: "Could not load scoreboard", classes: "red white-text"});
+            console.log("Create a toast here to show error");
+            // M.toast({html: "Could not load scoreboard", classes: "red white-text"});
             throw new Error(`API ${error}`);
         })
     }
@@ -48,7 +49,8 @@ const loadTeams = (context) => {
     Vue.axios.get('/api/teams').then((response) => {
         context.commit('SET_TEAMS', response.data);
     }).catch((error) => {
-        M.toast({html: "Could not load team data", classes: "red white-text"})
+        console.log("Create a toast here to show error");
+        // M.toast({html: "Could not load team data", classes: "red white-text"})
         throw new Error(`API ${error}`);
     })
 }
@@ -62,7 +64,8 @@ const loadSeasons = (context) => {
     Vue.axios.get('/api/seasons').then((response) => {
         context.commit('SET_SEASONS', response.data);
     }).catch((error) => {
-        M.toast({html: "Could not load season data", classes: "red white-text"});
+        console.log("Create a toast here to show error");
+        // M.toast({html: "Could not load season data", classes: "red white-text"});
         throw new Error(`API ${error}`);
     })
 }

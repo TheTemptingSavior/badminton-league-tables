@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import M from 'materialize-css'
 export default {
   name: "GameModal",
   props: {
@@ -26,7 +25,8 @@ export default {
   },
   mounted() {
     let elem = document.getElementById("#" + this.id);
-    M.Modal.init(elem);
+    console.log("Initialize modal: ");
+    console.log(elem);
   }
 }
 </script>
