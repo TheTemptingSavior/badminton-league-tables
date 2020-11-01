@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import vuetify from "vuetify";
+import vuetify from "@/plugins/vuetify";
+import 'vuetify/dist/vuetify.min.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
