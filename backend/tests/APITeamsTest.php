@@ -80,7 +80,6 @@ class APITeamsTest extends TestCase
     /**
      * Attempt to create a team without providing
      * the data
-     * TODO: Should return a 400 but returns a 422
      * @return void
      */
     function testCreateTeamBadData()
