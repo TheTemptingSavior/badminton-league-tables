@@ -1,5 +1,6 @@
 <?php
 
+// League specific constants
 defined('LEAGUE_NAME')      or define('LEAGUE_NAME',    'Rutland/Stamford');
 defined('LEAGUE_CODE')      or define('LEAGUE_CODE',    'rs');
 defined('API_HOST')         or define('API_HOST',       'localhost');

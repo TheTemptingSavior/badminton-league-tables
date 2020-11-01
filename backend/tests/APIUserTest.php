@@ -43,6 +43,48 @@ class APIUserTest extends TestCase
     }
 
     /**
+     * Test listing users that require multiple pages. Get the first page and
+     * assert that the meta data is correct
+     *
+     * @return void
+     */
+    function testListUsersPaged()
+    {
+        // TODO: Implement APIUserTest::testListUsersPaged
+    }
+
+    /**
+     * List the registered users where a second page of results is required
+     *
+     * @return void
+     */
+    function testListUsersPageTwo()
+    {
+        // TODO: Implement APIUserTest::testListUsersPageTwo
+    }
+
+    /**
+     * List the users in this league and changing the number of users
+     * per page
+     *
+     * @return void
+     */
+    function testListUsersPageLimit()
+    {
+        // TODO: Implement APIUserTest::testListUsersPageLimit
+    }
+
+    /**
+     * Return a list of user, selecting a page from the middle of the results
+     *
+     * @return void
+     */
+    function testListUsersMiddlePage()
+    {
+        // TODO: Implement APIUserTest::testListUsersMiddlePage
+    }
+
+    /**
      * Attempt to request a protected endpoint without
      * providing an authentication token
      *
