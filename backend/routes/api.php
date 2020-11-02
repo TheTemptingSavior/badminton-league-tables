@@ -157,4 +157,17 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
         // Get a scoreboard from the season slug
         $router->get('/{id}', ['as' => 'scoreboard-get', 'uses' => 'ScoreboardController@getScoreboard']);
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tracker Routes
+    |--------------------------------------------------------------------------
+    |
+    | Routes that handle traffic to do with the game tracker
+    |
+    */
+    $router->group(['prefix' => 'tracker'], function() use ($router) {
+        // Get the current tracker board
+        $router->get('/', ['as' => 'tracker-current', 'uses' => 'TrackerController@getCurrent']);
+    });
 });
