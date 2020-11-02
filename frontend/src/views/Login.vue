@@ -1,38 +1,54 @@
 <template>
-  <div class="login center">
-    <div class="section"></div>
-    <div class="container">
-      <h3 class="orange-text title">Login</h3>
-      <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
-        <form class="col s12">
-          <div class='row'>
-            <div class='col s12'></div>
-          </div>
-          <div class='row'>
-            <div class='input-field col s12'>
-              <input v-model="state.username" class='validate' type='text' name='username' id='username' />
-              <label for='username'>Enter your username</label>
-            </div>
-          </div>
-          <div class='row'>
-            <div class='input-field col s12'>
-              <input v-model="state.password" class='validate' type='password' name='password' id='password' />
-              <label for='password'>Enter your password</label>
-            </div>
-            <label style='float: right;'>
-              <a class='pink-text'><b>Forgot Password?</b></a>
-            </label>
-          </div>
-          <br />
-          <center>
-            <div class='row'>
-              <button type="button" v-on:click="login()" class="col s12 btn btn-large waves-effect waves-light orange">Login</button>
-            </div>
-          </center>
-        </form>
-      </div>
-    </div>
-  </div>
+  <v-container id="login" class="text-center">
+      <h3 class="accent--text text-h3 py-5">
+        Login
+      </h3>
+    <v-row justify="center">
+      <v-col cols="12" xs="12" sm="10" md="8" lg="6">
+        <v-card outlined shaped elevation="5" :loading="isSubmitted">
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <v-card-text>
+              <v-container>
+                <v-row v-if="loginError !== null" justify="center">
+                  <v-col cols="12" xs="12" sm="8">
+                    <span class="red--text font-weight-bold">{{ loginError }}</span>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" xs="12">
+                    <v-text-field
+                        v-model="state.username"
+                        :rules="rules.usernameRules"
+                        label="Username"
+                        prepend-icon="mdi-account"
+                        required
+                        autofocus
+                    />
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" xs="12">
+                    <v-text-field v-model="state.password" type="password" :rules="rules.passwordRules" label="Password" prepend-icon="mdi-lock" required />
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" xs="12" class="text-right">
+                    <router-link to="/forgotten-password">Forgotten Password?</router-link>
+                  </v-col>
+                </v-row>
+                <v-row justify="center">
+                  <v-col cols="12" xs="12">
+                    <v-btn x-large color="accent text" :disabled="!valid" @click="validate">Login</v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -41,14 +57,28 @@ export default {
   name: "Login",
   data() {
     return {
+      valid: false,
+      loginError: null,
+      isSubmitted: false,
       state: {
         username: "",
         password: ""
+      },
+      rules: {
+        usernameRules: [
+          v => !!v || 'Username is required',
+          v => (v && v.length <= 50) || 'Username must be less than 50 characters',
+          v => (v && 3 <= v.length) || 'Username must be greater than 3 characters'
+        ],
+        passwordRules: [
+          v => !!v || 'Password is required',
+        ]
       }
     }
   },
   methods: {
     login() {
+      this.isSubmitted = true;
       Vue.axios.post("/api/auth/login", {
         username: this.state.username, password: this.state.password
       }).then((response) => {
@@ -58,8 +88,18 @@ export default {
         }
       }).catch((error) => {
         console.log(error);
+        this.loginError = "Incorrect username/password."
+        this.isSubmitted = false;
       })
-    }
+    },
+    validate() {
+      if (this.$refs.form.validate()) {
+        this.login();
+      }
+    },
+    reset () {
+      this.$refs.form.reset()
+    },
   }
 }
 </script>

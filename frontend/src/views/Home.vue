@@ -5,10 +5,9 @@
         <h1 class="accent--text text-h2 font-weight-bolder">
           Badminton League Tables
         </h1>
-        <h5 class="text-h5">
+        <h5 class="text-h5 pb-5">
           Rutland and Stamford League
         </h5>
-        <br />
         <v-btn
             to="/scoreboards"
             elevation="2"
