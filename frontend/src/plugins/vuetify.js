@@ -11,7 +11,8 @@ const opts = {
                 primary: '#42a5f5',
                 secondary: '#b0bec5',
                 accent: '#ff9800',
-                error: '#b71c1c',
+                success: '#66BB6A',
+                error: '#EF5350',
             },
         },
     }
