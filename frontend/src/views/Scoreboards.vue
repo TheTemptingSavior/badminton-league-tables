@@ -1,22 +1,17 @@
 <template>
   <div class="scoreboards">
-    <SeasonModal id="seasons-modal" @seasonChange="changeSeason" />
-    <div class="container">
-      <h2 class="title orange-text center">
+    <v-container>
+      <h2 class="text-center accent--text text-h2">
         Current Scoreboard
-        <br />
-        <small>Season {{ currentSeason }}</small>
       </h2>
-      <div class="container center-align">
-        <button type="button" data-target="seasons-modal" class="btn waves-effect waves-light modal-trigger">
-          More Seasons
-        </button>
-        <!--&nbsp;<button class="btn waves-effect waves-light" v-on:click="refresh">Refresh</button> -->
+      <h5 class="text-center accent--text text-h5">Season {{ currentSeason }}</h5>
+      <div class="text-center py-5">
+        <SeasonModal id="seasons-model" @seasonChange="changeSeason" />
       </div>
-      <hr />
+      <v-divider />
       <ScoreboardTable :data=currentScoreboard :error=error />
       <h6 v-if="error !== null" class="red-text center">{{ error }}</h6>
-    </div>
+    </v-container>
     <br />
     <br />
 
@@ -69,6 +64,9 @@ export default {
     },
     refresh() {
       this.$store.dispatch('loadCurrentScoreboard');
+    },
+    showDialog() {
+
     }
   },
   created() {

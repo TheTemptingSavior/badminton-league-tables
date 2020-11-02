@@ -1,17 +1,43 @@
 <template>
-  <div :id="id" class="modal">
-    <div class="modal-content">
-      <h4>Available seasons</h4>
-      <ul id="seasons" class="collection">
-        <a v-for="season in getSeasons" :key="season.id" class="collection-item modal-close" v-on:click="changeSeason(season.id)">
-          {{ season.start }} to {{ season.end }}
-        </a>
-      </ul>
-    </div>
-    <div class="modal-footer">
-      <a class="modal-close waves-effect waves-green btn-flat">Close</a>
-    </div>
-  </div>
+  <v-dialog v-model="dialog" transition="dialog-bottom-transition">
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn
+          elevation="2"
+          color="secondary"
+          outlined
+          rounded
+          v-bind="attrs"
+          v-on="on"
+      >
+        More Seasons
+      </v-btn>
+    </template>
+    <v-card>
+      <v-card-title class="headline grey lighten-2">
+        Available Seasons
+      </v-card-title>
+
+      <v-card-text>
+        <v-list-item-group v-model="group">
+          <v-list-item v-for="season in getSeasons" :key="season.id" @click="changeSeason(season.id)">
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>{{ season.start }} to {{ season.end }}</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn text @click="dialog = false">
+          Close
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -20,6 +46,12 @@ export default {
   name: "SeasonModal",
   props: {
     id: String
+  },
+  data() {
+    return {
+      group: null,
+      dialog: false,
+    }
   },
   computed: {
     getSeasons() {
@@ -35,17 +67,13 @@ export default {
   },
   methods: {
     changeSeason(sid) {
+      this.dialog = false;
       console.log("[SeasonModal] Changing season to " + sid);
       this.$emit('seasonChange', sid);
     }
   },
   created() {
     this.$store.dispatch('loadSeasons');
-  },
-  mounted() {
-    let elem = document.getElementById("#" + this.id);
-    console.log("initialise the modal: ");
-    console.log(elem);
   }
 }
 </script>
