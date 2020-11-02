@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from "@/views/Login";
 import Scoreboards from "@/views/Scoreboards";
+import Tracker from "@/views/Tracker";
 import NotFound from "@/views/errors/NotFound";
 import adminRoutes from "@/router/adminRoutes";
 
@@ -32,6 +33,14 @@ const routes = [
     component: Scoreboards,
     meta: {
       title: 'Scoreboards'
+    }
+  },
+  {
+    path: '/tracker',
+    name: 'Tracker',
+    component: Tracker,
+    meta: {
+      title: 'Tracker'
     }
   },
   {
