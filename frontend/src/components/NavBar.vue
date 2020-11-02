@@ -10,31 +10,31 @@
       </v-list-item>
       <v-list-item to="/scoreboards">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-scoreboard</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Scorecards</v-list-item-title>
       </v-list-item>
       <v-list-item to="/tracker">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-grid</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Tracker</v-list-item-title>
       </v-list-item>
-      <v-list-item v-on:click="logout" v-if="isLoggedIn">
-        <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Logout</v-list-item-title>
-      </v-list-item>
       <v-list-item to="/admin" v-if="isLoggedIn">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-shield-account</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Admin</v-list-item-title>
       </v-list-item>
+      <v-list-item v-on:click="logout" v-if="isLoggedIn">
+        <v-list-item-icon>
+          <v-icon>mdi-lock-open</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Logout</v-list-item-title>
+      </v-list-item>
       <v-list-item to="/login" v-if="!isLoggedIn">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-lock</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Login</v-list-item-title>
       </v-list-item>

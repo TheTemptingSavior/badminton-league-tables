@@ -1,61 +1,53 @@
 <template>
-  <div class="home">
-    <div class="section no-pad-bot" id="index-banner">
-      <div class="container">
-        <br><br>
-        <h1 class="header center orange-text">Badminton League Tables</h1>
-        <div class="row center">
-          <h5 class="header col s12 light">
-            Rutland and Stamford League
-          </h5>
-        </div>
-        <div class="row center">
-          <router-link to="/scoreboards" class="btn-large waves-effect waves-light orange">
-            View Scoreboards
-          </router-link>
-        </div>
-        <br><br>
-        <div class="container">
-          <div class="section">
-            <!--   Icon Section   -->
-            <div class="row">
-              <div class="col s12 m4">
-                <div class="icon-block">
-                  <h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
-                  <h5 class="center">Played Game Tracker</h5>
-                  <p class="light">
-                    Track the games have and haven't been played.
-                  </p>
-                </div>
-              </div>
-              <div class="col s12 m4">
-                <div class="icon-block">
-                  <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
-                  <h5 class="center">Up-to-date Scoreboards</h5>
-                  <p class="light">
-                    Scoreboards are updated everytime a new game is played
-                  </p>
-                </div>
-              </div>
-              <div class="col s12 m4">
-                <div class="icon-block">
-                  <h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
-                  <h5 class="center">Team Stats and Graphs</h5>
-                  <p class="light">
-                    Stats about games won and lost across seasons
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <br><br>
-        </div>
+  <v-container class="home">
+    <div id="page-header">
+      <div class="text-center py-5">
+        <h1 class="accent--text text-h2 font-weight-bolder">
+          Badminton League Tables
+        </h1>
+        <h5 class="text-h5">
+          Rutland and Stamford League
+        </h5>
+        <br />
+        <v-btn
+            to="/scoreboards"
+            elevation="2"
+            color="secondary"
+            outlined
+            rounded
+            x-large>
+          View Scorecards
+        </v-btn>
       </div>
     </div>
-  </div>
+    <div id="page-content" style="padding-top: 5%;">
+      <v-row no-gutters>
+        <v-col cols="12" sm="4" class="text-center">
+          <v-icon x-large color="primary">mdi-grid</v-icon>
+          <h5>Played Game Tracker</h5>
+          <p class="light">
+            Track the games have and haven't been played.
+          </p>
+        </v-col>
+        <v-col cols="12" sm="4" class="text-center">
+          <v-icon x-large color="primary">mdi-scoreboard</v-icon>
+          <h5>Up-to-date Scoreboards</h5>
+          <p class="light">
+            Scoreboards are updated everytime a new game is played.
+          </p>
+        </v-col>
+        <v-col cols="12" sm="4" class="text-center">
+          <v-icon x-large color="primary">mdi-chart-bell-curve</v-icon>
+          <h5>Team stats and Graphs</h5>
+          <p class="light">
+            Stats about games won and lost across seasons.
+          </p>
+        </v-col>
+      </v-row>
+    </div>
+  </v-container>
 </template>
 <script>
-// @ is an alias to /src
 
 export default {
   name: 'Home',
