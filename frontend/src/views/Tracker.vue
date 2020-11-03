@@ -7,7 +7,7 @@
     </v-row>
     <v-divider />
     <v-row justify="center">
-      <v-col cols="12" xs="12" sm="6" md="4" v-for="team in getTeams" :key="team.id">
+      <v-col cols="12" xs="12" sm="6" md="4" v-for="team in getTracker" :key="team.id">
         <v-card class="mx-auto" elevation="5">
           <v-card-text>
             <div>Team Name</div>
@@ -18,23 +18,23 @@
             <v-list dense>
               <v-subheader>PLAYED</v-subheader>
               <v-list-item-group>
-                <v-list-item class="success">
+                <v-list-item v-for="played in team.played" :key="played.id" class="success">
                   <v-list-item-icon>
                     <v-icon>mdi-calendar-check</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title>Some Other Team Name</v-list-item-title>
+                    <v-list-item-title>{{ played.name }}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
               <v-subheader>NOT PLAYED</v-subheader>
               <v-list-item-group>
-                <v-list-item class="error">
+                <v-list-item v-for="played in team.not_played" :key="played.id" class="error">
                   <v-list-item-icon>
                     <v-icon>mdi-calendar-remove</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title>Some Other Team Name</v-list-item-title>
+                    <v-list-item-title>{{ played.name }}</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
@@ -52,10 +52,17 @@ export default {
   computed: {
     getTeams() {
       return this.$store.state.teams;
+    },
+    getTracker() {
+      if (this.$store.state.tracker.current.data === undefined) {
+        return [];
+      }
+      return this.$store.state.tracker.current.data;
     }
   },
   created() {
     this.$store.dispatch('loadTeams');
+    this.$store.dispatch('loadCurrentTracker');
   }
 }
 </script>

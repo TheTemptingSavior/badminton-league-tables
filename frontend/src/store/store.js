@@ -18,6 +18,10 @@ export default new Vuex.Store({
       current: {},
       all: {}
     },
+    tracker: {
+      current: {},
+      all: {}
+    },
     teams: [],
     seasons: []
   },
