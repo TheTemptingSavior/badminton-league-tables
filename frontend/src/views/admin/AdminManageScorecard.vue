@@ -15,7 +15,7 @@
         v-on:change="seasonChange"
     ></v-select>
     <v-row v-if="seasonId !== null">
-      <v-col cols="12" xs="12" sm="12" md="12" lg="10" offset-lg="2">
+      <v-col cols="12" xs="12" sm="12" md="12" lg="10" offset-lg="1">
         <div class="text-center">
           <v-data-table
               dense
