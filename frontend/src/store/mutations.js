@@ -52,6 +52,20 @@ const LOGOUT_USER = (state) => {
     state.user.receiveTime = null
 }
 
+/*
+ * ------------------------------------------------------
+ * Begin tracker related mutations
+ * ------------------------------------------------------
+ */
+const SET_CURRENT_TRACKER = (state, payload) => {
+    state.tracker.current = payload;
+}
+
+const CACHE_TRACKER = (state, payload) => {
+    let seasonId = payload.season.id;
+    state.tracker.all[seasonId] = payload;
+}
+
 export default {
     CACHE_SCOREBOARD,
     SET_CURRENT_SCOREBOARD,
@@ -60,5 +74,7 @@ export default {
     SET_TOKEN,
     SET_TOKEN_EXPIRES_IN,
     SET_TOKEN_RECEIVE_TIME,
-    LOGOUT_USER
+    LOGOUT_USER,
+    SET_CURRENT_TRACKER,
+    CACHE_TRACKER,
 }
