@@ -86,6 +86,8 @@ class TrackerController extends Controller
      *         )
      *     )
      * )
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getTracker(string $id)
     {
