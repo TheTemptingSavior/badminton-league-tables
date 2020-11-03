@@ -169,5 +169,7 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
     $router->group(['prefix' => 'tracker'], function() use ($router) {
         // Get the current tracker board
         $router->get('/', ['as' => 'tracker-current', 'uses' => 'TrackerController@getCurrent']);
+        // Get a tracker board for a specific season
+        $router->get('/{id}', ['as' => 'tracker-get', 'uses' => 'TrackerController@getTracker']);
     });
 });
