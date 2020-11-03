@@ -54,8 +54,8 @@ class TrackerController extends Controller
             'start' => $season->start,
             'end' => $season->end,
             'slug' => $season->slug,
-            'data' => []
         ];
+        $data['data'] = [];
 
         // Get a complete list of teams in this season
         $teams = DB::table('season_teams')
@@ -64,34 +64,54 @@ class TrackerController extends Controller
             ->select('teams.id', 'teams.name')
             ->get()
             ->toArray();
-        $allTeamIds = array_column($teams, 'id');
+        foreach($teams as $team) {
+            $data['data'][$team->id] = [
+                'id' => $team->id,
+                'name' => $team->name,
+                'played' => [],
+                'not_played' => [],
+            ];
+        }
+        $allTeamIds = array_keys($data['data']);
 
         foreach($teams as $team) {
             // List of played gamed
-            $team->played = DB::table('scorecards')
+            $data['data'][$team->id]['played'] = DB::table('scorecards')
                 ->whereBetween('date_played', [$season->start, $season->end])
                 ->where('home_team', '=', $team->id)
                 ->join('teams', 'scorecards.away_team', 'teams.id')
                 ->select(['teams.id', 'teams.name'])
                 ->get()
                 ->toArray();
-            $playedTeamIds = array_column($team->played, 'id');
+
+            $playedTeamIds = array_column($data['data'][$team->id]['played'], 'id');
             $notPlayedGames = array_filter(array_diff($allTeamIds, $playedTeamIds), function($id) use ($team) {
                 return $team->id !== $id;
             });
 
             // TODO: Remove the constant database calls here
-            $team->not_played = array_map(function ($id) use ($teams) {
-                // Search in the $teams variable as that is in memory
-                return [
-                    'id' => $id,
-                    'name' => DB::table('teams')->where('id', '=', $id)->first()->name
-                ];
-            }, $notPlayedGames);
-
-            $data['data'][$team->id] = $team;
+            $data['data'][$team->id]['not_played'] = [];
+            foreach ($notPlayedGames as $notPlayedGame) {
+                array_push(
+                    $data['data'][$team->id]['not_played'],
+                    [
+                        'id' => $notPlayedGame,
+                        'name' => $this->getTeamNameById($notPlayedGame, $teams)
+                    ]
+                );
+            }
         }
 
         return response()->json($data, 200);
+    }
+
+    private function getTeamNameById(int $id, Array $teams)
+    {
+        foreach ($teams as $team) {
+            if ($team->id === $id) {
+                return $team->name;
+            }
+        }
+        return -1;
     }
 }
