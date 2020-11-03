@@ -2,6 +2,7 @@ import AdminHome from "@/views/admin/AdminHome";
 import AdminNewScorecard from "@/views/admin/AdminNewScorecard";
 import store from "@/store/store";
 import AdminManageScorecard from "@/views/admin/AdminManageScorecard";
+import AdminEditScorecard from "@/views/admin/AdminEditScorecard";
 
 const checkLoggedIn = (to, from, next) => {
     let user = store.state.user;
@@ -42,6 +43,16 @@ export default [
         component: AdminManageScorecard,
         meta: {
             title: 'Admin:Manage Scorecards'
+        },
+        beforeEnter: checkLoggedIn
+    },
+    {
+        path: '/admin/scorecards/edit/:id',
+        name: 'AdminEditScorecard',
+        props: true,
+        component: AdminEditScorecard,
+        meta: {
+            title: 'Admin:Edit Scorecard'
         },
         beforeEnter: checkLoggedIn
     }
