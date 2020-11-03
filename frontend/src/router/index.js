@@ -7,6 +7,7 @@ import Scoreboards from "@/views/Scoreboards";
 import Tracker from "@/views/Tracker";
 import NotFound from "@/views/errors/NotFound";
 import adminRoutes from "@/router/adminRoutes";
+import Scorecard from "@/views/Scorecard";
 
 Vue.use(VueRouter)
 
@@ -41,6 +42,15 @@ const routes = [
     component: Tracker,
     meta: {
       title: 'Tracker'
+    }
+  },
+  {
+    path: '/scorecards/:scorecardId',
+    name: 'Scorecard',
+    component: Scorecard,
+    props: true,
+    meta: {
+      title: 'Scorecard'
     }
   },
   {

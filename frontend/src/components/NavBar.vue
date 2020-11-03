@@ -1,7 +1,7 @@
 <template>
   <v-list nav dense>
     <div v-if="!$vuetify.breakpoint.mdAndUp"><br /><br /></div>
-    <v-list-item-group v-model="group" active-class="orange--text text--accent-4">
+    <v-list-item-group v-model="homeGroup" active-class="orange--text text--accent-4">
       <v-list-item to="/">
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
@@ -12,7 +12,7 @@
         <v-list-item-icon>
           <v-icon>mdi-scoreboard</v-icon>
         </v-list-item-icon>
-        <v-list-item-title>Scorecards</v-list-item-title>
+        <v-list-item-title>Scoreboards</v-list-item-title>
       </v-list-item>
       <v-list-item to="/tracker">
         <v-list-item-icon>
@@ -91,11 +91,27 @@ export default {
   components: {},
   data() {
     return {
-      group: null,
-      adminGroup: null,
+      // These are the index that are selected in the list
+      // need a way to set these manually using a computedProperty
+      adminGroup: 0,
+      homeGroup: 0,
     }
   },
   computed: {
+    // homeGroup() {
+    //   console.log("Home group item is: " + this.$route.name);
+    //   if (this.$route.name === 'Home') {
+    //     return 0;
+    //   } else if (this.$route.name === 'Scoreboards') {
+    //     return 1;
+    //   } else if (this.$route.name === 'Tracker') {
+    //     return 2;
+    //   } else if (this.$route.name === 'Login') {
+    //     return 3;
+    //   } else {
+    //     return 0;
+    //   }
+    // },
     isAdmin() {
       return this.$route.name.toLowerCase().startsWith('admin');
     },
