@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" transition="dialog-bottom-transition">
+  <v-dialog v-model="dialog" max-width="600px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
           elevation="2"
@@ -13,10 +13,10 @@
       </v-btn>
     </template>
     <v-card>
-      <v-card-title class="headline grey lighten-2">
+      <v-card-title>
         Available Seasons
       </v-card-title>
-
+      <v-divider />
       <v-card-text>
         <v-list-item-group v-model="group">
           <v-list-item v-for="season in getSeasons" :key="season.id" @click="changeSeason(season.id)">
