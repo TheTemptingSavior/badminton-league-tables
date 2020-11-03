@@ -3,6 +3,10 @@
     <v-row >
       <v-col cols="12" xs="12" class="text-center">
         <h2 class="accent--text text-h2">Game Tracker</h2>
+        <h5 class="text-center accent--text text-h5">Season {{ currentSeason }}</h5>
+        <div class="text-center py-5">
+          <SeasonModal @seasonChange="changeSeason"  />
+        </div>
       </v-col>
     </v-row>
     <v-divider />
@@ -47,17 +51,34 @@
 </template>
 
 <script>
+import SeasonModal from "@/components/SeasonModal";
 export default {
   name: "Tracker",
+  components: {SeasonModal},
   computed: {
     getTeams() {
       return this.$store.state.teams;
+    },
+    currentSeason() {
+      if (this.$store.state.tracker.current.season !== undefined) {
+        return "Season " + this.$store.state.tracker.current.season.slug;
+      } else {
+        return "Season N/A"
+      }
     },
     getTracker() {
       if (this.$store.state.tracker.current.data === undefined) {
         return [];
       }
       return this.$store.state.tracker.current.data;
+    }
+  },
+  methods: {
+    changeSeason(sid) {
+      console.log("Changing season to " + sid);
+      // this.$store.dispatch('loadTracker', {
+      //   sid: sid
+      // });
     }
   },
   created() {
