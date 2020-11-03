@@ -80,7 +80,7 @@ class TrackerController extends Controller
                 ->whereBetween('date_played', [$season->start, $season->end])
                 ->where('home_team', '=', $team->id)
                 ->join('teams', 'scorecards.away_team', 'teams.id')
-                ->select(['teams.id', 'teams.name'])
+                ->select(['teams.id', 'teams.name', 'scorecards.id as scorecard_id'])
                 ->get()
                 ->toArray();
 

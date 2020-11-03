@@ -10,7 +10,7 @@
       </div>
       <v-divider />
       <ScoreboardTable :data=currentScoreboard :error=error />
-      <h6 v-if="error !== null" class="red-text center">{{ error }}</h6>
+      <h6 v-if="error !== null" class="text-center red--text text-h6">{{ error }}</h6>
     </v-container>
     <br />
     <br />
@@ -46,7 +46,7 @@ export default {
       });
     },
     currentSeason() {
-      if (this.$store.state.scoreboards.current.length === 0 || this.$store.state.teams.length === 0) {
+      if (this.$store.state.scoreboards.current.season === undefined || this.$store.state.teams.length === 0) {
         return "N/A";
       } else {
         return this.$store.state.scoreboards.current.slug;

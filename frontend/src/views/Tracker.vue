@@ -22,7 +22,7 @@
             <v-list dense>
               <v-subheader>PLAYED</v-subheader>
               <v-list-item-group>
-                <v-list-item v-for="played in team.played" :key="played.id" class="success">
+                <v-list-item v-for="played in team.played" :key="played.id" class="success" :to="'/scorecards/' + played.scorecard_id">
                   <v-list-item-icon>
                     <v-icon>mdi-calendar-check</v-icon>
                   </v-list-item-icon>
