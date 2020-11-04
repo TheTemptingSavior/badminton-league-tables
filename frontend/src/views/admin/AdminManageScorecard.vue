@@ -45,6 +45,11 @@
                         Something went wrong. Please refresh the page
                       </v-col>
                     </v-row>
+                    <v-checkbox
+                        v-model="deleteCheckBox"
+                        label="`Are you sure?`"
+                        required
+                    ></v-checkbox>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
@@ -86,6 +91,7 @@ export default {
       deleteDialog: false,
       toDelete: null,
       deleteError: null,
+      deleteCheckBox: false,
       table: {
         headers: [
           {
@@ -192,6 +198,11 @@ export default {
       this.toDelete = null;
     },
     confirmDelete() {
+      if (!this.deleteCheckBox) {
+        // TODO: Find a more elegant way to do this like highlight the checkbox
+        alert("You must tick the 'Are you sure?' checkbox before proceeding");
+        return;
+      }
       console.log("Item deleted");
       Vue.axios.delete(
           '/api/scorecards/' + this.toDelete.id,
