@@ -61,12 +61,24 @@
               </v-dialog>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editItem(item)">
-                mdi-pencil
-              </v-icon>
-              <v-icon small @click="deleteItem(item)">
-                mdi-delete
-              </v-icon>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon small class="mr-2" @click="viewScorecard(item)" v-bind="attrs" v-on="on">mdi-magnify</v-icon>
+                </template>
+                <span>View</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon small class="mr-2" @click="editItem(item)" v-bind="attrs" v-on="on">mdi-pencil</v-icon>
+                </template>
+                <span>Edit</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon small @click="deleteItem(item)" v-bind="attrs" v-on="on">mdi-delete</v-icon>
+                </template>
+                <span>Delete</span>
+              </v-tooltip>
             </template>
           </v-data-table>
         </div>
@@ -180,11 +192,18 @@ export default {
       })
     },
     editItem(item) {
-      console.log("Open up edit form for scorecard " + item.id);
       this.$router.push({
         name: 'AdminEditScorecard',
         params: {
           id: item.id
+        }
+      });
+    },
+    viewScorecard(item) {
+      this.$router.push({
+        name: 'Scorecard',
+        params: {
+          scorecardId: item.id
         }
       });
     },

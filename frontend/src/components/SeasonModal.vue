@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 export default {
   name: "SeasonModal",
   props: {
@@ -58,8 +57,8 @@ export default {
       return this.$store.state.seasons.map(s => {
         return {
           slug: s.slug,
-          start: moment(s.start).format("Do MMM YYYY"),
-          end: moment(s.end).format("Do MMM YYYY"),
+          start: new Date(s.start).getFullYear(),
+          end: new Date(s.end).getFullYear(),
           id: s.id
         }
       })
