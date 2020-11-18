@@ -38,7 +38,7 @@
                 </v-row>
                 <v-row justify="center">
                   <v-col cols="12" xs="12">
-                    <v-btn x-large color="accent text" :disabled="!valid" @click="validate">Login</v-btn>
+                    <v-btn x-large color="accent text" :disabled="!valid" @click="validate" type="submit">Login</v-btn>
                   </v-col>
                 </v-row>
               </v-container>
