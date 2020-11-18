@@ -47,37 +47,37 @@
     <v-list-item-group v-model="adminGroup" v-if="isLoggedIn" active-class="orange--text text--accent-4">
       <v-list-item to="/admin/scorecards/new">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-plus</v-icon>
         </v-list-item-icon>
         <v-list-item-title>New Scorecard</v-list-item-title>
       </v-list-item>
       <v-list-item to="/admin/scorecards/manage">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-pen</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Manage Scorecards</v-list-item-title>
       </v-list-item>
       <v-list-item to="/admin/teams">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-account-group</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Teams</v-list-item-title>
       </v-list-item>
       <v-list-item to="/admin/analytics">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-graphql</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Analytics</v-list-item-title>
       </v-list-item>
       <v-list-item to="/admin/users">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-account</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Users</v-list-item-title>
       </v-list-item>
       <v-list-item to="/admin/help">
         <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
+          <v-icon>mdi-help</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Help</v-list-item-title>
       </v-list-item>
@@ -98,20 +98,6 @@ export default {
     }
   },
   computed: {
-    // homeGroup() {
-    //   console.log("Home group item is: " + this.$route.name);
-    //   if (this.$route.name === 'Home') {
-    //     return 0;
-    //   } else if (this.$route.name === 'Scoreboards') {
-    //     return 1;
-    //   } else if (this.$route.name === 'Tracker') {
-    //     return 2;
-    //   } else if (this.$route.name === 'Login') {
-    //     return 3;
-    //   } else {
-    //     return 0;
-    //   }
-    // },
     isAdmin() {
       return this.$route.name.toLowerCase().startsWith('admin');
     },
