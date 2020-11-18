@@ -11,7 +11,6 @@ const loadCurrentScoreboard = (context) => {
         context.commit('SET_CURRENT_SCOREBOARD', response.data)
         context.commit('CACHE_SCOREBOARD', response.data)
     }).catch((error) => {
-        console.log("Create a toast here to show error");
         EventBus.$emit('show-error', 'Failed loading scoreboard data');
         throw new Error(`API ${error}`);
     })
