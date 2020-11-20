@@ -25,17 +25,15 @@ const loadScoreboard = (context, payload) =>  {
         console.log("Scoreboard for season exists locally")
         commit('SET_CURRENT_SCOREBOARD', state.scoreboards.all[payload.sid]);
     } else {
-        // We do not have the scoreboard so go and get it
         Vue.axios.get('/api/scoreboards/' + payload.sid).then((response) => {
             commit('SET_CURRENT_SCOREBOARD', response.data);
             commit('CACHE_SCOREBOARD', response.data)
         }).catch((error) => {
             console.log("Create a toast here to show error");
-            // M.toast({html: "Could not load scoreboard", classes: "red white-text"});
+            EventBus.$emit('show-error', 'Could not find scoreboard');
             throw new Error(`API ${error}`);
         })
     }
-    console.log(commit);
 };
 
 /*
