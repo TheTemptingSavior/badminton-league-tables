@@ -23,12 +23,21 @@
                         prepend-icon="mdi-account"
                         required
                         autofocus
+                        v-on:keyup.enter="validate"
                     />
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12" xs="12">
-                    <v-text-field v-model="state.password" type="password" :rules="rules.passwordRules" label="Password" prepend-icon="mdi-lock" required />
+                    <v-text-field
+                        v-model="state.password"
+                        type="password"
+                        :rules="rules.passwordRules"
+                        label="Password"
+                        prepend-icon="mdi-lock"
+                        required
+                        v-on:keyup.enter="validate"
+                    />
                   </v-col>
                 </v-row>
                 <v-row>
