@@ -21,7 +21,7 @@
         <v-list-item-group v-model="group">
           <v-list-item v-for="season in getSeasons" :key="season.id" @click="changeSeason(season.id)">
             <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
+              <v-icon>mdi-calendar-month</v-icon>
             </v-list-item-icon>
             <v-list-item-title>{{ season.start }} to {{ season.end }}</v-list-item-title>
           </v-list-item>
