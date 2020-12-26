@@ -1,5 +1,14 @@
 /*
  * ------------------------------------------------------
+ * General state mutators
+ * ------------------------------------------------------
+ */
+const SET_LOADING = (state, value) => {
+    state.loading = value;
+}
+
+/*
+ * ------------------------------------------------------
  * Begin scoreboard related mutations
  * ------------------------------------------------------
  */
@@ -67,6 +76,7 @@ const CACHE_TRACKER = (state, payload) => {
 }
 
 export default {
+    SET_LOADING,
     CACHE_SCOREBOARD,
     SET_CURRENT_SCOREBOARD,
     SET_TEAMS,

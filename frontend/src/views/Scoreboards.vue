@@ -8,6 +8,7 @@
       <div class="text-center py-5">
         <SeasonModal id="seasons-model" @seasonChange="changeSeason" />
       </div>
+      <Loader :showing="isLoading"/>
       <v-divider />
       <ScoreboardTable :data=currentScoreboard :error=error />
       <h6 v-if="error !== null" class="text-center red--text text-h6">{{ error }}</h6>
@@ -21,20 +22,29 @@
 <script>
 import ScoreboardTable from "@/components/ScoreboardTable";
 import SeasonModal from "@/components/SeasonModal";
+import Loader from "../components/Loader";
 
 export default {
   name: "Scoreboards",
-  components: {SeasonModal, ScoreboardTable},
+  components: {Loader, SeasonModal, ScoreboardTable},
   data() {
       return {
         error: null,
-        scoreboardId: null
+        scoreboardId: null,
       }
   },
   computed: {
+    isLoading() {
+      return this.$store.state.loading;
+    },
     currentScoreboard() {
       if (this.$store.state.scoreboards.current.data === undefined || this.$store.state.teams.length === 0) {
-        this.setError("Failed loading scoreboard.");
+        if (this.isLoading) {
+          console.log("Not showing 'Failed' message as still loading");
+        } else {
+          this.setError("Failed loading scoreboard.");
+          console.log("Failed to load scoreboard and ")
+        }
         return []
       }
       this.setError(null);
@@ -70,6 +80,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('setLoading');
     this.$store.dispatch('loadTeams');
     this.$store.dispatch('loadCurrentScoreboard');
   }
