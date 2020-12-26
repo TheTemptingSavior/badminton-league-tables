@@ -3,17 +3,29 @@ import {EventBus} from "@/plugins/event-bus";
 
 /*
  * ------------------------------------------------------
+ * Begin general store actions
+ * ------------------------------------------------------
+ */
+const setLoading = (context) => {
+    console.log("Setting the global loading flag");
+    context.commit('SET_LOADING', true);
+};
+
+/*
+ * ------------------------------------------------------
  * Begin scoreboard related actions
  * ------------------------------------------------------
  */
 const loadCurrentScoreboard = (context) => {
+    context.commit('SET_LOADING', true);
     Vue.axios.get('/api/scoreboards').then((response) => {
         context.commit('SET_CURRENT_SCOREBOARD', response.data)
         context.commit('CACHE_SCOREBOARD', response.data)
     }).catch((error) => {
         EventBus.$emit('show-error', 'Failed loading scoreboard data');
         throw new Error(`API ${error}`);
-    })
+    });
+    context.commit('SET_LOADING', false);
 };
 
 const loadScoreboard = (context, payload) =>  {
@@ -25,6 +37,7 @@ const loadScoreboard = (context, payload) =>  {
         console.log("Scoreboard for season exists locally")
         commit('SET_CURRENT_SCOREBOARD', state.scoreboards.all[payload.sid]);
     } else {
+        commit('SET_LOADING', true);
         Vue.axios.get('/api/scoreboards/' + payload.sid).then((response) => {
             commit('SET_CURRENT_SCOREBOARD', response.data);
             commit('CACHE_SCOREBOARD', response.data)
@@ -32,7 +45,8 @@ const loadScoreboard = (context, payload) =>  {
             console.log("Create a toast here to show error");
             EventBus.$emit('show-error', 'Could not find scoreboard');
             throw new Error(`API ${error}`);
-        })
+        });
+        commit('SET_LOADING', false);
     }
 };
 
@@ -121,6 +135,7 @@ const loadTracker = (context, payload) => {
 }
 
 export default {
+    setLoading,
     loadCurrentScoreboard,
     loadScoreboard,
     loadTeams,
