@@ -125,7 +125,7 @@ class Scorecard extends Model
      *
      * @var bool
      */
-    public bool $timestamps = true;
+    public $timestamps = true;
 
 
 
@@ -134,14 +134,14 @@ class Scorecard extends Model
      *
      * @var string
      */
-    protected string $table = 'scorecards';
+    protected $table = 'scorecards';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected array $fillable = [
+    protected $fillable = [
         'home_team', 'away_team', 'date_played', 'home_points', 'away_points',
         'home_player_1', 'home_player_2', 'home_player_3', 'home_player_4', 'home_player_5', 'home_player_6',
         'away_player_1', 'away_player_2', 'away_player_3', 'away_player_4', 'away_player_5', 'away_player_6',
@@ -168,7 +168,7 @@ class Scorecard extends Model
      *
      * @var array
      */
-    protected array $hidden = [
+    protected $hidden = [
 
     ];
 
@@ -178,7 +178,7 @@ class Scorecard extends Model
      * @param array $data Partially complete scorecard data array
      * @return array Data array with all the correct model fields
      */
-    #[Pure] public static function PAD_SCORECARD(array $data)
+    public static function PAD_SCORECARD(array $data)
     {
         return array_merge(self::$EMPTY_SCORECARD, $data);
     }
@@ -281,7 +281,7 @@ class Scorecard extends Model
      * @param array $data Data array to validate
      * @return array|bool True if the data passes validation else an array of error messages
      */
-    public static function validateData(array $data): bool|array
+    public static function validateData(array $data)
     {
         $errors = [];
 
