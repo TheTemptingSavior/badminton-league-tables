@@ -33,7 +33,7 @@ class Authenticate
      * @param  string|null  $guard Any guard conditions
      * @return mixed Returns the next middleware in the chain
      */
-    public function handle($request, Closure $next, $guard = null): mixed
+    public function handle($request, Closure $next, $guard = null)
     {
         if ($this->auth->guard($guard)->guest()) {
             return response()->json(['message' => 'Unauthorized'], 401);

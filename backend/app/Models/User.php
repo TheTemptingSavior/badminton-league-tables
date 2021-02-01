@@ -57,14 +57,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var string
      */
-    protected string $table = 'users';
+    protected $table = 'users';
 
     /**
      * The model's default values for attributes.
      *
      * @var array
      */
-    protected array $attributes = [
+    protected $attributes = [
         'admin' => false,
     ];
 
@@ -73,7 +73,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-    protected array $fillable = [
+    protected $fillable = [
         'username', 'password', 'added', 'admin',
     ];
 
@@ -82,7 +82,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-    protected array $hidden = [
+    protected $hidden = [
         'password',
     ];
 
@@ -91,7 +91,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return mixed
      */
-    public function getJWTIdentifier(): mixed
+    public function getJWTIdentifier()
     {
         return $this->getKey();
     }
@@ -101,7 +101,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * // TODO: Are custom claims required
      * @return array
      */
-    public function getJWTCustomClaims(): array
+    public function getJWTCustomClaims()
     {
         return [];
     }

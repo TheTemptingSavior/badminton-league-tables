@@ -53,21 +53,21 @@ class Season extends Model
      *
      * @var bool
      */
-    public bool $timestamps = true;
+    public $timestamps = true;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected string $table = 'seasons';
+    protected $table = 'seasons';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected array $fillable = [
+    protected $fillable = [
         'start', 'end', 'slug'
     ];
 
@@ -76,7 +76,7 @@ class Season extends Model
      *
      * @var array
      */
-    protected array $hidden = [
+    protected $hidden = [
         'created_at', 'updated_at',
     ];
 
@@ -85,7 +85,7 @@ class Season extends Model
      *
      * @var array
      */
-    protected array $dates = [
+    protected $dates = [
         'start', 'end'
     ];
 }

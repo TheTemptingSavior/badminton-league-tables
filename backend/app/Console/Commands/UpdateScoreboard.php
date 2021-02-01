@@ -14,14 +14,14 @@ class UpdateScoreboard extends Command
      *
      * @var string
      */
-    protected string $signature = 'manual:update-scoreboard {season : Slug of the season to update}';
+    protected $signature = 'manual:update-scoreboard {season : Slug of the season to update}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected string $description = 'Updates the scoreboard for a specific season';
+    protected $description = 'Updates the scoreboard for a specific season';
 
     /**
      * Create a new command instance.
