@@ -111,3 +111,16 @@ services:
       - 6379
     networks:
       - back
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8888:80
+    depends_on:
+      - db
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_USER=root
+      - PMA_PASSWORD=helloworld
+    networks:
+      - back

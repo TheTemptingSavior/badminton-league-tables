@@ -17,7 +17,7 @@ class ScoreboardHelper
      * @param int $season ID of the season to recalculate
      * @return bool True if the recalculation was successful, false otherwise
      */
-    public static function calculateScoreboard(int $season)
+    public static function calculateScoreboard(int $season): bool
     {
         Log::info("Calculating scoreboard for season " . $season);
         $seasonStart = null;
@@ -28,6 +28,7 @@ class ScoreboardHelper
             $seasonStart = $seasonObject->start;
             $seasonEnd = $seasonObject->end;
         } catch (Exception $exception) {
+            Log::error("Could not find season '".$season."'");
             return false;
         }
 
@@ -42,10 +43,24 @@ class ScoreboardHelper
         foreach ($rawData as $card) {
             // Check to ensure both teams on the scorecard
             if (! array_key_exists($card->home_team, $processedData)) {
-                $processedData[$card->home_team] = ['points' => 0, 'played' => 0, 'wins' => 0, 'losses' => 0, 'for' => 0, 'against' => 0];
+                $processedData[$card->home_team] = [
+                    'points' => 0,
+                    'played' => 0,
+                    'wins' => 0,
+                    'losses' => 0,
+                    'for' => 0,
+                    'against' => 0
+                ];
             }
             if (! array_key_exists($card->away_team, $processedData)) {
-                $processedData[$card->away_team] = ['points' => 0, 'played' => 0, 'wins' => 0, 'losses' => 0, 'for' => 0, 'against' => 0];
+                $processedData[$card->away_team] = [
+                    'points' => 0,
+                    'played' => 0,
+                    'wins' => 0,
+                    'losses' => 0,
+                    'for' => 0,
+                    'against' => 0
+                ];
             }
 
             // Add that each team has played another game
@@ -87,8 +102,8 @@ class ScoreboardHelper
 
     /**
      * Save the calculated scoreboard to the database
-     * @param $data array data
-     * @param $season int ID
+     * @param $data array data Data to save as the to the scoreboard
+     * @param $season int ID of the season to save the data against
      */
     protected static function saveData(array $data, int $season)
     {
@@ -107,6 +122,10 @@ class ScoreboardHelper
         }
     }
 
+    /**
+     * Deletes calculated scoreboard for the given season
+     * @param int $season ID of the season to delete scoreboards from
+     */
     protected static function deleteOldData(int $season)
     {
         Log::info("Deleting old scoreboard data");

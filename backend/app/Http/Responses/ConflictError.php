@@ -17,5 +17,5 @@ class ConflictError
      * @OA\Property()
      * @var string
      */
-    public $message;
+    public string $message;
 }
