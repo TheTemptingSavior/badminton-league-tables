@@ -98,21 +98,21 @@ class Scoreboard extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
+    public bool $timestamps = true;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'scoreboards';
+    protected string $table = 'scoreboards';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
+    protected array $fillable = [
         'team', 'season', 'played', 'points', 'wins', 'losses', 'for', 'against'
     ];
 }

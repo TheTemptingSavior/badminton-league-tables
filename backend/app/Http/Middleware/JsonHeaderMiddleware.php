@@ -9,11 +9,11 @@ class JsonHeaderMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  \Illuminate\Http\Request  $request Lumen request object
+     * @param  \Closure  $next Next middleware to run
+     * @return mixed Returns the next middleware in the chain
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next): mixed
     {
         $response = $next($request);
         $response->headers->set("Content-Type", "application/json");

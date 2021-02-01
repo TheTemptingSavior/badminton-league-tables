@@ -12,7 +12,7 @@ class UpdateScoreboard extends Job
 {
     use SerializesModels;
 
-    protected $scorecard;
+    protected Scorecard $scorecard;
 
     /**
      * Create a new job instance.

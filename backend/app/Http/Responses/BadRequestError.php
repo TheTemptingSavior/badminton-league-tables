@@ -17,11 +17,11 @@ class BadRequestError
      * @OA\Property()
      * @var string
      */
-    public $message;
+    public string $message;
 
     /**
      * @OA\Property(@OA\Items(type="string"))
      * @var array
      */
-    public $errors;
+    public array $errors;
 }

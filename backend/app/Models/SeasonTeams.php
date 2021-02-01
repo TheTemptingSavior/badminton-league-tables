@@ -38,14 +38,14 @@ class SeasonTeams extends Model
      *
      * @var string
      */
-    protected $table = 'season_teams';
+    protected string $table = 'season_teams';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
+    protected array $fillable = [
         'season', 'team',
     ];
 
@@ -54,5 +54,5 @@ class SeasonTeams extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
+    public bool $timestamps = true;
 }

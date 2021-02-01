@@ -57,10 +57,10 @@ class UserController extends Controller
      *     )
      * )
      *
-     * @param Request $request
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listUsers(Request $request)
+    public function listUsers(Request $request): \Illuminate\Http\JsonResponse
     {
         $per_page = $request->get('per_page', 15);
         return response()->json(User::simplePaginate($per_page));
@@ -97,10 +97,10 @@ class UserController extends Controller
      *     )
      * )
      *
-     * @param string $id
+     * @param string $id ID of the user to return
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUser(string $id)
+    public function getUser(string $id): \Illuminate\Http\JsonResponse
     {
         $user = User::findOrFail($id);
         return response()->json($user, 200);
@@ -143,11 +143,11 @@ class UserController extends Controller
      *     )
      * )
      *
-     * @param Request $request
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function createUser(Request $request)
+    public function createUser(Request $request): \Illuminate\Http\JsonResponse
     {
         // Ensure the user attempting to make the account is an admin
         if (! auth()->user()->admin) {
@@ -210,11 +210,18 @@ class UserController extends Controller
      *     )
      * )
      *
-     * @param string $id
+     * @param string $id ID of the user to delete
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteUser(string $id)
+    public function deleteUser(string $id): \Illuminate\Http\JsonResponse
     {
+        // Ensure the user attempting to delete the account is an admin
+        if (! auth()->user()->admin) {
+            Log::error('User is not an admin');
+            Log::error(auth()->user());
+            return response()->json(['error' => 'Only an admin may delete user accounts'], 403);
+        }
+
         User::findOrFail($id)->delete();
         return response()->json([], 204);
     }
@@ -267,13 +274,15 @@ class UserController extends Controller
      *     )
      * )
      *
-     * @param string $id
-     * @param Request $request
+     * @param string $id ID of the user to edit
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function updateUser(string $id, Request $request)
+    public function updateUser(string $id, Request $request): \Illuminate\Http\JsonResponse
     {
+        // Check to ensure the user is either an admin or updating their
+        // own account
         $currentUser = auth()->user();
         if (! $currentUser->admin) {
             if ($currentUser->id != $id) {
@@ -342,13 +351,22 @@ class UserController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     ),
      * )
-     * @param string $id
-     * @param Request $request
+     * @param string $id ID of the user to update
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function makeAdmin(string $id, Request $request)
+    public function makeAdmin(string $id, Request $request): \Illuminate\Http\JsonResponse
     {
+        // Ensure the user attempting to update the account is an admin
+        if (! auth()->user()->admin) {
+            Log::error('User is not an admin');
+            Log::error(auth()->user());
+            return response()->json(
+                ['error' => 'Only an admin may change the admin status of user accounts'],
+                403
+            );
+        }
         $this->validate(
             $request,
             ['admin' => 'required|boolean']

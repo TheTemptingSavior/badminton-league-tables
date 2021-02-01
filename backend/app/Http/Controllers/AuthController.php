@@ -17,10 +17,10 @@ class AuthController extends Controller
 
     /**
      * Returns a JSON Web Token to the requester
-     * @param $token
+     * @param $token Token to create a response with
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respondWithToken($token)
+    public function respondWithToken($token): \Illuminate\Http\JsonResponse
     {
         // TODO: Figure out a way to state when the token will expire
         return response()->json([
@@ -65,11 +65,10 @@ class AuthController extends Controller
      *     ),
      * )
      *
-     * @param Request $request
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function login(Request $request)
+    public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required|string',
@@ -104,7 +103,7 @@ class AuthController extends Controller
      * )
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(): \Illuminate\Http\JsonResponse
     {
         // TODO: Add the token to a blacklist here
         return response()->json(['message'=>'Goodbye!'], 200);
@@ -130,7 +129,7 @@ class AuthController extends Controller
      * )
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me()
+    public function me(): \Illuminate\Http\JsonResponse
     {
         return response()->json(auth()->user());
     }

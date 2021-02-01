@@ -25,7 +25,7 @@ class SeasonController extends Controller
      * )
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listSeasons()
+    public function listSeasons(): \Illuminate\Http\JsonResponse
     {
         return response()->json(Season::all());
     }
@@ -54,12 +54,12 @@ class SeasonController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     )
      * )
-     * @param string $id
+     * @param string $id ID of the season to retrieve
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSeason(string $id)
+    public function getSeason(string $id): \Illuminate\Http\JsonResponse
     {
-        $season = Season::findOrFail($id);
+        $season = Season::findOrFail($id, 'id');
         return response()->json($season, 200);
     }
 
@@ -90,10 +90,10 @@ class SeasonController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     )
      * )
-     * @param string $id
+     * @param string $id ID of season to retrieve the teams from
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getTeams(string $id)
+    public function getTeams(string $id): \Illuminate\Http\JsonResponse
     {
         $teams = DB::table('season_teams')
             ->where('season_id', '=', $id)
@@ -128,14 +128,16 @@ class SeasonController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     )
      * )
-     * @param string $slug
+     * @param string $slug Slug of the season to return
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getFromSlug(string $slug)
+    public function getFromSlug(string $slug): \Illuminate\Http\JsonResponse
     {
+        // TODO: Create catch for graceful 404 return if this fails
         $season = DB::table('seasons')
             ->where('slug', '=', $slug)
             ->first();
+
         return response()->json($season, 200);
     }
 
@@ -176,11 +178,12 @@ class SeasonController extends Controller
      *         )
      *     )
      * )
-     * @param string $slug
+     * @param string $slug Slug of the season to retrieve
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getScorecards(string $id)
+    public function getScorecards(string $id): \Illuminate\Http\JsonResponse
     {
+        // TODO: Create a catch if this fails to return 404
         $season = DB::table('seasons')
             ->where('id', '=', $id)
             ->first();

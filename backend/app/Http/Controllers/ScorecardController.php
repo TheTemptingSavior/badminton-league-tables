@@ -61,7 +61,7 @@ class ScorecardController extends Controller
      *         )
      *     )
      * )
-     * @param Request $request
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
      */
     public function getAll(Request $request)
@@ -100,10 +100,10 @@ class ScorecardController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/Scorecard")
      *     )
      * )
-     * @param string $id
+     * @param string $id ID of the game to retrieve
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getGame(string $id)
+    public function getGame(string $id): \Illuminate\Http\JsonResponse
     {
         $game = Scorecard::findOrFail($id);
         $game['home_team_data'] = Team::findOrFail($game['home_team']);
@@ -148,16 +148,16 @@ class ScorecardController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
      *     )
      * )
-     * @param Request $request
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function createGame(Request $request)
+    public function createGame(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), Scorecard::getValidationRules());
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+
         // Before running any validations against the data
         // ensure all the required keys are present
         $data = Scorecard::PAD_SCORECARD($request->toArray());
@@ -229,16 +229,17 @@ class ScorecardController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
      *     )
      * )
-     * @param string $id
+     * @param string $id ID of the game to update
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateGame(string $id)
+    public function updateGame(string $id): \Illuminate\Http\JsonResponse
     {
-        // TODO: Implement this
+        // TODO: Implement update feature to the scoreboard
+        //       Status code returns a 501
         $game = Scorecard::findOrFail($id);
 
         // Update the game
-        return response()->json($game, 200);
+        return response()->json($game, 501);
     }
 
     /**
@@ -275,10 +276,10 @@ class ScorecardController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     )
      * )
-     * @param string $id
+     * @param string $id ID of the game to delete
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteGame(string $id)
+    public function deleteGame(string $id): \Illuminate\Http\JsonResponse
     {
         Scorecard::findOrFail($id)->delete();
 

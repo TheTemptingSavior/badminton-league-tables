@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 
 class CorsMiddleware
 {
-    protected $settings = array(
+    protected array $settings = array(
         'origin' => '*',    // Wide Open!
         'allowMethods' => 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
     );
