@@ -5,17 +5,17 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.2.5",
+        "php": "^8.0",
         "ext-json": "*",
-        "darkaonline/swagger-lume": "^7.0",
-        "doctrine/annotations": "^1.10",
-        "doctrine/dbal": "^2.10",
-        "illuminate/contracts": "v7.28.3",
-        "illuminate/redis": "v7.28.3",
-        "laravel/lumen-framework": "^7.0",
-        "predis/predis": "^1.1",
+        "darkaonline/swagger-lume": "8.0",
+        "doctrine/annotations": "1.10",
+        "doctrine/dbal": "2.10",
+        "illuminate/contracts": "v8.26.1",
+        "illuminate/redis": "v8.26.1",
+        "laravel/lumen-framework": "8.2.2",
+        "predis/predis": "1.1",
         "tymon/jwt-auth": "dev-develop",
-        "zircote/swagger-php": "^3.1"
+        "zircote/swagger-php": "3.1"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9.1",

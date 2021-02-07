@@ -3,7 +3,7 @@ WORKDIR /app
 COPY backend/ /app
 RUN composer install
 
-FROM php:7.4-fpm-alpine
+FROM php:8.0.2-fpm-alpine
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 COPY backend/ /var/www/html/api
