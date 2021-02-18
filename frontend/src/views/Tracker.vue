@@ -3,7 +3,7 @@
     <v-row >
       <v-col cols="12" xs="12" class="text-center">
         <h2 class="accent--text text-h2">Game Tracker</h2>
-        <h5 class="text-center accent--text text-h5">Season {{ currentSeason }}</h5>
+        <h5 class="text-center accent--text text-h5">{{ currentSeason }}</h5>
         <div class="text-center py-5">
           <SeasonModal @seasonChange="changeSeason"  />
         </div>

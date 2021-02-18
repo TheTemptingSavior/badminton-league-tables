@@ -8,6 +8,7 @@ import Tracker from "@/views/Tracker";
 import NotFound from "@/views/errors/NotFound";
 import adminRoutes from "@/router/adminRoutes";
 import Scorecard from "@/views/Scorecard";
+import Teams from "@/views/Teams";
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,14 @@ const routes = [
     props: true,
     meta: {
       title: 'Scorecard'
+    }
+  },
+  {
+    path: '/teams',
+    name: 'Teams',
+    component: Teams,
+    meta: {
+      title: 'Teams'
     }
   },
   {
