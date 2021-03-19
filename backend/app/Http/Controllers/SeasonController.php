@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GenericHelper;
+use App\Helpers\SeasonHelper;
 use App\Models\Season;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +30,53 @@ class SeasonController extends Controller
     public function listSeasons(): \Illuminate\Http\JsonResponse
     {
         return response()->json(Season::all());
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/seasons/current",
+     *     summary="Get the current season",
+     *     description="Returns the current season and teams playing",
+     *     tags={"seasons"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Season data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="slug", type="string"),
+     *             @OA\Property(property="start", type="string"),
+     *             @OA\Property(property="end", type="string"),
+     *             @OA\Property(property="created_at", type="string"),
+     *             @OA\Property(property="updated_at", type="string"),
+     *             @OA\Property(
+     *                 type="teams",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Team")
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function currentSeason(): \Illuminate\Http\JsonResponse
+    {
+        $season = SeasonHelper::getCurrent();
+        $teams = DB::table('season_teams')
+            ->where('season_id', '=', $season->id)
+            ->join('teams', 'season_teams.team_id', 'teams.id')
+            ->select('teams.id', 'teams.name', 'teams.slug', 'teams.retired_on', 'teams.created_at', 'teams.updated_at')
+            ->get();
+
+        $data = Array(
+            "id" => $season->id,
+            "slug" => $season->slug,
+            "start" => $season->start,
+            "end" => $season->end,
+            "created_at" => $season->created_at,
+            "updated_at" => $season->updated_at,
+            "teams" => $teams
+        );
+
+        return response()->json($data, 200);
     }
 
     /**
