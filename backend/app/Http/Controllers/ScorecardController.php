@@ -238,6 +238,8 @@ class ScorecardController extends Controller
         //       Status code returns a 501
         $game = Scorecard::findOrFail($id);
 
+
+
         // Update the game
         return response()->json($game, 501);
     }

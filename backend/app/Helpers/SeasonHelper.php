@@ -20,4 +20,19 @@ class SeasonHelper
             ->first();
         return ($season !== null) ? $season->id : -1;
     }
+
+    /**
+     * Returns the current season
+     * @return \App\Models\Season
+     */
+    public static function getCurrent()
+    {
+        // Get the seasons ordered by date and select the first one
+        // This will be the latest season in the league
+        $season = DB::table('seasons')
+            ->orderBy('start', 'desc')
+            ->first();
+
+        return $season;
+    }
 }
