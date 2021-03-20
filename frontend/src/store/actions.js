@@ -52,7 +52,6 @@ const loadOther = async (context, payload) => {
     }
 
     console.log("Loading data from season ID " + payload.sid);
-    context.commit('CACHE_CURRENT');
     context.commit('UNSET_CURRENT_LOADED');
     Vue.axios.all([
         Vue.axios.get("/api/seasons/" + payload.sid),
