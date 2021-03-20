@@ -1,10 +1,10 @@
 <template>
   <div class="scoreboards">
     <v-container>
-      <h2 class="text-center accent--text text-h2">
-        Current Scoreboard
-      </h2>
-      <h5 class="text-center accent--text text-h5">Season {{ currentSeason }}</h5>
+      <v-col cols="12" xs="12" class="text-center">
+        <h2 class="accent--text text-h2">Current Scoreboard</h2>
+        <h5 class="text-center accent--text text-h5">{{ currentSeason }}</h5>
+      </v-col>
       <Loader :showing="!isLoaded"/>
       <v-divider />
       <ScoreboardTable :data=currentScoreboard :error=error />
