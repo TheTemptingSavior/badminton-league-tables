@@ -91,7 +91,7 @@ class TrackerController extends Controller
      */
     public function getTracker(string $id): \Illuminate\Http\JsonResponse
     {
-        $season = Season::findOrFail($id, 'id');
+        $season = Season::findOrFail($id);
         $data = $this->getData($season);
 
         return response()->json($data, 200);

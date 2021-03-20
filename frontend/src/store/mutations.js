@@ -10,7 +10,7 @@ const SET_CURRENT = (state, responses) => {
         },
         teams: responses[0].teams,
         scoreboard: responses[1].data,
-        tracker: responses[2]
+        tracker: responses[2].data
     }
 }
 

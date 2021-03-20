@@ -57,33 +57,32 @@ export default {
   components: {SeasonModal},
   computed: {
     getTeams() {
-      return this.$store.state.teams;
+      return this.$store.getters.getTeams;
     },
     currentSeason() {
-      if (this.$store.state.tracker.current.season !== undefined) {
-        return "Season " + this.$store.state.tracker.current.season.slug;
+      if (this.$store.state.currentLoaded) {
+        return "Season " + this.$store.getters.getSeason.slug;
       } else {
         return "Season N/A"
       }
     },
     getTracker() {
-      if (this.$store.state.tracker.current.data === undefined) {
+      if (! this.$store.state.currentLoaded) {
         return [];
       }
-      return this.$store.state.tracker.current.data;
+      return this.$store.getters.getTracker;
     }
   },
   methods: {
     changeSeason(sid) {
       console.log("Changing season to " + sid);
-      this.$store.dispatch('loadTracker', {
+      this.$store.dispatch('loadOther', {
         sid: sid
       });
     }
   },
   created() {
-    this.$store.dispatch('loadTeams');
-    this.$store.dispatch('loadCurrentTracker');
+    this.$store.dispatch('loadCurrent');
   }
 }
 </script>
