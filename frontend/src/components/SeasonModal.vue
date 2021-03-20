@@ -3,13 +3,10 @@
     <template v-slot:activator="{ on, attrs }">
       <v-btn
           elevation="2"
-          color="secondary"
-          outlined
-          rounded
           v-bind="attrs"
           v-on="on"
       >
-        More Seasons
+        Season {{ currentSeason }}
       </v-btn>
     </template>
     <v-card>
@@ -62,6 +59,13 @@ export default {
           id: s.id
         }
       })
+    },
+    currentSeason() {
+      if (this.$store.state.currentLoaded) {
+        return this.$store.getters.getSeason.slug;
+      } else {
+        return "N/A";
+      }
     }
   },
   methods: {

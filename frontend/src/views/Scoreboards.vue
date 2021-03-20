@@ -5,9 +5,6 @@
         Current Scoreboard
       </h2>
       <h5 class="text-center accent--text text-h5">Season {{ currentSeason }}</h5>
-      <div class="text-center py-5">
-        <SeasonModal id="seasons-model" @seasonChange="changeSeason" />
-      </div>
       <Loader :showing="!isLoaded"/>
       <v-divider />
       <ScoreboardTable :data=currentScoreboard :error=error />
@@ -21,12 +18,11 @@
 
 <script>
 import ScoreboardTable from "@/components/ScoreboardTable";
-import SeasonModal from "@/components/SeasonModal";
 import Loader from "../components/Loader";
 
 export default {
   name: "Scoreboards",
-  components: {Loader, SeasonModal, ScoreboardTable},
+  components: {Loader, ScoreboardTable},
   data() {
       return {
         error: null,
@@ -60,11 +56,6 @@ export default {
   methods: {
     setError(msg) {
       this.error = msg;
-    },
-    changeSeason(sid) {
-      this.$store.dispatch('loadOther', {
-        sid: sid
-      });
     },
     refresh() {
       this.$store.dispatch('loadCurrentScoreboard');

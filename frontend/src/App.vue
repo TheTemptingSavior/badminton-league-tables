@@ -18,6 +18,8 @@
     <v-app-bar app color="primary" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-toolbar-title>League Tables</v-toolbar-title>
+      <v-spacer />
+      <SeasonModal id="seasons-model" @seasonChange="changeSeason" />
     </v-app-bar>
 
     <!-- Page content -->
@@ -37,9 +39,10 @@
 <script>
 import NavBar from "@/components/NavBar";
 import { EventBus } from "@/plugins/event-bus";
+import SeasonModal from "./components/SeasonModal";
 
 export default {
-  components: { NavBar },
+  components: {SeasonModal, NavBar },
   data() {
     return {
       drawer: null,
@@ -54,7 +57,12 @@ export default {
     showError(message) {
       this.snackbar.text = message;
       this.snackbar.open = true;
-    }
+    },
+    changeSeason(sid) {
+      this.$store.dispatch('loadOther', {
+        sid: sid
+      });
+    },
   },
   mounted() {
     EventBus.$on("show-error", this.showError);
