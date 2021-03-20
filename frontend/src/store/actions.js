@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import {EventBus} from "@/plugins/event-bus";
+import axios from 'axios'
 
 /*
  * ------------------------------------------------------
@@ -10,6 +11,28 @@ const setLoading = (context) => {
     console.log("Setting the global loading flag");
     context.commit('SET_LOADING', true);
 };
+
+const loadCurrent = async (context) => {
+    console.log("Loading current season information");
+    const routes = [
+        Vue.axios.get("/api/seasons/current"),
+        Vue.axios.get("/api/scoreboards/current"),
+        Vue.axios.get("/api/tracker/current")
+    ];
+    Vue.axios.all(routes).then(axios.spread((r1, r2, r3) => {
+            console.log("Received responses for current");
+            console.log("Received responses: ");
+            console.log(r1);
+            console.log(r2);
+            console.log(r3);
+            context.commit('SET_CURRENT', [r1.data, r2.data, r3.data]);
+    })).catch((error) => {
+        console.log("Failed to get current data");
+        throw new Error(`APIError: ${error}`);
+    }).finally(() => {
+        context.commit('SET_CURRENT_LOADED');
+    });
+}
 
 /*
  * ------------------------------------------------------
@@ -136,6 +159,7 @@ const loadTracker = (context, payload) => {
 
 export default {
     setLoading,
+    loadCurrent,
     loadCurrentScoreboard,
     loadScoreboard,
     loadTeams,

@@ -1,3 +1,20 @@
+const SET_CURRENT = (state, responses) => {
+    state.current.season = {
+        id: responses[0].id,
+        slug: responses[0].slug,
+        start: responses[0].start,
+        end: responses[0].end,
+    }
+    state.current.teams = responses[0].teams;
+    state.current.scoreboard = responses[1].data;
+    state.current.tracker = responses[2];
+}
+
+const SET_CURRENT_LOADED = (state) => {
+    state.currentLoaded = true;
+}
+
+
 /*
  * ------------------------------------------------------
  * General state mutators
@@ -12,9 +29,9 @@ const SET_LOADING = (state, value) => {
  * Begin scoreboard related mutations
  * ------------------------------------------------------
  */
-const SET_CURRENT_SCOREBOARD = (state, scoreboard) => {
-    state.scoreboards.current = scoreboard;
-}
+// const SET_CURRENT_SCOREBOARD = (state, scoreboard) => {
+//     state.scoreboards.current = scoreboard;
+// }
 const CACHE_SCOREBOARD = (state, data) => {
     let seasonId = data.season;
     state.scoreboards.all[seasonId] = data;
@@ -66,9 +83,9 @@ const LOGOUT_USER = (state) => {
  * Begin tracker related mutations
  * ------------------------------------------------------
  */
-const SET_CURRENT_TRACKER = (state, payload) => {
-    state.tracker.current = payload;
-}
+// const SET_CURRENT_TRACKER = (state, payload) => {
+//     state.tracker.current = payload;
+// }
 
 const CACHE_TRACKER = (state, payload) => {
     let seasonId = payload.season.id;
@@ -77,14 +94,15 @@ const CACHE_TRACKER = (state, payload) => {
 
 export default {
     SET_LOADING,
+    SET_CURRENT,
+    SET_CURRENT_LOADED,
+
     CACHE_SCOREBOARD,
-    SET_CURRENT_SCOREBOARD,
     SET_TEAMS,
     SET_SEASONS,
     SET_TOKEN,
     SET_TOKEN_EXPIRES_IN,
     SET_TOKEN_RECEIVE_TIME,
     LOGOUT_USER,
-    SET_CURRENT_TRACKER,
     CACHE_TRACKER,
 }
