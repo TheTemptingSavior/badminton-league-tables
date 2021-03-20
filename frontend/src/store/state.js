@@ -10,4 +10,5 @@ export default {
     current: null,
     all: {},
     seasons: [],
+    teams: null,
 }
