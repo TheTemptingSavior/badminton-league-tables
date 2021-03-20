@@ -13,6 +13,10 @@ const setLoading = (context) => {
 };
 
 const loadCurrent = async (context) => {
+    if (context.state.currentLoaded) {
+        // The current state of the leaderboard is already loaded
+        return;
+    }
     console.log("Loading current season information");
     const routes = [
         Vue.axios.get("/api/seasons/current"),
@@ -20,17 +24,47 @@ const loadCurrent = async (context) => {
         Vue.axios.get("/api/tracker/current")
     ];
     Vue.axios.all(routes).then(axios.spread((r1, r2, r3) => {
-            console.log("Received responses for current");
-            console.log("Received responses: ");
-            console.log(r1);
-            console.log(r2);
-            console.log(r3);
-            context.commit('SET_CURRENT', [r1.data, r2.data, r3.data]);
+        console.log("Received responses for current");
+        context.commit('SET_CURRENT', [r1.data, r2.data, r3.data]);
     })).catch((error) => {
         console.log("Failed to get current data");
         throw new Error(`APIError: ${error}`);
     }).finally(() => {
         context.commit('SET_CURRENT_LOADED');
+    });
+}
+
+const loadOther = async (context, payload) => {
+    console.log("Loading data from season ID " + payload.sid);
+    // let state = context.state;
+
+    // if (state.currentLoaded) {
+    //     if (state.all.keys().includes(state.current.season.id)) {
+    //         // The slug is already in the all array
+    //         context.commit('CHANGE_CURRENT', payload.sid);
+    //     }
+    // }
+    context.commit('CACHE_CURRENT');
+    context.commit('UNSET_CURRENT_LOADED');
+    const routes = [
+        Vue.axios.get("/api/seasons/" + payload.sid),
+        Vue.axios.get("/api/seasons/" + payload.sid + "/teams"),
+        Vue.axios.get("/api/scoreboards/" + payload.sid),
+        Vue.axios.get("/api/tracker/" + payload.sid)
+    ];
+    Vue.axios.all(routes).then(axios.spread((r1, r2, r3, r4) => {
+        console.log("Received responses for current");
+        let seasonData = {
+            ...r1.data,
+            teams: r2.data
+        }
+        console.log("Combined season data:" );
+        console.log(seasonData);
+        context.commit('SET_CURRENT', [seasonData, r3.data, r4.data]);
+        context.commit('SET_CURRENT_LOADED');
+    })).catch((error) => {
+        console.log("Failed to get current data");
+        throw new Error(`APIError: ${error}`);
     });
 }
 
@@ -160,6 +194,8 @@ const loadTracker = (context, payload) => {
 export default {
     setLoading,
     loadCurrent,
+    loadOther,
+
     loadCurrentScoreboard,
     loadScoreboard,
     loadTeams,
