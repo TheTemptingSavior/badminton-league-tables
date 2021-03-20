@@ -11,4 +11,5 @@ export default {
     all: {},
     seasons: [],
     teams: null,
+    scorecards: {}
 }
