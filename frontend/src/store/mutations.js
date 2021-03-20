@@ -1,13 +1,17 @@
 const SET_CURRENT = (state, responses) => {
-    state.current.season = {
-        id: responses[0].id,
-        slug: responses[0].slug,
-        start: responses[0].start,
-        end: responses[0].end,
+    let season = responses[0];
+    state.current = season.id
+    state.all[season.id] = {
+        season: {
+            id: responses[0].id,
+            slug: responses[0].slug,
+            start: responses[0].start,
+            end: responses[0].end,
+        },
+        teams: responses[0].teams,
+        scoreboard: responses[1].data,
+        tracker: responses[2]
     }
-    state.current.teams = responses[0].teams;
-    state.current.scoreboard = responses[1].data;
-    state.current.tracker = responses[2];
 }
 
 const SET_CURRENT_LOADED = (state) => {
@@ -17,15 +21,12 @@ const UNSET_CURRENT_LOADED = (state) => {
     state.currentLoaded = false;
 }
 
-const CACHE_CURRENT = (state) => {
-    let key;
-    try {
-        key = state.current.season.slug
-    } catch (e) {
-        console.error("Could not cache current object. No season slug found to use as key");
+const CHANGE_CURRENT = (state, key) => {
+    if (state.all[key] === undefined) {
+        console.error("Key not found in the store");
         return;
     }
-    state.all[key] = state.current;
+    state.current = key;
 }
 
 /*
@@ -110,7 +111,7 @@ export default {
     SET_CURRENT,
     SET_CURRENT_LOADED,
     UNSET_CURRENT_LOADED,
-    CACHE_CURRENT,
+    CHANGE_CURRENT,
 
     CACHE_SCOREBOARD,
     SET_TEAMS,
