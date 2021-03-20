@@ -42,10 +42,10 @@ export default {
         return []
       }
       this.setError(null);
-      return this.$store.state.current.scoreboard.map(row => {
+      return this.$store.getters.getScoreboard.map(row => {
         return {
           ...row,
-          name: this.$store.state.current.teams.filter(x => x.id === row.team)[0].name
+          name: this.$store.getters.getTeams.filter(x => x.id === row.team)[0].name
         }
       });
     },
@@ -53,7 +53,7 @@ export default {
       if (! this.$store.state.currentLoaded) {
         return "N/A";
       } else {
-        return this.$store.state.current.season.slug;
+        return this.$store.getters.getSeason.slug;
       }
     }
   },
