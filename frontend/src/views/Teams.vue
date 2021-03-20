@@ -14,16 +14,18 @@
   </div>
 </template>
 <script>
+import SeasonModal from "@/components/SeasonModal";
 
 export default {
   name: 'Teams',
+  components: {SeasonModal},
   computed: {
     seasonTeams() {
       return [];
     },
     currentSeason() {
-      if (this.$store.state.tracker.current.season !== undefined) {
-        return "Season " + this.$store.state.tracker.current.season.slug;
+      if (this.$store.state.currentLoaded) {
+        return "Season " + this.$store.getters.getSeason.slug;
       } else {
         return "Season N/A"
       }
@@ -32,15 +34,13 @@ export default {
   methods: {
     changeSeason(sid) {
       console.log("Changing season to " + sid);
-      this.$store.dispatch('loadSeasonTeams', {
+      this.$store.dispatch('loadOther', {
         sid: sid
       });
     }
   },
   created() {
-    // TODO: Implement this method to get an object back containing the
-    //       teams active in the current season
-    this.$store.dispatch('loadSeasonTeams');
+    this.$store.dispatch('loadCurrent');
   }
 }
 </script>
