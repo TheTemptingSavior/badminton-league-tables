@@ -609,11 +609,7 @@ export default {
   },
   computed: {
     getTeams() {
-      if (this.$store.getters.allTeams === null) {
-        return [];
-      } else {
-        return this.$store.getters.allTeams;
-      }
+      return this.$store.getters.allTeams;
     }
   },
   created() {
