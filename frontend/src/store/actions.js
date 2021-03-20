@@ -68,6 +68,20 @@ const loadOther = async (context, payload) => {
     });
 }
 
+const loadTeams = (context) => {
+    if (context.state.teams !== null) {
+        // We already have the teams so don't load them again
+        return;
+    }
+    Vue.axios.get('/api/teams').then((response) => {
+        context.commit('SET_TEAMS', response.data);
+    }).catch((error) => {
+        console.log("Create a toast here to show error");
+        // M.toast({html: "Could not load team data", classes: "red white-text"})
+        throw new Error(`API ${error}`);
+    })
+}
+
 /*
  * ------------------------------------------------------
  * Begin scoreboard related actions
@@ -112,19 +126,7 @@ const loadScoreboard = (context, payload) =>  {
  * Begin teams related actions
  * ------------------------------------------------------
  */
-const loadTeams = (context) => {
-    if (context.state.teams.length !== 0) {
-        // We already have the teams so don't load them again
-        return;
-    }
-    Vue.axios.get('/api/teams').then((response) => {
-        context.commit('SET_TEAMS', response.data);
-    }).catch((error) => {
-        console.log("Create a toast here to show error");
-        // M.toast({html: "Could not load team data", classes: "red white-text"})
-        throw new Error(`API ${error}`);
-    })
-}
+
 
 /*
  * ------------------------------------------------------
