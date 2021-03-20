@@ -28,6 +28,7 @@ const loadCurrent = async (context) => {
         context.commit('SET_CURRENT', [r1.data, r2.data, r3.data]);
     })).catch((error) => {
         console.log("Failed to get current data");
+        EventBus.$emit('show-error', 'Failed loading data. Please refresh');
         throw new Error(`APIError: ${error}`);
     }).finally(() => {
         context.commit('SET_CURRENT_LOADED');
@@ -84,52 +85,6 @@ const loadTeams = (context) => {
 
 /*
  * ------------------------------------------------------
- * Begin scoreboard related actions
- * ------------------------------------------------------
- */
-const loadCurrentScoreboard = (context) => {
-    context.commit('SET_LOADING', true);
-    Vue.axios.get('/api/scoreboards').then((response) => {
-        context.commit('SET_CURRENT_SCOREBOARD', response.data)
-        context.commit('CACHE_SCOREBOARD', response.data)
-    }).catch((error) => {
-        EventBus.$emit('show-error', 'Failed loading scoreboard data');
-        throw new Error(`API ${error}`);
-    });
-    context.commit('SET_LOADING', false);
-};
-
-const loadScoreboard = (context, payload) =>  {
-    let commit = context.commit;
-    let state = context.state;
-    console.log('[store] Loading scoreboard for season: ' + payload.sid);
-    if (state.scoreboards.all[payload.sid] !== undefined) {
-        // We already have the scoreboard so use the cached version (no api calls)
-        console.log("Scoreboard for season exists locally")
-        commit('SET_CURRENT_SCOREBOARD', state.scoreboards.all[payload.sid]);
-    } else {
-        commit('SET_LOADING', true);
-        Vue.axios.get('/api/scoreboards/' + payload.sid).then((response) => {
-            commit('SET_CURRENT_SCOREBOARD', response.data);
-            commit('CACHE_SCOREBOARD', response.data)
-        }).catch((error) => {
-            console.log("Create a toast here to show error");
-            EventBus.$emit('show-error', 'Could not find scoreboard');
-            throw new Error(`API ${error}`);
-        });
-        commit('SET_LOADING', false);
-    }
-};
-
-/*
- * ------------------------------------------------------
- * Begin teams related actions
- * ------------------------------------------------------
- */
-
-
-/*
- * ------------------------------------------------------
  * Begin season related actions
  * ------------------------------------------------------
  */
@@ -158,52 +113,13 @@ const logoutUser = (context) => {
     context.commit('LOGOUT_USER');
 }
 
-/*
- * ------------------------------------------------------
- * Begin tracker related actions
- * ------------------------------------------------------
- */
-const loadCurrentTracker = (context) => {
-    Vue.axios.get('/api/tracker').then((response) => {
-        context.commit('SET_CURRENT_TRACKER', response.data);
-        context.commit('CACHE_TRACKER', response.data);
-    }).catch((error) => {
-        console.log("Create a toast here to show error");
-        // M.toast({html: "Could not load season data", classes: "red white-text"});
-        throw new Error(`API ${error}`);
-    });
-};
-
-const loadTracker = (context, payload) => {
-    let commit = context.commit;
-    let state = context.state;
-    if (state.tracker.all[payload.sid] !== undefined) {
-        // The tracker is already present
-        commit('SET_CURRENT_TRACKER', state.tracker.all[payload.sid]);
-    } else {
-        // Tracker is not present
-        Vue.axios.get('/api/tracker/' + payload.sid).then((response) => {
-            commit('SET_CURRENT_TRACKER', response.data);
-            commit('CACHE_TRACKER', response.data);
-        }).catch((error) => {
-            console.log("Create a toast here to show error");
-            // M.toast({html: "Could not load season data", classes: "red white-text"});
-            throw new Error(`API ${error}`);
-        });
-    }
-}
 
 export default {
     setLoading,
     loadCurrent,
     loadOther,
-
-    loadCurrentScoreboard,
-    loadScoreboard,
     loadTeams,
     loadSeasons,
     loginUser,
     logoutUser,
-    loadCurrentTracker,
-    loadTracker,
 }
