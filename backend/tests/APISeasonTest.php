@@ -40,7 +40,7 @@ class APISeasonTest extends TestCase
      */
     function testListSeasons()
     {
-        factory('App\Models\Season', 3)->create();
+        Season::factory(3)->create();
 
         $result = $this->json('GET', '/api/seasons')
             ->seeStatusCode(200);
@@ -142,7 +142,7 @@ class APISeasonTest extends TestCase
      */
     function testGetSeasonFromSlug()
     {
-        $season = factory('App\Models\Season')->create();
+        $season = Season::factory()->create();
         $this->json('GET', '/api/seasons/fromslug/' . $season->slug)
             ->seeJsonStructure(['id', 'start', 'end', 'slug'])
             ->seeJson(['slug' => $season->slug])

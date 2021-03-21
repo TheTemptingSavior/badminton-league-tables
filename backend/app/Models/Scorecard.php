@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\SeasonHelper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Pure;
@@ -91,6 +92,8 @@ use JetBrains\PhpStorm\Pure;
  */
 class Scorecard extends Model
 {
+    use HasFactory;
+
     protected static array $EMPTY_SCORECARD = [
         'home_team' => null, 'away_team' => null, 'date_played' => null, 'home_points' => null, 'away_points' => null,
         'home_player_1' => null, 'home_player_2' => null, 'home_player_3' => null, 'home_player_4' => null,
