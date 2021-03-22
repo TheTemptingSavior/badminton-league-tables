@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\GenericHelper;
 use App\Helpers\SeasonHelper;
 use App\Models\Season;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
@@ -16,20 +17,52 @@ class SeasonController extends Controller
      *     summary="List seasons",
      *     description="List all seasons that have been played",
      *     tags={"seasons"},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="path",
+     *         description="Page of results to retrieve",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="path",
+     *         description="Number of results to retrieve per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
      *     @OA\Response(
      *         response="200",
      *         description="List of seasons the league has been active for",
      *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Season")
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="first_page_url", type="string", format="url"),
+     *             @OA\Property(property="from", type="integer"),
+     *             @OA\Property(property="next_page_url", type="string", format="url"),
+     *             @OA\Property(property="path", type="string", format="url"),
+     *             @OA\Property(property="per_page", type="integer"),
+     *             @OA\Property(property="prev_page_url", type="string", format="url"),
+     *             @OA\Property(property="to", type="string", format="int64"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array"
+     *                 @OA\Items(ref="#/components/schemas/Season")
+     *             )
      *         )
      *     )
      * )
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listSeasons(): \Illuminate\Http\JsonResponse
+    public function listSeasons(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json(Season::all());
+        // Page parameter isn't needed as it happens automatically
+        $per_page = $request->get('per_page', '15');
+        $data = DB::table('seasons')
+            ->orderBy('start')
+            ->select(['id', 'start', 'end', 'slug', 'created_at', 'updated_at'])
+            ->simplePaginate($per_page);
+
+        return response()->json($data);
     }
 
     /**
