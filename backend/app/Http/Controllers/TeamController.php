@@ -45,7 +45,7 @@ class TeamController extends Controller
      *             @OA\Property(property="to", type="string", format="int64"),
      *             @OA\Property(
      *                 property="data",
-     *                 type="array"
+     *                 type="array",
      *                 @OA\Items(ref="#/components/schemas/Team")
      *             )
      *         )
