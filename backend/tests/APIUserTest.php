@@ -21,8 +21,8 @@ class APIUserTest extends TestCase
             ->json('GET', '/api/users')
             ->seeStatusCode(200);
 
-        $data = $result->response->original;
-        $this->assertCount(1, $data, 'Incorrect number of users');
+        $data = json_decode($result->response->content());
+        $this->assertCount(1, $data->data, 'Incorrect number of users');
     }
 
     /**
@@ -39,8 +39,8 @@ class APIUserTest extends TestCase
             ->json('GET', '/api/users')
             ->seeStatusCode(200);
 
-        $data = $result->response->original;
-        $this->assertCount(11, $data, 'Incorrect number of users');
+        $data = json_decode($result->response->content());
+        $this->assertCount(11, $data->data, 'Incorrect number of users');
     }
 
     /**
@@ -51,7 +51,27 @@ class APIUserTest extends TestCase
      */
     function testListUsersPaged()
     {
-        // TODO: Implement APIUserTest::testListUsersPaged
+        User::factory()->count(6)->create();
+        $user = User::factory()->admin()->create();
+
+        $result = $this->actingAs($user)
+            ->json('GET', '/api/users')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        // Note this is 7 because the 6 users created and the admin to query them
+        $this->assertCount(7, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/users?page=1', $data->first_page_url);
+        $this->assertNull($data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/users', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(7, $data->to);
     }
 
     /**
@@ -61,7 +81,27 @@ class APIUserTest extends TestCase
      */
     function testListUsersPageTwo()
     {
-        // TODO: Implement APIUserTest::testListUsersPageTwo
+        User::factory()->count(40)->create();
+        $user = User::factory()->admin()->create();
+
+        $result = $this->actingAs($user)
+            ->json('GET', '/api/users?page=2')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        // Note this is 7 because the 6 users created and the admin to query them
+        $this->assertCount(15, $data->data);
+        $this->assertEquals(2, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/users?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/users?page=3', $data->next_page_url);
+        $this->assertStringEndsWith('/api/users?page=1', $data->prev_page_url);
+        $this->assertStringEndsWith('/api/users', $data->path);
+        $this->assertEquals(16, $data->from);
+        $this->assertEquals(30, $data->to);
     }
 
     /**
@@ -72,7 +112,27 @@ class APIUserTest extends TestCase
      */
     function testListUsersPageLimit()
     {
-        // TODO: Implement APIUserTest::testListUsersPageLimit
+        User::factory()->count(15)->create();
+        $user = User::factory()->admin()->create();
+
+        $result = $this->actingAs($user)
+            ->json('GET', '/api/users?per_page=5')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        // Note this is 7 because the 6 users created and the admin to query them
+        $this->assertCount(5, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(5, $data->per_page);
+        $this->assertStringEndsWith('/api/users?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/users?page=2', $data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/users', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(5, $data->to);
     }
 
     /**
@@ -82,7 +142,27 @@ class APIUserTest extends TestCase
      */
     function testListUsersMiddlePage()
     {
-        // TODO: Implement APIUserTest::testListUsersMiddlePage
+        User::factory()->count(20)->create();
+        $user = User::factory()->admin()->create();
+
+        $result = $this->actingAs($user)
+            ->json('GET', '/api/users?per_page=5&page=2')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        // Note this is 7 because the 6 users created and the admin to query them
+        $this->assertCount(5, $data->data);
+        $this->assertEquals(2, $data->current_page);
+        $this->assertEquals(5, $data->per_page);
+        $this->assertStringEndsWith('/api/users?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/users?page=3', $data->next_page_url);
+        $this->assertStringEndsWith('/api/users?page=1', $data->prev_page_url);
+        $this->assertStringEndsWith('/api/users', $data->path);
+        $this->assertEquals(6, $data->from);
+        $this->assertEquals(10, $data->to);
     }
 
     /**
