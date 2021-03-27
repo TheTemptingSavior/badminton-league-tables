@@ -62,6 +62,7 @@
 
 <script>
 import Vue from 'vue'
+import {EventBus} from "../plugins/event-bus";
 export default {
   name: "Login",
   data() {
@@ -94,12 +95,17 @@ export default {
         if (response.data.token) {
           this.$store.dispatch('loginUser', response.data);
           this.$router.push('/admin')
+        } else {
+          EventBus.$emit('show-error', 'Something went wrong logging in');
+          console.log("Login Error:");
+          console.log(response);
         }
       }).catch((error) => {
         console.log(error);
         this.loginError = "Incorrect username/password."
+      }).finally(() => {
         this.isSubmitted = false;
-      })
+      });
     },
     validate() {
       if (this.$refs.form.validate()) {
