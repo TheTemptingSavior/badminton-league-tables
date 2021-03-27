@@ -49,4 +49,25 @@ class ScorecardFactory extends Factory
             'away_player_6' => ($this->faker->boolean ? $this->faker->name : null),
         ];
     }
+
+    public function setHomeTeam($id)
+    {
+        return $this->state([
+            'home_team' => $id
+        ]);
+    }
+
+    public function setAwayTeam($id)
+    {
+        return $this->state([
+            'away_team' => $id
+        ]);
+    }
+
+    public function setDatePlayed($datePlayed)
+    {
+        return $this->state([
+            'date_played' => $datePlayed
+        ]);
+    }
 }

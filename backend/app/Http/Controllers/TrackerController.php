@@ -9,7 +9,7 @@ class TrackerController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/tracker",
+     *     path="/api/tracker/current",
      *     summary="Get games played by all teams for the current season",
      *     description="Get the games played by a team and the games they have yet to play",
      *     tags={"tracker"},
@@ -46,6 +46,7 @@ class TrackerController extends Controller
     {
         $season = DB::table('seasons')
             ->orderBy('start', 'desc')
+            ->select(['id', 'slug', 'start', 'end'])
             ->first();
         $data = $this->getData($season);
 
