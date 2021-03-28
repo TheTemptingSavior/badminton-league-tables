@@ -18,6 +18,7 @@ const getTeam = (state) => (index) => {
     }
 }
 
+
 const user = state => state.user;
 const token = state => state.user.token;
 const teams = state => state.teams;

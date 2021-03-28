@@ -25,16 +25,12 @@
             Select the seasons the team is active in. If the season
             has scorecards from that season. It will not be retired
           </v-alert>
-          <pre>
-// This will require a serverside check for if the team has
-// any scorecards from the season that are to be
-// retired from. If they do, they cannot be retired from it
-For season in seasons:
-  if team is active in season:
-    checkbox checked
-  else:
-    checkbox unchecked
-          </pre>
+          <v-checkbox
+              v-for="(a, key) in checkboxes"
+              v-bind:key="a.id"
+              v-model="checkboxes[key++].active"
+              :label="a.slug"
+          />
         </v-form>
       </v-card-text>
       <v-card-text v-else>
@@ -70,18 +66,34 @@ export default {
           v => !!v || 'Team name is required',
           v => (v && v.length < 255) || 'Team name is too long',
           v => (v && 2 < v.length) || 'Team name is too short',
-      ]
+      ],
+      checkboxes: []
     }
   },
   computed: {
     team() {
       return this.$store.getters.getTeam(this.teamIndex);
+    },
+  },
+  methods: {
+    calculateCheckboxes(activeSeasons) {
+      let seasonIndex, season;
+      let d = [];
+      for(seasonIndex in this.$store.state.seasons) {
+        season = this.$store.state.seasons[seasonIndex];
+        if (activeSeasons.find(({ id }) => id === season.id) !== undefined) {
+          d.push({sid: season.id, slug: season.slug, active: true})
+        } else {
+          d.push({sid: season.id, slug: season.slug, active: false})
+        }
+      }
+      return d;
     }
   },
   created() {
     let teamId = this.team.id;
-    Vue.axios.get('/api/teams/' + teamId).then((response) => {
-      console.log(response);
+    Vue.axios.get('/api/teams/' + teamId + '/seasons').then((response) => {
+      this.checkboxes = this.calculateCheckboxes(response.data.active);
     }).catch((error) => {
       console.log("Failed getting the team information");
       console.log(error);
