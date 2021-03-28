@@ -116,6 +116,8 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
         $router->get('/', ['as' => 'team-list', 'uses' => 'TeamController@listTeams']);
         // Get a specific team
         $router->get('/{id}', ['as' => 'team-detail', 'uses' => 'TeamController@getTeam']);
+        // Get team active and inactive seasons
+        $router->get('/{id}/seasons', ['as' => 'team-seasons', 'uses' => 'TeamController@getTeamSeasons']);
     });
 
     /*
