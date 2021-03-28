@@ -1,5 +1,11 @@
 # Badminton League Tables
 
+## ToDo
+- Remove the `retired_on` key from teams
+  - Removed in favour of the `season_teams` table
+    
+---
+
 Provides a way for badminton leagues to manage the league scoreboard
 with constant updates and data integrity.
 
