@@ -607,6 +607,12 @@ export default {
       }
     }
   },
+  methods: {
+    saveScorecard() {
+      // TODO: Implement the create scorecard post to the server
+      return;
+    }
+  },
   computed: {
     getTeams() {
       return this.$store.getters.allTeams;

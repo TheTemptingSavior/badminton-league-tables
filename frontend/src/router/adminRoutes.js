@@ -8,13 +8,15 @@ import AdminManageTeams from "@/views/admin/AdminManageTeams";
 const checkLoggedIn = (to, from, next) => {
     let user = store.state.user;
     if (user.token !== null && user.expiresIn !== null && user.receiveTime !== null) {
-        // All data is present so just assume logged in for no
         if (Date.now() < (user.receiveTime + user.expiresIn)) {
+            // Valid token that hasn't expired
             next();
         } else {
+            // Token has expired
             next({name: 'Login'});
         }
     } else {
+        // No user token
         next({name: 'Login'});
     }
 }

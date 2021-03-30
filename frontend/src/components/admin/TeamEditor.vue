@@ -5,7 +5,7 @@
         Edit
       </v-btn>
     </template>
-    <v-card>
+    <v-card :loading="isUpdating">
       <v-card-title>
         Edit Team
       </v-card-title>
@@ -26,9 +26,9 @@
             has scorecards from that season. It will not be retired
           </v-alert>
           <v-checkbox
-              v-for="(a, key) in checkboxes"
+              v-for="a in checkboxes"
               v-bind:key="a.id"
-              v-model="checkboxes[key++].active"
+              v-model="a.active"
               :label="a.slug"
           />
         </v-form>
@@ -41,7 +41,8 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="dialog = false">
+        <v-btn text color="accent" v-on:click="saveForm">Update</v-btn>
+        <v-btn text color="error" @click="dialog = false">
           Close
         </v-btn>
       </v-card-actions>
@@ -62,6 +63,7 @@ export default {
       dialog: false,
       valid: true,
       loaded: false,
+      isUpdating: false,
       nameRules: [
           v => !!v || 'Team name is required',
           v => (v && v.length < 255) || 'Team name is too long',
@@ -88,6 +90,22 @@ export default {
         }
       }
       return d;
+    },
+    saveForm() {
+      this.isUpdating = true;
+      let data = this.checkboxes.map(function(cb) {
+          return {
+            active: cb.active,
+            season: cb.sid
+          }
+      });
+      Vue.axios.post('/api/teams/' + this.team.id + '/retire', data).then((response) => {
+        console.log(response);
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        this.isUpdating = false;
+      })
     }
   },
   created() {
