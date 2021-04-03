@@ -11,6 +11,7 @@ services:
       context: .
     depends_on:
       - backend
+      - frontend
     ports:
       - "80:80"
     volumes:
@@ -42,9 +43,6 @@ services:
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile.development
-    depends_on:
-      - nginx
-      - backend
     ports:
       - "8080:8080"
     volumes:

@@ -232,16 +232,43 @@ class ScorecardController extends Controller
      * @param string $id ID of the game to update
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateGame(string $id): \Illuminate\Http\JsonResponse
+    public function updateGame(string $id, Request $request): \Illuminate\Http\JsonResponse
     {
         // TODO: Implement update feature to the scoreboard
         //       Status code returns a 501
         $game = Scorecard::findOrFail($id);
 
+        $validator = Validator::make($request->all(), Scorecard::getValidationRules());
+        if ($validator->fails()) {
+            // There were missing fields so we can't update everything
+            return response()->json($validator->errors(), 400);
+        }
 
+        $newData = $request->toArray();
+        foreach ($newData as $key => $value) {
+            if ($key === 'id') {
+                // Cannot overwite the ID
+                continue;
+            }
+            Log::debug("Overwriting key '".$key."' with value '".$value."'");
+            $game->$key = $value;
+        }
 
-        // Update the game
-        return response()->json($game, 501);
+        Log::info("Updating scorecard");
+        $game->save();
+        Log::info("Scorecard updated");
+
+        // TODO: Recalculate the scoreboard
+
+        $warnings = Scorecard::checkData($game->toArray());
+        return response()->json(
+            [
+                'message' => 'Scorecard created',
+                'id' => $game->id,
+                'warnings' => (sizeof($warnings) == 0 ? null : $warnings)
+            ],
+            201
+        );
     }
 
     /**
