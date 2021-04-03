@@ -11,14 +11,13 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
     $router->get('/', function() use ($router) {
         // Get the number of teams that haven't retired from the league yet
         $teams = DB::table('teams')
-            ->whereNull('retired_on')
             ->get()
             ->count();
 
         return response()->json(
             [
                 'league' => LEAGUE_NAME,
-                'active_teams' => $teams,
+                'teams' => $teams,
             ], 200);
     });
 
