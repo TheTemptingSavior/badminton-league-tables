@@ -241,7 +241,7 @@ class ScorecardController extends Controller
         $validator = Validator::make($request->all(), Scorecard::getValidationRules());
         if ($validator->fails()) {
             // There were missing fields so we can't update everything
-            return response()->json($validator->errors(), 400);
+            return response()->json(["errors" => $validator->errors()], 400);
         }
 
         $newData = $request->toArray();
@@ -253,6 +253,9 @@ class ScorecardController extends Controller
             Log::debug("Overwriting key '".$key."' with value '".$value."'");
             $game->$key = $value;
         }
+
+        $errors = Scorecard::validateData($game->toArray());
+        if ($errors !== true) { return response()->json(["errors" => $errors], 400); }
 
         Log::info("Updating scorecard");
         $game->save();
