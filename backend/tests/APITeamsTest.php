@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Scorecard;
 use App\Models\Season;
 use App\Models\Team;
 use App\Models\User;
@@ -319,7 +320,7 @@ class APITeamsTest extends TestCase
     }
 
     /**
-     * Retire a team from the specfied season
+     * Retire a team from the specified season
      *
      * @return void
      */
@@ -353,6 +354,66 @@ class APITeamsTest extends TestCase
     }
 
     /**
+     * Attempt to retire a team from a season without providing the
+     * correct data for the 'active'
+     *
+     * @return void
+     */
+    function testRetireTeamFromOneSeasonBadActive()
+    {
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
+        $season = Season::factory()->create();
+
+        // Manually create the link
+        DB::table('season_teams')->insert([
+            'season_id' => $season->id,
+            'team_id' => $team->id
+        ]);
+
+        // Retire the team
+        $data = Array(
+            'data' => Array(
+                Array('season' => $season->id, 'active' => 'seventeen')
+            )
+        );
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', $data)
+            ->seeStatusCode(400);
+    }
+
+    /**
+     * Attempt to retire a team from a season without providing the
+     * correct data for the 'active'
+     *
+     * @return void
+     */
+    function testRetireTeamFromSeasonsMissingData()
+    {
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
+        $season = Season::factory()->count(5)->create();
+
+        // Manually create the link
+        DB::table('season_teams')->insert([
+            'season_id' => $season[0]->id,
+            'team_id' => $team->id
+        ]);
+
+        // Retire the team
+        $data = Array(
+            'data' => Array(
+                Array('season' => $season[0]->id, 'active' => false),
+                Array('season' => $season[1]->id),
+                Array('season' => $season[2]->id, 'active' => false, 'other' => 'type')
+            )
+        );
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', $data)
+            ->seeStatusCode(400);
+    }
+
+    /**
      * Attempt to retire team from the specified season without the
      * season existing
      *
@@ -362,6 +423,15 @@ class APITeamsTest extends TestCase
     {
         $user = User::factory()->admin()->create();
         $team = Team::factory()->create();
+
+        $data = Array(
+            'data' => Array(
+                Array('season' => 999, 'active' => false)
+            )
+        );
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', $data)
+            ->seeStatusCode(404);
     }
 
     /**
@@ -373,6 +443,55 @@ class APITeamsTest extends TestCase
     {
         $user = User::factory()->admin()->create();
         $team = Team::factory()->create();
+        $seasons = Season::factory()->count(5)->create();
+
+        foreach($seasons as $s) {
+            DB::table('season_teams')->insert([
+                'season_id' => $s->id,
+                'team_id' => $team->id
+            ]);
+        }
+
+        $data = Array(
+            'data' => Array(
+                Array('active' => false, 'season' => $seasons[0]->id),
+                Array('active' => false, 'season' => $seasons[1]->id),
+            )
+        );
+        $this->actingAs($user)
+            ->json('put', '/api/teams/'.$team->id.'/retire', $data)
+            ->seeStatusCode(200);
+
+        $this->assertNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[0]->id)
+                ->first()
+        );
+        $this->assertNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[1]->id)
+                ->first()
+        );
+        $this->assertNotNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[2]->id)
+                ->first()
+        );
+        $this->assertNotNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[3]->id)
+                ->first()
+        );
+        $this->assertNotNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[4]->id)
+                ->first()
+        );
     }
 
     /**
@@ -385,6 +504,61 @@ class APITeamsTest extends TestCase
     {
         $user = User::factory()->admin()->create();
         $team = Team::factory()->create();
+        $seasons = Season::factory()->count(5)->create();
+
+        DB::table('season_teams')->insert([
+            'season_id' => $seasons[0]->id,
+            'team_id' => $team->id
+        ]);
+        DB::table('season_teams')->insert([
+            'season_id' => $seasons[1]->id,
+            'team_id' => $team->id
+        ]);
+
+        $data = Array(
+            'data' => Array(
+                Array('active' => true,  'season' => $seasons[0]->id),
+                Array('active' => false, 'season' => $seasons[1]->id),
+                Array('active' => true,  'season' => $seasons[2]->id),
+                Array('active' => false, 'season' => $seasons[3]->id),
+                Array('active' => false, 'season' => $seasons[4]->id)
+            )
+        );
+
+        $this->actingAs($user)
+            ->json('put', '/api/teams/'.$team->id.'/retire', $data)
+            ->seeStatusCode(200);
+
+        $this->assertNotNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[0]->id)
+                ->first()
+        );
+        $this->assertNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[1]->id)
+                ->first()
+        );
+        $this->assertNotNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[2]->id)
+                ->first()
+        );
+        $this->assertNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[3]->id)
+                ->first()
+        );
+        $this->assertNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[4]->id)
+                ->first()
+        );
     }
 
     /**
@@ -412,5 +586,45 @@ class APITeamsTest extends TestCase
     {
         $user = User::factory()->admin()->create();
         $team = Team::factory()->create();
+        $otherTeam = Team::factory()->create();
+        $season = new Season;
+        $season->start = '2018-09-01';
+        $season->end = '2019-08-31';
+        $season->slug = '18-19';
+        $season->save();
+        $sc = Scorecard::factory()
+            ->setHomeTeam($team->id)
+            ->setAwayTeam($otherTeam->id)
+            ->setDatePlayed('2018-11-07')
+            ->create();
+
+        // Manually create the link
+        DB::table('season_teams')->insert([
+            'season_id' => $season->id,
+            'team_id' => $team->id
+        ]);
+        DB::table('season_teams')->insert([
+            'season_id' => $season->id,
+            'team_id' => $otherTeam->id
+        ]);
+
+        // Retire the team
+        $data = Array(
+            'data' => Array(
+                Array('season' => $season->id, 'active' => false)
+            )
+        );
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', $data)
+            ->seeStatusCode(400)
+            ->seeJsonStructure(['error']);
+
+        // Row should NOT have been deleted. There are scorecards
+        $this->assertNotNull(
+            DB::table('season_teams')
+                ->where('season_id', '=', $season->id)
+                ->where('team_id', '=', $team->id)
+                ->first()
+        );
     }
 }

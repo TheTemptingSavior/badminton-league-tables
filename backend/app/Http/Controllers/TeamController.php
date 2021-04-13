@@ -233,7 +233,7 @@ class TeamController extends Controller
         DB::beginTransaction();
         foreach($data['data'] as $sa) {
             // Gather data
-            $season = Season::findOrFail($sa['season']);
+            $season = Season::findOrFail($sa['season'], "*");
             // Attempt to get the data from the season_teams table
             $row = DB::table('season_teams')
                 ->where('season_id', '=', $season->id)
@@ -250,17 +250,28 @@ class TeamController extends Controller
             } else if ($row != null && $sa['active'] == false) {
                 Log::info("SeasonTeams(season=$season->id, team=$team->id) exists. Deleting now");
                 // There is a row but the team is not active
-                if (TeamHelper::canRetire($id, $sa['season'])) {
+                if (TeamHelper::canRetire($id, $season->id)) {
+                    Log::info("Team #$team->id is being retired");
                     DB::table('season_teams')->delete($row->id);
                 } else {
+                    Log::warning("Team #$team->id still has scorecards. Aborting all operations");
                     DB::rollBack();
                     return response()->json(
                         ['error' => 'Team has active scorecards in season '.$season->slug],
                         400
                     );
                 }
+            } else if ($row == null && $sa['active'] == false) {
+                Log::debug("No entry in SeasonTeams and active is false. Nothing to do");
+            } else if ($row != null && $sa['active'] == true) {
+                Log::debug("SeasonTeams already exists and active is true. Nothing to do");
             } else {
-                echo "Unmatched combination of \$row and \$sa->active";
+                Log::critical("Unknown combination of row and active! Aborting operation");
+                DB::rollBack();
+                return response()->json(
+                    ['error' => 'An unknown error occurred'],
+                    400
+                );
             }
         }
 
