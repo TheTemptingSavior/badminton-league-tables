@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\GenericHelper;
+use App\Helpers\TeamHelper;
+use App\Models\Season;
+use App\Models\SeasonTeams;
 use App\Models\Team;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -166,16 +170,9 @@ class TeamController extends Controller
     /**
      * @OA\Post(
      *     path="/api/teams/{id}/retire",
-     *     summary="Retire team from the league",
-     *     description="Retires a team in the league, removing it from options in games and removing them from future league tables",
+     *     summary="Retire team from seasons in the leage",
+     *     description="Updates the retirement status of a team within the league. Note: Seasons can be omitted from the list and only present seasons will be updated",
      *     tags={"teams"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="Team retirement status",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="retired", type="boolean")
-     *         )
-     *     ),
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -183,10 +180,32 @@ class TeamController extends Controller
      *         required=true,
      *         @OA\Schema(type="integer", format="int64")
      *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Seasons and whether the team is still active in it",
+     *         @OA\JsonContent(
+     *             propert="data",
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="active", type="boolean"),
+     *                 @OA\Property(property="season", type="integer")
+     *             )
+     *         )
+     *     ),
      *     @OA\Response(
      *         response="200",
      *         description="Returns the newly edited team",
      *         @OA\JsonContent(ref="#/components/schemas/Team")
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request data provided",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="409",
+     *         description="Team cannot be retired as they have scorecards in one of the leagues to be retired from",
+     *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
      *     )
      * )
      * @param string $id ID of the team to retire
@@ -195,19 +214,62 @@ class TeamController extends Controller
      */
     public function retireTeam(string $id, Request $request): \Illuminate\Http\JsonResponse
     {
-        // TODO: This should use the season_teams table from now on
-        $validator = Validator::make($request->all(), ['retired' => 'required|boolean']);
+        // Validate the parameters
+        $team = Team::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'data' => 'required|array',
+            'data.*.season' => 'required|integer',
+            'data.*.active' => 'required|boolean'
+        ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
 
-        $team = Team::findOrFail($id);
-        if ($request->retired) {
-            $team->retired_on = date('Y-m-d');
-        } else {
-            $team->retired_on = null;
+        // Get the data in a usable format
+        $data = $request->toArray();
+
+        // Start a transaction. Either all the season changes are applied
+        // or none of them are
+        DB::beginTransaction();
+        foreach($data['data'] as $sa) {
+            // Gather data
+            $season = Season::findOrFail($sa['season']);
+            // Attempt to get the data from the season_teams table
+            $row = DB::table('season_teams')
+                ->where('season_id', '=', $season->id)
+                ->where('team_id', '=', $team->id)
+                ->first();
+
+            if ($row == null && $sa['active'] == true) {
+                Log::info("No SeasonTeams(season=$season->id, team=$team->id) row. Creating now");
+                // There is no row but the team is active so create one
+                $st = new SeasonTeams;
+                $st->season_id = $season->id;
+                $st->team_id = $team->id;
+                $st->save();
+            } else if ($row != null && $sa['active'] == false) {
+                Log::info("SeasonTeams(season=$season->id, team=$team->id) exists. Deleting now");
+                // There is a row but the team is not active
+                if (TeamHelper::canRetire($id, $sa['season'])) {
+                    DB::table('season_teams')->delete($row->id);
+                } else {
+                    DB::rollBack();
+                    return response()->json(
+                        ['error' => 'Team has active scorecards in season '.$season->slug],
+                        400
+                    );
+                }
+            } else {
+                echo "Unmatched combination of \$row and \$sa->active";
+            }
         }
-        $team->save();
+
+        try {
+            DB::commit();
+        } catch (\Exception $e) {
+            Log::error("Failed updating season retirement status");
+            return response()->json(['error' => 'Failed updating team status', 'msg' => $e], 400);
+        }
 
         return response()->json($team, 200);
     }

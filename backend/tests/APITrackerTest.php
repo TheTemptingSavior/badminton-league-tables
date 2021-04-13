@@ -65,7 +65,6 @@ class APITrackerTest extends TestCase
         $data = json_decode($result->response->content());
 
         $this->assertEquals($season->id, $data->season->id);
-        print_r($data->data);
         // All the  teams exist so now we can validate the actual scorecard
         foreach ($teams as $team) {
             $t = $team->id;
