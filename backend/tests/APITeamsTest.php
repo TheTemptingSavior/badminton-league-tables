@@ -431,7 +431,7 @@ class APITeamsTest extends TestCase
         );
         $this->actingAs($user)
             ->json('PUT', '/api/teams/'.$team->id.'/retire', $data)
-            ->seeStatusCode(404);
+            ->seeStatusCode(400);
     }
 
     /**
@@ -572,8 +572,47 @@ class APITeamsTest extends TestCase
     {
         $user = User::factory()->admin()->create();
         $team = Team::factory()->create();
+        $seasons = Season::factory()->count(3)->create();
 
-        // Check database to make sure changes didn't persist
+        DB::table('season_teams')->insert([
+            'season_id' => $seasons[0]->id,
+            'team_id' => $team->id
+        ]);
+        DB::table('season_teams')->insert([
+            'season_id' => $seasons[1]->id,
+            'team_id' => $team->id
+        ]);
+
+        $data = Array(
+            'data' => Array(
+                Array('active' => false, 'season' => $seasons[0]->id),
+                Array('active' => true, 'season' => 999)
+            )
+        );
+
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', $data)
+            ->seeStatusCode(400);
+
+        // This row should still be here as the transaction was rolled back
+        $this->assertNotNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[0]->id)
+                ->first()
+        );
+        $this->assertNotNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[1]->id)
+                ->first()
+        );
+        $this->assertNull(
+            DB::table('season_teams')
+                ->where('team_id', '=', $team->id)
+                ->where('season_id', '=', $seasons[2]->id)
+                ->first()
+        );
     }
 
     /**

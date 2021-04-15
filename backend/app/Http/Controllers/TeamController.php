@@ -233,7 +233,16 @@ class TeamController extends Controller
         DB::beginTransaction();
         foreach($data['data'] as $sa) {
             // Gather data
-            $season = Season::findOrFail($sa['season'], "*");
+            $season = Season::find($sa['season'], "*");
+            if ($season == null) {
+                $sid = $sa['season'];
+                Log::error("Season #$sid does not exist");
+                DB::rollBack();
+                return response()->json(
+                    ['error' => "Season #$sid not found"],
+                    400
+                );
+            }
             // Attempt to get the data from the season_teams table
             $row = DB::table('season_teams')
                 ->where('season_id', '=', $season->id)
