@@ -20,14 +20,12 @@ class ScoreboardHelper
     public static function calculateScoreboard(int $season): bool
     {
         Log::info("Calculating scoreboard for season " . $season);
-        $seasonStart = null;
-        $seasonEnd = null;
         try {
             // Sanity to check to ensure the season exists
-            $seasonObject = Season::findOrFail($season);
+            $seasonObject = Season::findOrFail($season, "*");
             $seasonStart = $seasonObject->start;
             $seasonEnd = $seasonObject->end;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             Log::error("Could not find season '".$season."'");
             return false;
         }
