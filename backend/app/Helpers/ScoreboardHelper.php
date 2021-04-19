@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Scoreboard;
 use App\Models\Season;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -93,6 +94,13 @@ class ScoreboardHelper
         self::deleteOldData($season);
         Log::info("Old scoreboard data deleted, saving new data");
         self::saveData($processedData, $season);
+
+        // Check to make sure there is a valid scoreboard set here
+        $existing = DB::table('scoreboards')->where('season', '=', $season)->get()->count();
+        if ($existing == 0) {
+            self::generateZeros($seasonObject->id);
+        }
+
         DB::commit();
 
         return true;
@@ -130,5 +138,23 @@ class ScoreboardHelper
         DB::table('scoreboards')
             ->where('season', '=', $season)
             ->delete();
+    }
+
+    protected static function generateZeros($seasonId)
+    {
+        Log::info("No scoreboard exists for season $seasonId. Generating an empty one");
+        $seasonTeams = DB::table('season_teams')->where('season_id', '=', $seasonId)->get();
+        foreach($seasonTeams as $seasonTeam) {
+            $sb = new Scoreboard;
+            $sb->team = $seasonTeam->team_id;
+            $sb->season = $seasonId;
+            $sb->played = 0;
+            $sb->points = 0;
+            $sb->wins = 0;
+            $sb->losses = 0;
+            $sb->for = 0;
+            $sb->against = 0;
+            $sb->saveOrFail();
+        }
     }
 }
