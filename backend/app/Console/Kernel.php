@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\UpdateScoreboards::class,
         \App\Console\Commands\UpdateScoreboard::class,
         \App\Console\Commands\ImportData::class,
+        \App\Console\Commands\CreateSeasons::class,
     ];
 
     /**
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //
+        $schedule->command('cron:create-seasons')
+            ->daily();
     }
 }

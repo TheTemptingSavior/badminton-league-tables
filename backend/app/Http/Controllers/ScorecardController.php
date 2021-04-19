@@ -168,6 +168,7 @@ class ScorecardController extends Controller
         $warnings = Scorecard::checkData($data);
         Log::info("Adding update scoreboard task to the queue");
         $this->dispatch(new UpdateScoreboard($scorecard));
+
         if (sizeof($warnings) == 0) {
             return response()->json(
                 ['message' => 'Scorecard created', 'id' => $scorecard->id, 'warnings' => null],
