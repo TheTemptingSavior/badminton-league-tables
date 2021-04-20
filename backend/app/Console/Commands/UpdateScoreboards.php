@@ -43,13 +43,13 @@ class UpdateScoreboards extends Command
         $this->info('Beginning update of all league scoreboards.');
 
         $seasons = DB::table('seasons')->select(['id', 'slug'])->get();
-        $this->info('Found ' . $seasons->count() . ' seasons to update.');
+        $this->info('Found '.$seasons->count().' seasons to update.');
         foreach($seasons as $s) {
-            $this->info('Starting update of season ' . $s->slug);
+            $this->info('Starting update of season '.$s->slug);
             if (ScoreboardHelper::calculateScoreboard($s->id)) {
-                $this->info('Finished update of season ' . $s->slug);
+                $this->info('Finished update of season '.$s->slug);
             } else {
-                $this->error('Failed update of season ' . $s->slug . '. Please check the logs.');
+                $this->error('Failed update of season '.$s->slug.'. Please check the logs.');
                 return 1;
             }
         }

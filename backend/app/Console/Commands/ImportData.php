@@ -59,14 +59,14 @@ class ImportData extends Command
             $this->error("Import directory does not exist. Cannot continue.");
             return 1;
         }
-        $this->info("Importing data as '$this->dataType'");
+        $this->info("Importing data as '{$this->dataType}'");
 
         if ($this->dataType == 'csv') {
             return $this->importAsCsv();
         } else if ($this->dataType == 'sql') {
             return $this->importAsSql();
         } else {
-            $this->error("Unknown import type '$this->dataType'");
+            $this->error("Unknown import type '{$this->dataType}'");
             return 1;
         }
     }
@@ -78,11 +78,11 @@ class ImportData extends Command
             'teams.csv',
             'seasons.csv',
             'season_teams.csv',
-            'scorecards.csv'
+            'scorecards.csv',
         );
         foreach($files as $file) {
-            if (!is_file($directory.DIRECTORY_SEPARATOR.$file)) {
-                $this->error("Expected to find a file called '$file' but didn't");
+            if (! is_file($directory.DIRECTORY_SEPARATOR.$file)) {
+                $this->error("Expected to find a file called '{$file}' but didn't");
                 return 1;
             }
         }
@@ -103,7 +103,7 @@ class ImportData extends Command
             try {
                 $team->saveOrFail();
             } catch (\Exception $e) {
-                $this->error("Failed saving team to the database: $team->name");
+                $this->error("Failed saving team to the database: {$team->name}");
                 $this->info($e);
                 DB::rollBack();
                 return 1;
@@ -128,7 +128,7 @@ class ImportData extends Command
             try {
                 $season->saveOrFail();
             } catch (\Exception $e) {
-                $this->error("Failed saving season to the database: $season->slug");
+                $this->error("Failed saving season to the database: {$season->slug}");
                 $this->info($e);
                 DB::rollBack();
                 return 1;
@@ -151,7 +151,7 @@ class ImportData extends Command
             try {
                 $seasonTeam->saveOrFail();
             } catch (\Exception $e) {
-                $this->error("Failed saving season_team to the database: $seasonTeam->season_id and $seasonTeam->team_id");
+                $this->error("Failed saving season_team to the database: {$seasonTeam->season_id} and {$seasonTeam->team_id}");
                 $this->info($e);
                 DB::rollBack();
                 return 1;
@@ -245,7 +245,7 @@ class ImportData extends Command
             try {
                 $scorecard->saveOrFail();
             } catch (\Exception $e) {
-                $this->error("Failed adding scorecard to the database: $scorecard->home_team vs $scorecard->away_team on $scorecard->date_played");
+                $this->error("Failed adding scorecard to the database: {$scorecard->home_team} vs {$scorecard->away_team} on {$scorecard->date_played}");
                 print_r($scorecard);
                 $this->info($e);
                 DB::rollBack();

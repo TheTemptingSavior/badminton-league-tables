@@ -30,13 +30,12 @@ class ScoreboardController extends Controller
             ->orderBy('start', 'desc')
             ->first();
 
-        Log::info("Got a current season object #$season->id");
+        Log::info("Got a current season object #{$season->id}");
         $data = DB::table('scoreboards')
             ->where('season', '=', $season->id)
-//            ->orderBy('points', 'DESC')
-//            ->orderBy('wins', 'DESC')
+            ->orderBy('points', 'DESC')
+            ->orderBy('wins', 'DESC')
             ->get();
-        Log::info("Got some rows back $data");
         return response()->json(
             [
                 'season' => $season->id,

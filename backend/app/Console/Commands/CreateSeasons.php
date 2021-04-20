@@ -50,7 +50,7 @@ class CreateSeasons extends Command
         $seasons = Season::all();
         foreach($seasons as $season) {
             if ($season->start <= $currentDate && $currentDate <= $season->end) {
-                $this->info("Today ($currentDate) is in season #$season->id");
+                $this->info("Today ({$currentDate}) is in season #{$season->id}");
                 $inSeason = true;
                 break;
             }
@@ -59,7 +59,7 @@ class CreateSeasons extends Command
         if (! $inSeason) {
             // TODO: Calculate the correct season information
             // We need to create a new season object
-            $this->info("Today ($currentDate) is not in a season. Creating a new season");
+            $this->info("Today ({$currentDate}) is not in a season. Creating a new season");
             $s = new Season;
             $s->start = null;
             $s->end  = null;

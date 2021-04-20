@@ -43,10 +43,7 @@ class UpdateScoreboard extends Job
         $seasonId = SeasonHelper::getSeasonFromDate($this->scorecard->date_played);
         if ($seasonId === null) {
             Log::critical(
-                "Could not find a season for the data '" .
-                $this->scorecard->date_played .
-                "'. Scorecard ID = " .
-                $this->scorecard->id
+                "Could not find a season for the data '".$this->scorecard->date_played."'. Scorecard ID = ".$this->scorecard->id
             );
             return;
         }
@@ -54,7 +51,7 @@ class UpdateScoreboard extends Job
         // Not interested in the return value
         $returnValue = ScoreboardHelper::calculateScoreboard($seasonId);
         if (! $returnValue) {
-            Log::critical("Failed to update the scoreboard for season #$seasonId");
+            Log::critical("Failed to update the scoreboard for season #{$seasonId}");
         }
     }
 }

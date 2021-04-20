@@ -106,7 +106,7 @@ class SeasonController extends Controller
             "end" => $season->end,
             "created_at" => $season->created_at,
             "updated_at" => $season->updated_at,
-            "teams" => $teams
+            "teams" => $teams,
         );
 
         return response()->json($data, 200);

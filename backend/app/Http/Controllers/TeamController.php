@@ -219,7 +219,7 @@ class TeamController extends Controller
         $validator = Validator::make($request->all(), [
             'data' => 'required|array',
             'data.*.season' => 'required|integer',
-            'data.*.active' => 'required|boolean'
+            'data.*.active' => 'required|boolean',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -236,10 +236,10 @@ class TeamController extends Controller
             $season = Season::find($sa['season'], "*");
             if ($season == null) {
                 $sid = $sa['season'];
-                Log::error("Season #$sid does not exist");
+                Log::error("Season #{$sid} does not exist");
                 DB::rollBack();
                 return response()->json(
-                    ['error' => "Season #$sid not found"],
+                    ['error' => "Season #{$sid} not found"],
                     400
                 );
             }
@@ -250,20 +250,20 @@ class TeamController extends Controller
                 ->first();
 
             if ($row == null && $sa['active'] == true) {
-                Log::info("No SeasonTeams(season=$season->id, team=$team->id) row. Creating now");
+                Log::info("No SeasonTeams(season={$season->id}, team={$team->id}) row. Creating now");
                 // There is no row but the team is active so create one
                 $st = new SeasonTeams;
                 $st->season_id = $season->id;
                 $st->team_id = $team->id;
                 $st->save();
             } else if ($row != null && $sa['active'] == false) {
-                Log::info("SeasonTeams(season=$season->id, team=$team->id) exists. Deleting now");
+                Log::info("SeasonTeams(season={$season->id}, team={$team->id}) exists. Deleting now");
                 // There is a row but the team is not active
                 if (TeamHelper::canRetire($id, $season->id)) {
-                    Log::info("Team #$team->id is being retired");
+                    Log::info("Team #{$team->id} is being retired");
                     DB::table('season_teams')->delete($row->id);
                 } else {
-                    Log::warning("Team #$team->id still has scorecards. Aborting all operations");
+                    Log::warning("Team #{$team->id} still has scorecards. Aborting all operations");
                     DB::rollBack();
                     return response()->json(
                         ['error' => 'Team has active scorecards in season '.$season->slug],
@@ -416,7 +416,7 @@ class TeamController extends Controller
 
         $data = Array(
             'active' => Array(),
-            'notactive' => Array()
+            'notactive' => Array(),
         );
 
         foreach ($allSeasons as $season) {
