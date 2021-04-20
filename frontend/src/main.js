@@ -13,7 +13,7 @@ Vue.config.productionTip = false
 Vue.use(VueAxios, axios);
 
 // TODO: Somehow needs to be set with an environment variable
-Vue.axios.defaults.baseURL = 'http://localhost';
+// Vue.axios.defaults.baseURL = process.env.VUE_APP_API_ROOT;
 Vue.axios.interceptors.request.use(config => {
   console.log("Making request to: " + config.url);
   return config;
