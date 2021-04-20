@@ -13,13 +13,13 @@ steps:
       - composer install
 
   - name: Linter
-    image: php:7.4
+    image: php:8.0.2
     commands:
       - cd backend/
       - vendor/bin/tlint
 
   - name: Test
-    image: php:7.4
+    image: php:8.0.2
     commands:
       - pecl install xdebug --quiet 1> /dev/null 2>&1 && docker-php-ext-enable xdebug
       - cd backend/
