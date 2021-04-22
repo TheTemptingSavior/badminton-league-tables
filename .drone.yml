@@ -2,8 +2,10 @@ kind: pipeline
 name: default
 
 environment:
-  APP_ENV: local
-  DB_CONNECTION: sqlite
+  APP_ENV: "local"
+  APP_KEY: helloworlddlrowolleh
+  DB_CONNECTION: ":memory:"
+  JWT_SECRET: "pXj0Wh0QIz09mfaMAfUjSnELPDHhaDn4R4jN3fuuvCynDY3XiaMSh6BqbgP8CRCL"
 
 steps:
   - name: Install
