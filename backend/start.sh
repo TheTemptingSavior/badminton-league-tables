@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ARTISAN=/var/www/html/api
+ARTISAN=/var/www/html/api/artisan
 
 # Check to ensure we have a role
 if [ -z "$1" ] && [ -z "$APP_ROLE" ]; then
@@ -15,9 +15,22 @@ else
     MODE=$1;
 fi
 
+# Regardless of the role we use a connection to the database is still required
+php $ARTISAN manual:check-database --attempts=5 --timeout=3
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "Could not create a connection to the database. Is it up?";
+    exit 1;
+else
+    echo "Database connection successful"
+fi
+
+# Ensure the database is setup and check for an initial "INIT" env var
+
+
 case $MODE in
     app)
-        echo "Service Lumen application";
+        echo "Starting main Lumen application";
         php-fpm;
         ;;
     worker)
@@ -28,7 +41,7 @@ case $MODE in
         echo "Starting as Lumen scheduler";
         while true
         do
-          php /var/www/html/api/artisan schedule:run --verbose --no-interaction &
+          php $ARTISAN schedule:run --verbose --no-interaction &
           sleep 120
         done
         ;;
