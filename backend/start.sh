@@ -25,7 +25,9 @@ else
     echo "Database connection successful"
 fi
 
-# Ensure the database is setup and check for an initial "INIT" env var
+# Ensure the database is setup and check for the default user
+php $ARTISAN migrate
+php $ARTISAN user:make-default
 
 
 case $MODE in
