@@ -1,37 +1,25 @@
 # Badminton League Tables
 
-## ToDo
-#### Required
-- Implement API calls from admin page
-  - Edit teams has no backend function or API call
-- Write the help page  
-  
-#### Optional
-- Store user information and token in the client browser
-  - Localstorage api looks promising
-- Dark mode 
-  - Need to figure out the colors
-- Workers / Scheduling
-  - Auto create seasons at the end of each day
-  - Send emails when scorecards added
-- Users
-  - Admins can log into this web management arena
-  - Non-admins log in to a different portal 
-    - Can delete account
-    - Can subscribe / unsubscribe from emails
-  
----
-
-Provides a way for badminton leagues to manage the league scoreboard
-with constant updates and data integrity.
+Provides a way for badminton leagues to manage the league scoreboard with constant updates. The system provides a 
+certain level of data integrity and has the ability to warn users about incomplete scorecards or incorrect information.
 
 ## Technologies
-What technologies are bing used in this stack
+This stack relies on a few different technologies to run:
+- MariaDB
+- Redis
+- Lumen PHP Framework
+- Vue.JS JavaScript Framework
 
-### Frontend
-The frontend is written in JavaScript using VueJS, compiled and served by nginx
+The backend API is REST based and aims to keep inline with REST standards. The frontend has heavy emphasis on caching
+data from the API to reduce the number of network calls, albeit at the expense of being slightly more memory hungry
 
-### Backend
-The backend is written in PHP using Lumen
+## Docker
+The whole stack is designed to be run in a containerized environment. Currently `docker-compose` is the best way to run
+the system. Persistent data is stored using bind mounts and private networking is utilized to separate services and 
+only expose what is necessary: the front facing Nginx container.
 
-### Docker
+Avoiding CORS issues is done via the reverse proxy Nginx as both the frontend and backend reside on the same subdomain.
+The frontend runs on `/` and the backend is running on `/api`.
+
+Before running, the `env` file must be edited to reflect the specifics of a league, the rest of the configuration is 
+done at run and build time.
