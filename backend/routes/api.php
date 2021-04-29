@@ -49,7 +49,7 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
     | routes require the user to have a valid token.
     |
     */
-    $router->group(['prefix' => 'users', 'middleware' => 'auth'], function() use ($router) {
+    $router->group(['prefix' => 'users', 'middleware' => ['auth', 'admin']], function() use ($router) {
         // Get a list of users
         $router->get('/', ['as' => 'user-list', 'uses' => 'UserController@listUsers']);
         // Get a specific user
@@ -135,7 +135,7 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
         // Get information on a specific game
         $router->get('/{id}', ['as' => 'scorecards-detail', 'uses' => 'ScorecardController@getGame']);
     });
-    $router->group(['prefix' => 'scorecards', 'middleware' => ['auth', 'admin']], function() use ($router) {
+    $router->group(['prefix' => 'scorecards', 'middleware' => ['auth']], function() use ($router) {
         // Create a score cards
         $router->post('/', ['as' => 'scorecards-create', 'uses' => 'ScorecardController@createGame']);
         // Update a scorecard
