@@ -106,9 +106,11 @@ services:
 #      - "DB_DATABASE=:memory:"
       - APP_DEBUG=true
       - APP_ENV=testing
+      - JWT_SECRET=your-secret-key-here
     expose:
       - 9000
     volumes:
       - ./backend:/var/www/html/api
       - logs:/var/www/html/api/storage/logs
       - ./docker/backend/import:/import:ro
+      - ./docker/backend/database.testing.sqlite:/database.testing.sqlite
