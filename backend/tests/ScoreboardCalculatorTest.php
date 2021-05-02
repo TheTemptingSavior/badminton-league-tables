@@ -195,4 +195,43 @@ class ScoreboardCalculatorTest extends TestCase
             $this->assertEquals($data[6], $row->against, "$team->slug has incorrect against value");
         }
     }
+
+    function testSeason2020_2021()
+    {
+        // It is assumed this works
+        $this->artisan('import');
+
+        $season = Season::findOrFail(6, '*');
+        $this->assertEquals('20-21', $season->slug);
+        $ret = ScoreboardHelper::calculateScoreboard($season->id);
+        $this->assertTrue($ret);
+
+        $correctData = Array(
+            Array("meltonshire-a", 0, 0, 0, 0, 0, 0),
+            Array("meltonshire-b", 0, 0, 0, 0, 0, 0),
+            Array("melton-mowbray", 0, 0, 0, 0, 0, 0),
+            Array("stamford-badminton-a", 0, 0, 0, 0, 0, 0),
+            Array("stamford-badminton-b", 0, 0, 0, 0, 0, 0),
+            Array("stamford-community", 0, 0, 0, 0, 0, 0),
+            Array("rockingham", 0, 0, 0, 0, 0, 0),
+            Array("uppingham", 0, 0, 0, 0, 0, 0)
+        );
+
+        foreach($correctData as $data) {
+            $team = DB::table('teams')->where('slug', '=', $data[0])->first();
+            $this->assertNotNull($team, "Could not find team for $data[0]");
+
+            $row = DB::table('scoreboards')
+                ->where('team', '=', $team->id)
+                ->where('season', '=', $season->id)
+                ->first();
+            $this->assertNotNull($row, "Could not find scoreboard data for $team->slug");
+            $this->assertEquals($data[1], $row->played, "$team->slug has incorrect played value");
+            $this->assertEquals($data[2], $row->points, "$team->slug has incorrect points value");
+            $this->assertEquals($data[3], $row->wins, "$team->slug has incorrect wins value");
+            $this->assertEquals($data[4], $row->losses, "$team->slug has incorrect losses value");
+            $this->assertEquals($data[5], $row->for, "$team->slug has incorrect for value");
+            $this->assertEquals($data[6], $row->against, "$team->slug has incorrect against value");
+        }
+    }
 }

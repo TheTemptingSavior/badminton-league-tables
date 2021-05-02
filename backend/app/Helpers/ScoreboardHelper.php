@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Scoreboard;
 use App\Models\Season;
+use App\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -144,7 +145,20 @@ class ScoreboardHelper
     {
         Log::info("No scoreboard exists for season {$seasonId}. Generating an empty one");
         $seasonTeams = DB::table('season_teams')->where('season_id', '=', $seasonId)->get();
-        foreach($seasonTeams as $seasonTeam) {
+        $existing = DB::table('scoreboards')
+            ->where('season', '=', $seasonId)
+            ->select('team')
+            ->get();
+        $toUpdate = array_filter($seasonTeams->toArray(), function($item) use ($existing) {
+            foreach($existing as $e) {
+                if ($e->team == $item->team_id) {
+                    return 0;
+                }
+            }
+            return 1;
+        });
+
+        foreach($toUpdate as $seasonTeam) {
             $sb = new Scoreboard;
             $sb->team = $seasonTeam->team_id;
             $sb->season = $seasonId;
