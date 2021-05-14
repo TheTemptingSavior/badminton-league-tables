@@ -17,11 +17,12 @@ class APIAuthTest extends TestCase
         $user->admin = false;
         $user->save();
 
-        $this->json(
+        $result = $this->json(
                 'POST',
                 '/api/auth/login',
                 ['username' => 'test-username', 'password' => 'helloworld']
-            )->seeStatusCode(200)
+            )
+            ->seeStatusCode(200)
             ->seeJsonStructure(['token', 'token_type', 'expires_in']);
     }
 
