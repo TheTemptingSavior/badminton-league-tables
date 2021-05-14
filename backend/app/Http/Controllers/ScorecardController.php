@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SeasonHelper;
 use App\Jobs\UpdateScoreboard;
 use App\Models\Scorecard;
 use App\Models\Team;
@@ -166,8 +167,11 @@ class ScorecardController extends Controller
 
         $scorecard = Scorecard::create($data);
         $warnings = Scorecard::checkData($data);
+
+
         Log::info("Adding update scoreboard task to the queue");
-        $this->dispatch(new UpdateScoreboard($scorecard));
+        $seasonId = SeasonHelper::getSeasonFromDate($scorecard->date_played);
+        $this->dispatch(new UpdateScoreboard($seasonId));
 
         if (sizeof($warnings) == 0) {
             return response()->json(
