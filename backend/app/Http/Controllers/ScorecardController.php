@@ -239,8 +239,6 @@ class ScorecardController extends Controller
      */
     public function updateGame(string $id, Request $request): \Illuminate\Http\JsonResponse
     {
-        // TODO: Implement update feature to the scoreboard
-        //       Status code returns a 501
         $game = Scorecard::findOrFail($id);
 
         $validator = Validator::make($request->all(), Scorecard::getValidationRules());
@@ -266,7 +264,9 @@ class ScorecardController extends Controller
         $game->save();
         Log::info("Scorecard updated");
 
-        // TODO: Recalculate the scoreboard
+        Log::info("Adding update scoreboard task to the queue");
+        $seasonId = SeasonHelper::getSeasonFromDate($game->date_played);
+        $this->dispatch(new UpdateScoreboard($seasonId));
 
         $warnings = Scorecard::checkData($game->toArray());
         return response()->json(
@@ -318,7 +318,13 @@ class ScorecardController extends Controller
      */
     public function deleteGame(string $id): \Illuminate\Http\JsonResponse
     {
-        Scorecard::findOrFail($id)->delete();
+        $scorecard = Scorecard::findOrFail($id);
+        $seasonId = SeasonHelper::getSeasonFromDate($scorecard->date_played);
+        $scorecard->delete();
+
+        // Update the scoreboard to reflect the deleted scorecard
+        Log::info("Adding update scoreboard task to the queue");
+        $this->dispatch(new UpdateScoreboard($seasonId));
 
         return response()->json([], 204);
     }
