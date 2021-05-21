@@ -259,7 +259,7 @@ class ScorecardController extends Controller
         $errors = Scorecard::validateData($game->toArray());
         if ($errors !== true) { return response()->json(["errors" => $errors], 400); }
 
-        Log::info("Updating scorecard");
+        Log::info("Updating scorecard #{$id}");
         $game->save();
         Log::info("Scorecard updated");
 
