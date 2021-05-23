@@ -32,6 +32,11 @@ class ScoreboardHelper
             return false;
         }
 
+        // The teams in this season
+        $allTeams = DB::table('season_teams')
+            ->where('season_id', '=', $season)
+            ->get();
+
         // Get all scorecards from the season
         $rawData = DB::table('scorecards')
             ->where('date_played', '>', $seasonStart)
@@ -100,11 +105,58 @@ class ScoreboardHelper
         $existing = DB::table('scoreboards')->where('season', '=', $season)->get()->count();
         if ($existing == 0) {
             self::generateZeros($seasonObject->id);
+        } else if ($existing < $allTeams->count()) {
+            // There are less scoreboard rows than teams
+            // generate zeros for the missing teams
+            Log::warning("Beginning padding of scoreboard to add missing teams");
+            self::padScoreboard($season);
         }
 
         DB::commit();
 
         return true;
+    }
+
+    /**
+     * Pad a scoreboard with zero values. Any missing team in the
+     * season is added with zeros in each column
+     * @param $seasonId int Season Scoreboard ID
+     */
+    protected static function padScoreboard($seasonId)
+    {
+        $teams = DB::table('season_teams')
+            ->where('season_id', '=', $seasonId)
+            ->get();
+
+        $scoreboard = DB::table('scoreboards')
+            ->where('season', '=', $seasonId)
+            ->get();
+
+        foreach($teams as $st) {
+            // Assume the team doesn't have an entry until proven
+            // otherwise
+            $exists = false;
+            foreach($scoreboard as $row) {
+                if ($row->team == $st->team_id) {
+                    $exists = true;
+                    break;
+                }
+            }
+
+            if (! $exists) {
+                // we need to pad the entry for this team
+                $sb = new Scoreboard;
+                $sb->team = $st->team_id;
+                $sb->season = $seasonId;
+                $sb->played = 0;
+                $sb->points = 0;
+                $sb->wins = 0;
+                $sb->losses = 0;
+                $sb->for = 0;
+                $sb->against = 0;
+                $sb->saveOrFail();
+            }
+        }
     }
 
     /**
