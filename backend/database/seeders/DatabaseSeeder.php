@@ -2,6 +2,11 @@
 
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\UserSeeder;
+use Database\Seeders\TeamSeeder;
+use Database\Seeders\SeasonSeeder;
+use Database\Seeders\SeasonTeamsSeeder;
+use Database\Seeders\ScorecardSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +18,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            'UserSeeder',
-            'TeamSeeder',
-            'SeasonSeeder',
-            'SeasonTeamsSeeder',
-            'ScorecardSeeder',
+            UserSeeder::class,
+            TeamSeeder::class,
+            SeasonSeeder::class,
+            SeasonTeamsSeeder::class,
+            ScorecardSeeder::class,
         ]);
     }
 }
