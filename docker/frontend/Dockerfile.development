@@ -15,4 +15,5 @@ RUN npm install @vue/cli@3.7.0 -g
 COPY frontend/ /app
 
 # start app
-CMD ["npm", "run", "serve"]
+EXPOSE 80
+CMD ["npm", "run", "serve", "--", "--port", "80"]
