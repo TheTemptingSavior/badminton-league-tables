@@ -36,6 +36,7 @@ services:
       - REDIS_PORT=6379
       - ADMIN_USERNAME=ethan
       - ADMIN_PASSWORD=cotterell
+      - JWT_SECRET=OeBlqZryMt0ga7PtsO79vQz2CFEIBXjblMKUpjNNJAsR0KxDPHQREDLnp5KYkR3l
     expose:
       - 9000
     volumes:
