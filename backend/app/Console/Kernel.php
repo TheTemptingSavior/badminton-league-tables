@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\UpdateScoreboards::class,
         \App\Console\Commands\UpdateScoreboard::class,
+        \App\Console\Commands\ImportData::class,
     ];
 
     /**
