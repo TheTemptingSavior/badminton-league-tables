@@ -85,11 +85,28 @@ const logoutUser = (context) => {
     context.commit('LOGOUT_USER');
 }
 
+/*
+ * ------------------------------------------------------
+ * Begin tracker related actions
+ * ------------------------------------------------------
+ */
+const loadCurrentTracker = (context) => {
+    Vue.axios.get('/api/tracker').then((response) => {
+        context.commit('SET_CURRENT_TRACKER', response.data);
+        context.commit('CACHE_TRACKER', response.data);
+    }).catch((error) => {
+        console.log("Create a toast here to show error");
+        // M.toast({html: "Could not load season data", classes: "red white-text"});
+        throw new Error(`API ${error}`);
+    })
+};
+
 export default {
     loadCurrentScoreboard,
     loadScoreboard,
     loadTeams,
     loadSeasons,
     loginUser,
-    logoutUser
+    logoutUser,
+    loadCurrentTracker,
 }
