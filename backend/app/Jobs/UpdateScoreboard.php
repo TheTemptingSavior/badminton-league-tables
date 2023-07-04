@@ -8,6 +8,13 @@ use App\Models\Scorecard;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class UpdateScoreboard
+ * @package App\Jobs
+ * Recalculates the scoreboards for this season. This job is called whenever a
+ * new scorecard is added to the system (inside the route logic
+ * App\Http\Controllers\ScorecardController)
+ */
 class UpdateScoreboard extends Job
 {
     use SerializesModels;
@@ -22,6 +29,7 @@ class UpdateScoreboard extends Job
     public function __construct(Scorecard $scorecard)
     {
         $this->scorecard = $scorecard;
+        Log::debug("New update scoreboard job created.");
     }
 
     /**
@@ -44,6 +52,9 @@ class UpdateScoreboard extends Job
         }
 
         // Not interested in the return value
-        ScoreboardHelper::calculateScoreboard($seasonId);
+        $returnValue = ScoreboardHelper::calculateScoreboard($seasonId);
+        if (! $returnValue) {
+            Log::critical("Failed to update the scoreboard for season #$seasonId");
+        }
     }
 }
