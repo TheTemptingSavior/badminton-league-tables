@@ -57,6 +57,7 @@ class CreateSeasons extends Command
         }
 
         if (! $inSeason) {
+            // TODO: Calculate the correct season information
             // We need to create a new season object
             $this->info("Today ($currentDate) is not in a season. Creating a new season");
             $s = new Season;
@@ -64,6 +65,9 @@ class CreateSeasons extends Command
             $s->end  = null;
             $s->slug = null;
             $s->saveOrFail();
+
+            // Get all the active teams from last season and assume they are active this season
+
         }
         return 0;
     }
