@@ -95,6 +95,11 @@ class TrackerController extends Controller
         return response()->json($data, 200);
     }
 
+    /**
+     * Gets the tracker data for the given season
+     * @param $season Season object
+     * @return mixed Array of season data
+     */
     private function getData($season)
     {
         // Set up our return object
@@ -154,6 +159,12 @@ class TrackerController extends Controller
         return $data;
     }
 
+    /**
+     * Searches the teams array for a team with the given ID and returns the name
+     * @param int $id ID of the team to find
+     * @param array $teams List of all the teams
+     * @return string Team name
+     */
     private function getTeamNameById(int $id, Array $teams)
     {
         foreach ($teams as $team) {
@@ -161,6 +172,6 @@ class TrackerController extends Controller
                 return $team->name;
             }
         }
-        return -1;
+        return "";
     }
 }
