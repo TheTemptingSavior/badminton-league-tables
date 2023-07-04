@@ -7,11 +7,17 @@ volumes:
       type: none
       device: $PWD/volumes/database
       o: bind
-  code:
+  backend:
     driver: local
     driver_opts:
       type: none
       device: $PWD/backend
+      o: bind
+  frontend:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/frontend
       o: bind
   kanboard_data:
     driver: local
@@ -36,7 +42,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - code:/usr/share/nginx/html
+      - backend:/usr/share/nginx/html
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./docker/nginx/sites:/etc/nginx/sites-available
@@ -54,7 +60,7 @@ services:
       - redis
       - db
     volumes:
-      - code:/usr/share/nginx/html
+      - backend:/usr/share/nginx/html
 
   worker:
     build:
@@ -99,6 +105,15 @@ services:
     image: redis
     expose:
       - 6379
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    expose:
+      - 8080
+    volumes:
+      - frontend:/app
 
 ###
 ### Development containers

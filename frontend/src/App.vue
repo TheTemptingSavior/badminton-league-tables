@@ -12,7 +12,11 @@
 </style>
 <script>
 import NavBar from "@/components/NavBar";
+import M from 'materialize-css'
 export default {
-  components: { NavBar }
+  components: { NavBar },
+  mounted() {
+    M.AutoInit();
+  }
 }
 </script>

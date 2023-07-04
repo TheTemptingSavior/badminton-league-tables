@@ -27,7 +27,7 @@ class ScoreboardController extends Controller
      */
     public function getCurrent()
     {
-        // TODO: Implement this function
+        // TODO: Find most recent scoreboard automatically
         $season = DB::table('seasons')
             ->where('slug', '=', '17-18')
             ->first();
@@ -35,6 +35,7 @@ class ScoreboardController extends Controller
         $data = DB::table('scoreboards')
             ->where('season', '=', $season->id)
             ->orderBy('points', 'DESC')
+            ->orderBy('wins', 'DESC')
             ->get();
         return response()->json($data, 200);
 
