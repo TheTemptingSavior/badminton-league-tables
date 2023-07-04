@@ -68,7 +68,28 @@ class RegistrarController extends Controller
      *     path="/api/registrar",
      *     summary="List all registered users",
      *     description="List all users that have an account with the site",
-     *     tags={"users"}
+     *     tags={"registrars"},
+     *     @OA\Parameter(
+     *         name="token",
+     *         in="query",
+     *         description="Token of the user to delete",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response="204",
+     *         description="Registrar deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad registrar token format",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Registrar token does not match any existing registrars",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     ),
      * )
      */
     public function deleteRegistrar(Request $request): \Illuminate\Http\JsonResponse
@@ -78,15 +99,25 @@ class RegistrarController extends Controller
             return response()->json(['error' => 'No token was specified'], 400);
         }
         $registrar = DB::table('registrars')
-            ->where('token', '=', $deleteToken);
+            ->where('token', '=', $deleteToken)
+            ->first();
+        if ($registrar == null) {
+            return response()->json(['error' => 'No user with this token could be found'], 404);
+        }
+
+        DB::table('registrars')
+            ->where('token', '=', $deleteToken)
+            ->delete();
+        
+        return response()->json([], 204);
     }
 
     /**
      * @OA\Get(
      *     path="/api/registrar",
-     *     summary="List all registered users",
-     *     description="List all users that have an account with the site",
-     *     tags={"users"},
+     *     summary="List all registrars",
+     *     description="List all registrars that have an account with the site",
+     *     tags={"registrars"},
      *     security={"jwt_auth": ""},
      *     @OA\Parameter(
      *         name="page",
@@ -124,6 +155,11 @@ class RegistrarController extends Controller
      *     @OA\Response(
      *         response="401",
      *         description="Unauthorized to list registrars",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Forbidden to list the registrars. Only admins can perform this action",
      *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
      *     )
      * )

@@ -17,6 +17,10 @@ use Illuminate\Database\Eloquent\Model;
  *         property="email",
  *         type="string",
  *     ),
+ *     @OA\Property(
+ *         property="token",
+ *         type="string",
+ *     ),
  *     @Oa\Property(
  *         property="created_at",
  *         type="string",
