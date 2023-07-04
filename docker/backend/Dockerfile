@@ -8,7 +8,7 @@ FROM php:8.0.2-fpm-alpine
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 COPY backend/ /var/www/html/api
 COPY --from=composer /app/vendor /var/www/html/api/vendor
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/htmtomll
 
 WORKDIR /var/www/html
 EXPOSE 9000

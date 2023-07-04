@@ -2,8 +2,6 @@
 
 ## ToDo
 #### Required
-- Remove the `retired_on` key from teams
-  - Removed in favour of the `season_teams` table
 - Implement API calls from admin page
   - Edit teams has no backend function or API call
 - Write the help page  

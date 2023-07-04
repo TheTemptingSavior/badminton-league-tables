@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Season;
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class APITeamsTest extends TestCase
@@ -254,25 +256,6 @@ class APITeamsTest extends TestCase
     }
 
     /**
-     * Retire a team
-     *
-     * @return void
-     */
-    function testRetireTeam()
-    {
-        $user = User::factory()->admin()->create();
-        $team = Team::factory()->create();
-
-        $result = $this->actingAs($user)
-            ->json('PUT', '/api/teams/' . $team->id . '/retire', ['retired' => true])
-            ->seeStatusCode(200)
-            ->seeJsonStructure(['id', 'name', 'slug', 'created_at', 'updated_at']);
-
-        $data = json_decode($result->response->content());
-        $this->assertNotNull($data->retired_on);
-    }
-
-    /**
      * Attempt to retire a team without providing authentication
      *
      * @return void
@@ -301,17 +284,133 @@ class APITeamsTest extends TestCase
     }
 
     /**
-     * Attempt to retire a team without providing the proper data
+     * Attempt to retire a team with an incorrect team ID
      *
      * @return void
      */
-    function testRetireTeamBadData()
+    function testRetireTeamBadTeamId()
+    {
+        $user = User::factory()->admin()->create();
+
+        $data = Array(
+            Array('season' => 1, 'active' => true)
+        );
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/9999/retire', $data)
+            ->seeStatusCode(404);
+    }
+
+    /**
+     * Attempt to retire a team without providing any data
+     *
+     * @return void
+     */
+    function testRetireTeamNoData()
     {
         $user = User::factory()->admin()->create();
         $team = Team::factory()->create();
 
         $this->actingAs($user)
-            ->json('PUT', '/api/teams/' . $team->id . '/retire', ['baddata' => true])
+            ->json('PUT', '/api/teams/'.$team->id.'/retire')
             ->seeStatusCode(400);
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', [])
+            ->seeStatusCode(400);
+    }
+
+    /**
+     * Retire a team from the specfied season
+     *
+     * @return void
+     */
+    function testRetireTeamFromOneSeason()
+    {
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
+        $season = Season::factory()->create();
+
+        // Manually create the link
+        DB::table('season_teams')->insert([
+            'season_id' => $season->id,
+            'team_id' => $team->id
+        ]);
+
+        // Retire the team
+        $data = Array(
+            'data' => Array(
+                Array('season' => $season->id, 'active' => false)
+            )
+        );
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', $data)
+            ->seeStatusCode(200);
+
+        // Check the database to make sure it was actually deleted
+        $this->assertCount(
+            0,
+            DB::table('season_teams')->get()->toArray()
+        );
+    }
+
+    /**
+     * Attempt to retire team from the specified season without the
+     * season existing
+     *
+     * @return void
+     */
+    function testRetireTeamFromOneBadSeason()
+    {
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
+    }
+
+    /**
+     * Retire a team from multiple seasons
+     *
+     * @return void
+     */
+    function testRetireTeamManySeasons()
+    {
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
+    }
+
+    /**
+     * Multiple actions to perform on the team season data.
+     * Includes two retire and one make active again
+     *
+     * @return void
+     */
+    function testRetireTeamManyActions()
+    {
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
+    }
+
+    /**
+     * Multiple actions to perform on the team season data.
+     * Includes two retire and one make active again. One of
+     * which fails
+     *
+     * @return void
+     */
+    function testRetireTeamManyActionsOnFails()
+    {
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
+
+        // Check database to make sure changes didn't persist
+    }
+
+    /**
+     * Attempt to retire a team from a season where they
+     * have scorecards
+     *
+     * @return void
+     */
+    function testRetireTeamHasScorecards()
+    {
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
     }
 }
