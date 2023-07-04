@@ -26,6 +26,20 @@ class APIUserTest extends TestCase
     }
 
     /**
+     * Attempt to list the users without being an admin
+     *
+     * @return void
+     */
+    function testListUsersNoAdmin()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->json('GET', '/api/users')
+            ->seeStatusCode(200);
+    }
+
+    /**
      * Testing listing many users
      *
      * @return void
@@ -191,6 +205,19 @@ class APIUserTest extends TestCase
             ->seeStatusCode(200)
             ->seeJson(["id" => $user->id])
             ->seeJson(["username" => $user->username]);
+    }
+
+    /**
+     * Attempt to get a user without being an admin
+     *
+     * @return void
+     */
+    function testGetUserNoAdmin()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->seeStatusCode(403);
     }
 
     /**
@@ -402,7 +429,7 @@ class APIUserTest extends TestCase
      */
     function testUpdateUserDuplicateData()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
         $userTwo = User::factory()->create();
 
         $this->actingAs($user)

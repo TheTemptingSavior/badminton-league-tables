@@ -5,10 +5,11 @@ use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class APIScorecardTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseMigrations, DatabaseTransactions;
     /**
      * List all the scorecards in the system
      *
@@ -362,11 +363,11 @@ class APIScorecardTest extends TestCase
         $user = User::factory()->create();
 
         Team::factory()->count(6)->create();
-        $scorecard = Scorecard::factory()->create();
+        $scorecard = Scorecard::factory()->make();
 
         $this->actingAs($user)
             ->json('POST', '/api/scorecards', $scorecard->toArray())
-            ->seeStatusCode(403);
+            ->seeStatusCode(201);
     }
 
     /**
@@ -434,8 +435,7 @@ class APIScorecardTest extends TestCase
     }
 
     /**
-     * Attempt to delete a scorecard without being an
-     * admin user
+     * Delete a scorecard as a non-admin user
      *
      * @return void
      */
@@ -447,7 +447,7 @@ class APIScorecardTest extends TestCase
 
         $this->actingAs($user)
             ->json('DELETE', '/api/scorecards/'.$scorecard->id)
-            ->seeStatusCode(403);
+            ->seeStatusCode(204);
     }
 
 

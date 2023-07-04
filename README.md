@@ -3,6 +3,26 @@
 Provides a way for badminton leagues to manage the league scoreboard with constant updates. The system provides a 
 certain level of data integrity and has the ability to warn users about incomplete scorecards or incorrect information.
 
+## Running
+1. Clone the repository
+2. Environment file
+   1. Copy the `.env.example` to `.env`
+   2. Change the passwords and other required fields
+3. `docker-compose build`
+5. `docker-compose up -d`
+
+### Data Import
+If there is data to import, then this can be done by running the 
+following command inside the container:
+```bash
+docker-compose exec backend sh
+cd api/
+php artisan import
+```
+
+This will import the CSV data in the `/import` folder in the Docker
+container (bind mounted through docker-compose). 
+
 ## Technologies
 This stack relies on a few different technologies to run:
 - MariaDB
