@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import {EventBus} from "@/plugins/event-bus";
 
 /*
  * ------------------------------------------------------
@@ -11,7 +12,7 @@ const loadCurrentScoreboard = (context) => {
         context.commit('CACHE_SCOREBOARD', response.data)
     }).catch((error) => {
         console.log("Create a toast here to show error");
-        // M.toast({html: "Could not load current scoreboard", classes: "red white-text"})
+        EventBus.$emit('show-error', 'Failed loading scoreboard data');
         throw new Error(`API ${error}`);
     })
 };
@@ -20,11 +21,9 @@ const loadScoreboard = (context, payload) =>  {
     let commit = context.commit;
     let state = context.state;
     console.log('[store] Loading scoreboard for season: ' + payload.sid);
-    console.log("Local state: ");
-    console.log(state);
     if (state.scoreboards.all[payload.sid] !== undefined) {
         // We already have the scoreboard so use the cached version (no api calls)
-        console.log("Scoreboard for season")
+        console.log("Scoreboard for season exists locally")
         commit('SET_CURRENT_SCOREBOARD', state.scoreboards.all[payload.sid]);
     } else {
         // We do not have the scoreboard so go and get it
@@ -46,6 +45,10 @@ const loadScoreboard = (context, payload) =>  {
  * ------------------------------------------------------
  */
 const loadTeams = (context) => {
+    if (context.state.teams.length !== 0) {
+        // We already have the teams so don't load them again
+        return;
+    }
     Vue.axios.get('/api/teams').then((response) => {
         context.commit('SET_TEAMS', response.data);
     }).catch((error) => {
