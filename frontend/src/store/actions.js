@@ -35,32 +35,33 @@ const loadCurrent = async (context) => {
 }
 
 const loadOther = async (context, payload) => {
-    console.log("Loading data from season ID " + payload.sid);
-    // let state = context.state;
+    let state = context.state;
+    if (state.currentLoaded) {
+        if (state.all[state.current].season.id === payload.sid) {
+            // The season to load is already loaded
+            console.log("Chosen season (" + payload.sid + ") already loaded");
+            return;
+        }
+        if (state.all[payload.sid] !== undefined) {
+            // The slug is already in the all array
+            console.log("Chosen season (" + payload.sid + ") is cached. Switching");
+            // Switch the seasons
+            context.commit('CHANGE_CURRENT', payload.sid);
+            return;
+        }
+    }
 
-    // if (state.currentLoaded) {
-    //     if (state.all.keys().includes(state.current.season.id)) {
-    //         // The slug is already in the all array
-    //         context.commit('CHANGE_CURRENT', payload.sid);
-    //     }
-    // }
+    console.log("Loading data from season ID " + payload.sid);
     context.commit('CACHE_CURRENT');
     context.commit('UNSET_CURRENT_LOADED');
-    const routes = [
+    Vue.axios.all([
         Vue.axios.get("/api/seasons/" + payload.sid),
         Vue.axios.get("/api/seasons/" + payload.sid + "/teams"),
         Vue.axios.get("/api/scoreboards/" + payload.sid),
         Vue.axios.get("/api/tracker/" + payload.sid)
-    ];
-    Vue.axios.all(routes).then(axios.spread((r1, r2, r3, r4) => {
+    ]).then(axios.spread((r1, r2, r3, r4) => {
         console.log("Received responses for current");
-        let seasonData = {
-            ...r1.data,
-            teams: r2.data
-        }
-        console.log("Combined season data:" );
-        console.log(seasonData);
-        context.commit('SET_CURRENT', [seasonData, r3.data, r4.data]);
+        context.commit('SET_CURRENT', [{...r1.data, teams: r2.data}, r3.data, r4.data]);
         context.commit('SET_CURRENT_LOADED');
     })).catch((error) => {
         console.log("Failed to get current data");
