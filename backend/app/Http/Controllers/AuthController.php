@@ -11,7 +11,6 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        // TODO: change this to match /api/auth/login, /api/auth/logout and (post) /api/users
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
@@ -22,11 +21,10 @@ class AuthController extends Controller
      */
     public function respondWithToken($token): \Illuminate\Http\JsonResponse
     {
-        // TODO: Figure out a way to state when the token will expire
         return response()->json([
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => 3600
+            'expires_in' => TOKEN_EXPIRATION
         ], 200);
     }
 
