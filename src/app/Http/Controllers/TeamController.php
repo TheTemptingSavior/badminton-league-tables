@@ -51,12 +51,10 @@ class TeamController extends Controller
     }
 
     /**
-     * Retires a team in the league, removing it from options in games
-     * and removing them from future league tables
      * @OA\Post(
      *     path="/team/{id}",
-     *     description="Allows for a team to be retired in the league e.g. they no longer play",
-     *     tags={"users"},
+     *     description="Retires a team in the league, removing it from options in games and removing them from future league tables",
+     *     tags={"teams"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/json",
@@ -73,11 +71,12 @@ class TeamController extends Controller
      *         in="path",
      *         description="ID of the team to edit the retire status of",
      *         required=true,
-     *         @OA\Schema(type="numeric", format="int64")
+     *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\Response(
      *         response="200",
-     *         description="Returns the newly edited team"
+     *         description="Returns the newly edited team",
+     *         @OA\JsonContent(ref="#/components/schemas/Team")
      *     )
      * )
      * @param string $id
