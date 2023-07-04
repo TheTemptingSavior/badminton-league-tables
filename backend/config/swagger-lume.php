@@ -7,7 +7,7 @@ return [
         | Edit to set the api's title
         |--------------------------------------------------------------------------
          */
-        'title' => 'League API',
+        'title' => 'Badminton League Tables API',
     ],
 
     'routes' => [
