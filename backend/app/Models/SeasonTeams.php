@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @OA\Schema(
@@ -58,4 +59,19 @@ class SeasonTeams extends Model
      * @var bool
      */
     public $timestamps = true;
+
+
+    // TODO: Test whether or not `SeasonTeams::saving()` works
+    protected static function boot()
+    {
+        parent::boot();
+        static::saving(function ($model) {
+            $existing = DB::table('season_teams')
+                ->where('season_id', '=', $model->season_id)
+                ->where('team_id', '=', $model->team_id)
+                ->first();
+            
+            return $existing == NULL;
+        });
+    }
 }
