@@ -50,8 +50,8 @@ services:
       dockerfile: docker/frontend/Dockerfile.development
     environment:
       - VUE_APP_LEAGUE_NAME=Rutland and Stamford
-      - VUE_APP_API_URL=https://badminton.ethancotterell.co.uk/api
-      - NODE_ENV=production
+      - VUE_APP_API_URL=http://127.0.0.1/api
+      - NODE_ENV=development
     ports:
       - "127.0.0.1:8080:80"
     volumes:
@@ -63,7 +63,6 @@ services:
 
   db:
     image: linuxserver/mariadb
-    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000

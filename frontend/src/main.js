@@ -8,6 +8,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store/store'
 
+axios.defaults.baseURL = process.env['VUE_APP_API_URL']
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios);
