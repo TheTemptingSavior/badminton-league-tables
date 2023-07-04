@@ -14,7 +14,7 @@ class AdminOnly
      * @param  string|null  $guard Any guard conditions
      * @return mixed Returns the next middleware in the chain
      */
-    public function handle($request, Closure $next, $guard = null): mixed
+    public function handle($request, Closure $next, $guard = null)
     {
         if (auth()->user()->admin != true) {
             return response()->json(

@@ -51,21 +51,21 @@ class Team extends Model
      *
      * @var bool
      */
-    public bool $timestamps = true;
+    public $timestamps = true;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected string $table = 'teams';
+    protected $table = 'teams';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected array $fillable = [
+    protected $fillable = [
         'name', 'slug', 'retired'
     ];
 }
