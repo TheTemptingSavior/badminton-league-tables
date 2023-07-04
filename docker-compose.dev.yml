@@ -51,7 +51,7 @@ services:
     environment:
       - VUE_APP_LEAGUE_NAME=Rutland and Stamford
       - VUE_APP_API_URL=http://127.0.0.1/api
-      - NODE_ENV=development
+      - NODE_ENV=production
     ports:
       - "127.0.0.1:8080:80"
     volumes:
@@ -84,7 +84,7 @@ services:
   phpmyadmin:
     image: phpmyadmin
     ports:
-      - 8888:80
+      - 127.0.0.1:8888:80
     depends_on:
       - db
     environment:
