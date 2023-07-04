@@ -24,9 +24,43 @@
               :items="getScorecardList"
               class="elevation-1"
           >
+            <template v-slot:top>
+              <v-dialog v-model="deleteDialog" max-width="500px">
+                <v-card>
+                  <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+                  <v-card-subtitle class="subtitle-1 red--text">This action is irreversible</v-card-subtitle>
+                  <v-divider />
+                  <v-card-text>
+                    <v-row v-if="deleteError !== null">
+                      <p class="red--text text-center">{{ deleteError }}</p>
+                    </v-row>
+                    <v-row v-if="toDelete !== null">
+                      <v-col cols="12" xs="12" sm="5" class="text-center">{{ toDelete.homeTeam }}</v-col>
+                      <v-col cols="12" xs="12" sm="2" class="text-center">vs</v-col>
+                      <v-col cols="12" xs="12" sm="5" class="text-center">{{ toDelete.awayTeam }}</v-col>
+                      <v-col cols="12" xs="12" class="text-center">that was played on {{ toDelete.datePlayed }}</v-col>
+                    </v-row>
+                    <v-row v-else>
+                      <v-col cols="12" xs="12" class="red--text font-weight-bold">
+                        Something went wrong. Please refresh the page
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                    <v-btn color="blue darken-1" text @click="confirmDelete">OK</v-btn>
+                    <v-spacer></v-spacer>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </template>
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="editItem(item)">
                 mdi-pencil
+              </v-icon>
+              <v-icon small @click="deleteItem(item)">
+                mdi-delete
               </v-icon>
             </template>
           </v-data-table>
@@ -49,6 +83,9 @@ export default {
   data() {
     return {
       seasonId: null,
+      deleteDialog: false,
+      toDelete: null,
+      deleteError: null,
       table: {
         headers: [
           {
@@ -137,7 +174,6 @@ export default {
       })
     },
     editItem(item) {
-      // TODO: Redirect to an edit page instead
       console.log("Open up edit form for scorecard " + item.id);
       this.$router.push({
         name: 'AdminEditScorecard',
@@ -145,6 +181,30 @@ export default {
           id: item.id
         }
       });
+    },
+    deleteItem(item) {
+      console.log("Request to delete scorecard: " + item.id);
+      this.toDelete = item;
+      this.deleteDialog = true;
+    },
+    closeDelete() {
+      this.deleteDialog = false;
+      this.toDelete = null;
+    },
+    confirmDelete() {
+      console.log("Item deleted");
+      Vue.axios.delete(
+          '/api/scorecards/' + this.toDelete.id,
+          {headers: {Authorization: "Bearer " + this.$store.getters.token}}
+      ).then((response) => {
+        console.log("Scorecard deleted: " + response.data);
+        this.scorecards = this.scorecards.filter(x => x['id'] !== this.toDelete.id)
+        this.toDelete = null;
+        this.deleteDialog = false;
+      }).catch((error) => {
+        this.deleteError = "Failed deleting the scorecard.";
+        throw new Error(`API Error: ${error}`);
+      })
     }
   },
   created() {
