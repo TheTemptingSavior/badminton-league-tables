@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\GenericHelper;
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -16,20 +17,50 @@ class TeamController extends Controller
      *     summary="List teams",
      *     description="List all teams that exist",
      *     tags={"teams"},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="path",
+     *         description="Page of results to retrieve",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="path",
+     *         description="Number of results to retrieve per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
      *     @OA\Response(
      *         response="200",
-     *         description="List of teams in the league",
+     *         description="List of seasons the league has been active for",
      *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Team")
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="first_page_url", type="string", format="url"),
+     *             @OA\Property(property="from", type="integer"),
+     *             @OA\Property(property="next_page_url", type="string", format="url"),
+     *             @OA\Property(property="path", type="string", format="url"),
+     *             @OA\Property(property="per_page", type="integer"),
+     *             @OA\Property(property="prev_page_url", type="string", format="url"),
+     *             @OA\Property(property="to", type="string", format="int64"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array"
+     *                 @OA\Items(ref="#/components/schemas/Team")
+     *             )
      *         )
      *     )
      * )
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listTeams(): \Illuminate\Http\JsonResponse
+    public function listTeams(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json(Team::all());
+        $per_page = $request->get('per_page', 15);
+        $data = DB::table('teams')
+            ->orderBy('name')
+            ->select(['id', 'name', 'slug', 'retired'])
+            ->simplePaginate($per_page);
+        return response()->json($data, 200);
     }
 
     /**

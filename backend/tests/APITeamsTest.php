@@ -18,11 +18,21 @@ class APITeamsTest extends TestCase
         Team::factory(10)->create();
 
         $result = $this->json('GET', '/api/teams')
-            ->seeStatusCode(200)
-            ->seeJsonStructure([['id', 'name', 'slug', 'created_at', 'updated_at', 'retired_on']]);
-
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
         $data = json_decode($result->response->content());
-        $this->assertCount(10, $data);
+
+        $this->assertCount(10, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/teams?page=1', $data->first_page_url);
+        $this->assertNull($data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/teams', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(10, $data->to);
     }
 
     /**
@@ -33,7 +43,24 @@ class APITeamsTest extends TestCase
      */
     function testListTeamsPaged()
     {
-        // TODO: Implement APITeamsTest::testListTeamsPaged
+        Team::factory(30)->create();
+
+        $result = $this->json('GET', '/api/teams')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        $this->assertCount(15, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/teams?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/teams?page=2', $data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/teams', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(15, $data->to);
     }
 
     /**
@@ -43,7 +70,24 @@ class APITeamsTest extends TestCase
      */
     function testListTeamsPageTwo()
     {
-        // TODO: Implement APITeamsTest::testListTeamsPageTwo
+        Team::factory(40)->create();
+
+        $result = $this->json('GET', '/api/teams?page=2')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        $this->assertCount(15, $data->data);
+        $this->assertEquals(2, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/teams?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/teams?page=3', $data->next_page_url);
+        $this->assertStringEndsWith('/api/teams?page=1', $data->prev_page_url);
+        $this->assertStringEndsWith('/api/teams', $data->path);
+        $this->assertEquals(16, $data->from);
+        $this->assertEquals(30, $data->to);
     }
 
     /**
@@ -54,7 +98,24 @@ class APITeamsTest extends TestCase
      */
     function testListTeamsPageLimit()
     {
-        // TODO: Implement APITeamsTest::testListTeamsPageLimit
+        Team::factory(30)->create();
+
+        $result = $this->json('GET', '/api/teams?per_page=10')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        $this->assertCount(10, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(10, $data->per_page);
+        $this->assertStringEndsWith('/api/teams?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/teams?page=2', $data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/teams', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(10, $data->to);
     }
 
     /**
@@ -64,7 +125,24 @@ class APITeamsTest extends TestCase
      */
     function testListTeamsMiddlePage()
     {
-        // TODO: Implement APITeamsTest::testListTeamsMiddlePage
+        Team::factory(40)->create();
+
+        $result = $this->json('GET', '/api/teams?page=2')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        $this->assertCount(15, $data->data);
+        $this->assertEquals(2, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/teams?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/teams?page=3', $data->next_page_url);
+        $this->assertStringEndsWith('/api/teams?page=1', $data->prev_page_url);
+        $this->assertStringEndsWith('/api/teams', $data->path);
+        $this->assertEquals(16, $data->from);
+        $this->assertEquals(30, $data->to);
     }
 
     /**
