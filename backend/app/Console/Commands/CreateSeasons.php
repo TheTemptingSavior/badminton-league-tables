@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 
 use App\Models\Season;
+use App\Models\SeasonTeams;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,7 @@ class CreateSeasons extends Command
 
     /**
      * Execute the console command.
-     *
+     * TODO: Run this entire block as a DB transaction to avoid botched creations
      * @return int Returns 0 on success of 1 otherwise
      */
     public function handle(): int
@@ -57,17 +58,48 @@ class CreateSeasons extends Command
         }
 
         if (! $inSeason) {
-            // TODO: Calculate the correct season information
-            // We need to create a new season object
             $this->info("Today ({$currentDate}) is not in a season. Creating a new season");
+
+            // Before we add the new season, get the latest one
+            $latest = DB::table('seasons')
+                ->orderBy('end', 'DESC')
+                ->select(['id', 'slug'])
+                ->first();
+            $this->info("Most recent season was ".$latest->slug.". Rolling over teams");
+            
+            // Create a new season object
+            $month = intval(date("m"));
+            if ($month < 9) {
+                $start = (int)date("Y") - 1;
+                $start = $start."-09-01";
+                $end = date("Y")."-08-31";
+            } else {
+                $start = date("Y")."-09-01";
+                $end = (int)date("Y") + 1;
+                $end = $end."-08-31";
+            }
+            $slug = substr($start, 2, 2).'-'.substr($end, 2, 2);
             $s = new Season;
-            $s->start = null;
-            $s->end  = null;
-            $s->slug = null;
+            $s->start = $start;
+            $s->end  = $end;
+            $s->slug = $slug;
             $s->saveOrFail();
+            $this->info("New season being created for period of '".$s->slug."'");
 
             // Get all the active teams from last season and assume they are active this season
+            $activeTeams = DB::table('season_teams')
+                ->where('season_id', '=', $latest->id)
+                ->select(['team_id'])
+                ->get();
 
+            $this->info("Adding ".$activeTeams->count()." to the new season");
+
+            foreach($activeTeams as $team) {
+                $st = new SeasonTeams;
+                $st->team_id = $team->team_id;
+                $st->season_id = $s->id;
+                $st->saveOrFail();
+            }
         }
         return 0;
     }
