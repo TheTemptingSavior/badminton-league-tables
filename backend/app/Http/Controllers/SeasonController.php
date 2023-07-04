@@ -142,7 +142,7 @@ class SeasonController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/seasons/scorecards",
+     *     path="/api/seasons/{id}/scorecards",
      *     summary="List scorecards in a season",
      *     description="List all the scorecards that were registered in a season",
      *     tags={"seasons"},
@@ -179,10 +179,10 @@ class SeasonController extends Controller
      * @param string $slug
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getScorecards(string $slug)
+    public function getScorecards(string $id)
     {
         $season = DB::table('seasons')
-            ->where('slug', '=', $slug)
+            ->where('id', '=', $id)
             ->first();
 
         $games = DB::table('scorecards')
