@@ -16,9 +16,9 @@ class CheckDatabase extends Command
      *
      * @var string
      */
-    protected $signature = 'manual:check-database '.
-                           '{--a|attempts=5 : How many times to attempt to connect}'.
-                           '{--t|timeout=3 : How many seconds to leave before trying again}';
+    protected $signature = 'manual:check-database '
+                           .'{--a|attempts=5 : How many times to attempt to connect}'
+                           .'{--t|timeout=3 : How many seconds to leave before trying again}';
 
     /**
      * The console command description.
