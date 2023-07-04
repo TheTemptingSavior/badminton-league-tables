@@ -225,7 +225,6 @@ class APIUserTest extends TestCase
 
     /**
      * Update a users information
-     * TODO: Fails due to the $data var not being a proper array
      * @return void
      */
     function testUpdateUser()
