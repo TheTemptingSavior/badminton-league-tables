@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
+
+/** @var \Laravel\Lumen\Routing\Router $router */
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -12,7 +16,7 @@
 */
 
 $router->get('/', function () use ($router) {
+    Log::debug("Accessed the root url");
     return $router->app->version();
 });
-
 

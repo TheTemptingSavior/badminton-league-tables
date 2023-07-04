@@ -6,11 +6,10 @@ use App\Models\Season;
 use App\Models\SeasonTeams;
 use App\Models\Team;
 use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class APITrackerTest extends TestCase
 {
-    use DatabaseMigrations, DatabaseTransactions;
+    use DatabaseMigrations;
 
     function populateSeasonTeams($season, $teams)
     {

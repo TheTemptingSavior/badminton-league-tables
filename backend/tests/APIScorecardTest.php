@@ -5,11 +5,10 @@ use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class APIScorecardTest extends TestCase
 {
-    use DatabaseMigrations, DatabaseTransactions;
+    use DatabaseMigrations;
     /**
      * List all the scorecards in the system
      *
@@ -191,11 +190,12 @@ class APIScorecardTest extends TestCase
             ->seeJsonStructure(['message', 'warnings']);
         $data = json_decode($result->response->content());
 
-        $result = $this->json('GET', '/api/scorecards/' . $data->id)
-            ->seeStatusCode(200)
-            ->seeJson(['home_team' => '' . $homeTeam->id . ''])
-            ->seeJson(['away_team' => '' . $awayTeam->id . '']);
+        $result = $this->json('GET', '/api/scorecards/' . $data->id);
         $data = json_decode($result->response->content());
+        
+        $result->seeStatusCode(200)
+            ->seeJson(['home_team' => $homeTeam->id])
+            ->seeJson(['away_team' => $awayTeam->id]);
 
         $this->assertNull($data->home_player_1);
         $this->assertNull($data->away_player_1);

@@ -11,7 +11,7 @@ class ExampleJob extends Job
      */
     public function __construct()
     {
-        echo "\n\nNew job created\n\n";
+        //
     }
 
     /**
@@ -21,6 +21,6 @@ class ExampleJob extends Job
      */
     public function handle()
     {
-        echo "\n\nThis came from the job function\n\n";
+        //
     }
 }

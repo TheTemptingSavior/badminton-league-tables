@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -67,6 +66,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $attributes = [
         'admin' => false,
+        'super_admin' => false,
     ];
 
     /**
@@ -75,7 +75,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'username', 'password', 'added', 'admin',
+        'username', 'password', 'added', 'admin', 'super_admin',
     ];
 
     /**
@@ -99,7 +99,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
-     * // TODO: Are custom claims required
+     *
      * @return array
      */
     public function getJWTCustomClaims()

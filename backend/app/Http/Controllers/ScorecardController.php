@@ -105,7 +105,7 @@ class ScorecardController extends Controller
      */
     public function getGame(string $id): \Illuminate\Http\JsonResponse
     {
-        $game = Scorecard::findOrFail($id);
+        $game = Scorecard::findOrFail($id)->toArray();
         $game['home_team_data'] = Team::findOrFail($game['home_team']);
         $game['away_team_data'] = Team::findOrFail($game['away_team']);
         return response()->json($game, 200);

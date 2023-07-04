@@ -7,7 +7,7 @@ return [
         | Edit to set the api's title
         |--------------------------------------------------------------------------
          */
-        'title' => 'Badminton League Tables API',
+        'title' => 'Swagger Lume API',
     ],
 
     'routes' => [
@@ -16,14 +16,14 @@ return [
         | Route for accessing api documentation interface
         |--------------------------------------------------------------------------
          */
-        'api' => '/api/docs',
+        'api' => '/api/documentation',
 
         /*
         |--------------------------------------------------------------------------
         | Route for accessing parsed swagger annotations.
         |--------------------------------------------------------------------------
          */
-        'docs' => '/api/docs/raw',
+        'docs' => '/docs',
 
         /*
         |--------------------------------------------------------------------------
@@ -37,7 +37,7 @@ return [
         | Route for serving assets
         |--------------------------------------------------------------------------
         */
-        'assets' => '/api/swagger-ui-assets',
+        'assets' => '/swagger-ui-assets',
 
         /*
         |--------------------------------------------------------------------------

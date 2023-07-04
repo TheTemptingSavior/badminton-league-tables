@@ -1,13 +1,13 @@
 <?php
+
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/const.php';
-
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
 ))->bootstrap();
 
-date_default_timezone_set(env('TZ', 'UTC'));
+date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +61,11 @@ $app->singleton(
 */
 
 $app->configure('app');
-$app->configure('swagger-lume');
+$app->configure('const');
+$app->configure('auth');
+$app->configure('cors');
+$app->configure('database');
+$app->configure('logging');
 
 /*
 |--------------------------------------------------------------------------
@@ -76,9 +80,9 @@ $app->configure('swagger-lume');
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
-    'jsonheader' => App\Http\Middleware\JsonHeaderMiddleware::class,
+    'jsonheader' => App\Http\Middleware\JsonHeader::class,
+    'cors' => App\Http\Middleware\Cors::class,
     'admin' => App\Http\Middleware\AdminOnly::class,
-    'cors' => App\Http\Middleware\CorsMiddleware::class,
 ]);
 
 /*
@@ -92,15 +96,12 @@ $app->routeMiddleware([
 |
 */
 
-$app->register(App\Providers\AppServiceProvider::class);
+// $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
-$app->register(App\Providers\EventServiceProvider::class);
+// $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
-$app->register(Illuminate\Redis\RedisServiceProvider::class);
-
-$app->register(\Thedevsaddam\LumenRouteList\LumenRouteListServiceProvider::class);
+$app->register(Illuminate\Redis\RedisServiceProvider::class); 
 $app->register(\SwaggerLume\ServiceProvider::class);
-
 
 /*
 |--------------------------------------------------------------------------
@@ -116,8 +117,8 @@ $app->register(\SwaggerLume\ServiceProvider::class);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__ . '/../routes/web.php';
-    require __DIR__ . '/../routes/api.php';
+    require __DIR__.'/../routes/web.php';
+    require __DIR__.'/../routes/api.php';
 });
 
 return $app;

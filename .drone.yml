@@ -48,11 +48,15 @@ steps:
     image: php:8.0.2
     commands:
       - pecl install xdebug --quiet 1> /dev/null 2>&1 && docker-php-ext-enable xdebug
+      - docker-php-ext-install mysqli pdo pdo_mysql 1>/dev/null 2>&1
       - cd backend/
-      - vendor/bin/phpunit --configuration phpunit.xml
+      - vendor/bin/phpunit --configuration phpunit.xml --stop-on-fail
+      - php artisan swagger-lume:generate 1>/dev/null 2>&1
     environment:
-      APP_ENV: "local"
+      APP_ENV: local
       APP_KEY: helloworlddlrowolleh
+      LOG_LEVEL: alert
+      DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306
       DB_DATABASE: leaguetables
@@ -72,6 +76,7 @@ steps:
       - name: logs
         path: /drone/src/backend/storage/logs
 
+
 # We only want to dump the logs if the tests failed
   - name: Cleanup
     image: alpine
@@ -79,7 +84,8 @@ steps:
       status:
         - failure
     commands:
-      - cat /logs/*
+      - cd /logs 
+      - for FILE in $(ls); do cat $FILE; done
     volumes:
       - name: logs
         path: /logs

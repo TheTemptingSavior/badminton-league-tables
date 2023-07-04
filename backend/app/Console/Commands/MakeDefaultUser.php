@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 
-use App\Helpers\ScoreboardHelper;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -49,11 +47,12 @@ class MakeDefaultUser extends Command
             $user = new User;
             $user->username = ADMIN_USERNAME;
             $user->password = Hash::make(ADMIN_PASSWORD);
+            $user->super_admin = true;
             $user->admin = true;
             $user->saveOrFail();
             $this->info("Default user '".ADMIN_USERNAME."' created");
         } else {
-            $this->info("Default system user ('".ADMIN_USERNAME."')exists");
+            $this->info("Default system user ('".ADMIN_USERNAME."') exists");
         }
         return 0;
     }

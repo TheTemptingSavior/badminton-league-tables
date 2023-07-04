@@ -11,15 +11,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ScorecardFactory extends Factory
 {
     /**
-     * Name of the factories model
+     * The name of the factory's corresponding model.
      *
      * @var string
      */
     protected $model = Scorecard::class;
 
     /**
-     * Model's default state
-     * @return array|void
+     * Define the model's default state.
+     *
+     * @return array
      */
     public function definition()
     {

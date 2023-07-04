@@ -26,7 +26,9 @@ else
 fi
 
 # Ensure the database is setup and check for the default user
-php $ARTISAN migrate --no-interaction
+echo "Setting up the database"
+php $ARTISAN migrate --no-interaction --force
+echo "Creating the default admin user"
 php $ARTISAN user:make-default
 
 

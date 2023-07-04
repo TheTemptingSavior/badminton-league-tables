@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Helpers\GenericHelper;
 use App\Helpers\TeamHelper;
+use App\Jobs\UpdateScoreboard;
 use App\Models\Season;
 use App\Models\SeasonTeams;
 use App\Models\Team;
-use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -184,11 +184,13 @@ class TeamController extends Controller
      *         required=true,
      *         description="Seasons and whether the team is still active in it",
      *         @OA\JsonContent(
-     *             propert="data",
-     *             type="array",
-     *             @OA\Items(
-     *                 @OA\Property(property="active", type="boolean"),
-     *                 @OA\Property(property="season", type="integer")
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="active", type="boolean"),
+     *                     @OA\Property(property="season", type="integer")
+     *                 )
      *             )
      *         )
      *     ),

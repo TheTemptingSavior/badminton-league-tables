@@ -38,6 +38,7 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
         // This route under auth required the 'auth' middleware so that the user can be
         // identified from their token
         $router->get('/me', ['as' => 'me', 'uses' => 'AuthController@me']);
+        $router->get('/refresh', ['as' => 'refresh', 'uses' => 'AuthController@refresh']);
     });
 
     /*

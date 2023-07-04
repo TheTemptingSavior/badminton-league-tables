@@ -1,33 +1,14 @@
 <?php
 
+/** @var \Illuminate\Contracts\Auth\StatefulGuard auth */
 
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
-
-    /**
-     * Returns a JSON Web Token to the requester
-     * @param $token Token to create a response with
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function respondWithToken($token): \Illuminate\Http\JsonResponse
-    {
-        return response()->json([
-            'token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => TOKEN_EXPIRATION
-        ], 200);
-    }
-
     /**
      * @OA\Post(
      *     path="/api/auth/login",
@@ -66,46 +47,19 @@ class AuthController extends Controller
      * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request): \Illuminate\Http\JsonResponse
+    public function login()
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string',
-            'password' => 'required|string'
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+        $credentials = request(['username', 'password'], null);
+        if ($credentials == null) {
+            return response()->json(['error' => 'Must specify a username and password'], 400);
         }
-        $credentials = $request->only(['username', 'password']);
+        
+        if (! $token = auth()->attempt($credentials)) {
+            Log::warning("Invalid login attempt", ["username" => $credentials["username"]]);
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
 
-        if (!$token = Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
         return $this->respondWithToken($token);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/auth/logout",
-     *     summary="User logout",
-     *     description="Adds the users current token to a black list forcing them to re-login to the application",
-     *     tags={"auth"},
-     *     security={"jwt_auth": ""},
-     *     @OA\Response(
-     *         response="204",
-     *         description="Successfull logout operation",
-     *     ),
-     *     @OA\Response(
-     *         response="401",
-     *         description="Bearer authentication required to access this route",
-     *     )
-     * )
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function logout(): \Illuminate\Http\JsonResponse
-    {
-        // TODO: Add the token to a blacklist here
-        return response()->json(['message'=>'Goodbye!'], 200);
-
     }
 
     /**
@@ -127,8 +81,58 @@ class AuthController extends Controller
      * )
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me(): \Illuminate\Http\JsonResponse
+    public function me()
     {
         return response()->json(auth()->user());
     }
+
+     /**
+     * @OA\Get(
+     *     path="/api/auth/logout",
+     *     summary="User logout",
+     *     description="Adds the users current token to a black list forcing them to re-login to the application",
+     *     tags={"auth"},
+     *     security={"jwt_auth": ""},
+     *     @OA\Response(
+     *         response="204",
+     *         description="Successfull logout operation",
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Bearer authentication required to access this route",
+     *     )
+     * )
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        auth()->logout();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Refresh a token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(auth()->refresh());
+    }
+
+    /**
+     * Returns a JSON Web Token to the requester
+     * @param $token Token to create a response with
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
+    }
+    
 }

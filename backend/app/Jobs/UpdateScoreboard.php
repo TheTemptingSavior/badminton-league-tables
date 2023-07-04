@@ -3,8 +3,6 @@
 namespace App\Jobs;
 
 use App\Helpers\ScoreboardHelper;
-use App\Helpers\SeasonHelper;
-use App\Models\Scorecard;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 

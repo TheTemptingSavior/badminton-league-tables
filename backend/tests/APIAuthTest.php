@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Log;
 
 class APIAuthTest extends TestCase
 {

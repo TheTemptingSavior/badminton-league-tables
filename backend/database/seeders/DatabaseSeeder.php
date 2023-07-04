@@ -1,10 +1,7 @@
 <?php
 
-use Database\Seeders\ScorecardSeeder;
-use Database\Seeders\SeasonSeeder;
-use Database\Seeders\SeasonTeamsSeeder;
-use Database\Seeders\TeamSeeder;
-use Database\Seeders\UserSeeder;
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,12 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            UserSeeder::class,
-            TeamSeeder::class,
-            SeasonSeeder::class,
-            SeasonTeamsSeeder::class,
-            ScorecardSeeder::class,
-        ]);
+        // $this->call('UsersTableSeeder');
     }
 }

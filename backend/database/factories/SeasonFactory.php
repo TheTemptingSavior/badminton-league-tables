@@ -1,17 +1,24 @@
 <?php
 
-
 namespace Database\Factories;
 
-
 use App\Models\Season;
-use DateTime;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SeasonFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
     protected $model = Season::class;
 
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
     public function definition()
     {
         $startYear = $this->faker->unique()->numberBetween(2001, 2100);
