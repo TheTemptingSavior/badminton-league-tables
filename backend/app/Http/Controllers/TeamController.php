@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\GenericHelper;
 use App\Models\Team;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -194,6 +195,7 @@ class TeamController extends Controller
      */
     public function retireTeam(string $id, Request $request): \Illuminate\Http\JsonResponse
     {
+        // TODO: This should use the season_teams table from now on
         $validator = Validator::make($request->all(), ['retired' => 'required|boolean']);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -280,5 +282,38 @@ class TeamController extends Controller
             ['error' => 'Team name must be present in request and unique'],
             400
         );
+    }
+
+    public function getTeamSeasons(string $id): \Illuminate\Http\JsonResponse
+    {
+        $team = Team::findOrFail($id);
+
+        $activeSeasons = DB::table('season_teams')
+            ->where('team_id', '=', $team->id)
+            ->get()
+            ->toArray();
+        $allSeasons = DB::table('seasons')
+            ->get()
+            ->toArray();
+        $data = Array(
+            'active' => Array(),
+            'notactive' => Array()
+        );
+
+        foreach ($allSeasons as $season) {
+            $added = false;
+            foreach($activeSeasons as $active) {
+                if ($active->season_id === $season->id) {
+                    array_push($data['active'], $season);
+                    $added = true;
+                    break;
+                }
+            }
+            if (! $added) {
+                array_push($data['notactive'], $season);
+            }
+        }
+
+        return response()->json($data, 200);
     }
 }
