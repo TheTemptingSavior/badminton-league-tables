@@ -256,12 +256,18 @@ class TeamController extends Controller
                 $st->season_id = $season->id;
                 $st->team_id = $team->id;
                 $st->save();
+
+                // Because a new entry is made the scoreboards must be updated
+                $this->dispatch(new UpdateScoreboard($season->id));
             } else if ($row != null && $sa['active'] == false) {
                 Log::info("SeasonTeams(season={$season->id}, team={$team->id}) exists. Deleting now");
                 // There is a row but the team is not active
                 if (TeamHelper::canRetire($id, $season->id)) {
                     Log::info("Team #{$team->id} is being retired");
                     DB::table('season_teams')->delete($row->id);
+
+                    // Because an entry was deleted the scoreboards must be updated
+                    $this->dispatch(new UpdateScoreboard($season->id));
                 } else {
                     Log::warning("Team #{$team->id} still has scorecards. Aborting all operations");
                     DB::rollBack();
