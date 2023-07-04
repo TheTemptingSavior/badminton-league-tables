@@ -90,7 +90,8 @@ services:
       dockerfile: docker/backend/Dockerfile
     tty: true
     stdin_open: true
-    command: sh -c "cd /var/www/html/api && ./vendor/bin/phpunit"
+    entrypoint: sh
+    command: -c "cd /var/www/html/api && ./vendor/bin/phpunit"
     environment:
       - DB_CONNECTION=sqlite
       - "DB_DATABASE=/database.testing.sqlite"

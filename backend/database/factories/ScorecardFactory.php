@@ -53,21 +53,21 @@ class ScorecardFactory extends Factory
     public function setHomeTeam($id)
     {
         return $this->state([
-            'home_team' => $id
+            'home_team' => $id,
         ]);
     }
 
     public function setAwayTeam($id)
     {
         return $this->state([
-            'away_team' => $id
+            'away_team' => $id,
         ]);
     }
 
     public function setDatePlayed($datePlayed)
     {
         return $this->state([
-            'date_played' => $datePlayed
+            'date_played' => $datePlayed,
         ]);
     }
 }

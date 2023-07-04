@@ -24,7 +24,7 @@ class UserFactory extends Factory
     public function admin()
     {
         return $this->state([
-            'admin' => true
+            'admin' => true,
         ]);
     }
 }

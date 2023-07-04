@@ -40,17 +40,17 @@ class UpdateScoreboard extends Command
      */
     public function handle(): int
     {
-        $this->info('Beginning update scoreboard for season ' . $this->argument('season'));
+        $this->info('Beginning update scoreboard for season '.$this->argument('season'));
         $season = DB::table('seasons')
             ->where('slug', '=', $this->argument('season'))
             ->select(['id', 'slug'])
             ->first();
 
-        $this->info('Started update of scoreboard for season ' . $season->slug);
+        $this->info('Started update of scoreboard for season '.$season->slug);
         if (ScoreboardHelper::calculateScoreboard($season->id)) {
-            $this->info('Finished update of scoreboard for season ' . $season->slug);
+            $this->info('Finished update of scoreboard for season '.$season->slug);
         } else {
-            $this->error('Failed update of scoreboard for season ' . $season->slug);
+            $this->error('Failed update of scoreboard for season '.$season->slug);
             return 1;
         }
         return 0;

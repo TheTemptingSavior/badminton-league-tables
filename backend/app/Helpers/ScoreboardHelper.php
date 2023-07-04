@@ -20,7 +20,7 @@ class ScoreboardHelper
      */
     public static function calculateScoreboard(int $season): bool
     {
-        Log::info("Calculating scoreboard for season " . $season);
+        Log::info("Calculating scoreboard for season ".$season);
         try {
             // Sanity to check to ensure the season exists
             $seasonObject = Season::findOrFail($season, "*");
@@ -48,7 +48,7 @@ class ScoreboardHelper
                     'wins' => 0,
                     'losses' => 0,
                     'for' => 0,
-                    'against' => 0
+                    'against' => 0,
                 ];
             }
             if (! array_key_exists($card->away_team, $processedData)) {
@@ -58,7 +58,7 @@ class ScoreboardHelper
                     'wins' => 0,
                     'losses' => 0,
                     'for' => 0,
-                    'against' => 0
+                    'against' => 0,
                 ];
             }
 
@@ -142,7 +142,7 @@ class ScoreboardHelper
 
     protected static function generateZeros($seasonId)
     {
-        Log::info("No scoreboard exists for season $seasonId. Generating an empty one");
+        Log::info("No scoreboard exists for season {$seasonId}. Generating an empty one");
         $seasonTeams = DB::table('season_teams')->where('season_id', '=', $seasonId)->get();
         foreach($seasonTeams as $seasonTeam) {
             $sb = new Scoreboard;

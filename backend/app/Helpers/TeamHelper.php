@@ -11,7 +11,7 @@ class TeamHelper
 {
     public static function canRetire($teamId, $seasonId)
     {
-        Log::debug("Checking if team #$teamId can retire from season #$seasonId");
+        Log::debug("Checking if team #{$teamId} can retire from season #$seasonId");
         $season = Season::findOrFail($seasonId);
         $scorecards = DB::table('scorecards')
             ->where('date_played', '>', $season->start)
@@ -29,7 +29,7 @@ class TeamHelper
             return true;
         } else {
             $number = sizeof($scorecards);
-            Log::debug("Team has #$number existing scorecards");
+            Log::debug("Team has #{$number} existing scorecards");
             return false;
         }
     }

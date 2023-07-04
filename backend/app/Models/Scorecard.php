@@ -359,13 +359,13 @@ class Scorecard extends Model
             if ($data[$game[0]] == null and $data[$game[1]] != null) {
                 array_push(
                     $warnings,
-                    "The scores do not add up for '" . $game[0] . "' and '" . $game[1] . "'"
+                    "The scores do not add up for '".$game[0]."' and '".$game[1]."'"
                 );
                 continue;
             } else if ($data[$game[0]] != null and $data[$game[1]] == null) {
                 array_push(
                     $warnings,
-                    "The scores do not add up for '" . $game[0] . "' and '" . $game[1] . "'"
+                    "The scores do not add up for '".$game[0]."' and '".$game[1]."'"
                 );
                 continue;
             }
@@ -387,7 +387,7 @@ class Scorecard extends Model
             // Failed the above validations so it must be incorrect
             array_push(
                 $warnings,
-                "The scores do not add up for '" . $game[0] . "' and '" . $game[1] . "'");
+                "The scores do not add up for '".$game[0]."' and '".$game[1]."'");
         }
 
         return $warnings;

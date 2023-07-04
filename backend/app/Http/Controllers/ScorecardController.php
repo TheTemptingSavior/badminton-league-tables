@@ -269,7 +269,7 @@ class ScorecardController extends Controller
             [
                 'message' => 'Scorecard created',
                 'id' => $game->id,
-                'warnings' => (sizeof($warnings) == 0 ? null : $warnings)
+                'warnings' => (sizeof($warnings) == 0 ? null : $warnings),
             ],
             201
         );

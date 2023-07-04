@@ -15,21 +15,21 @@ class SeasonTeamsFactory extends Factory
     {
         return [
             'season_id' => null,
-            'team_id' => null
+            'team_id' => null,
         ];
     }
 
     public function season($id)
     {
         return $this->state([
-            'season_id' => $id
+            'season_id' => $id,
         ]);
     }
 
     public function team($id)
     {
         return $this->state([
-            'team_id' => $id
+            'team_id' => $id,
         ]);
     }
 }
