@@ -12,15 +12,41 @@ class UserController extends Controller
     /**
      * @OA\Get(
      *     path="/api/users",
+     *     summary="List all users",
      *     description="List all users that have an account with the site",
      *     tags={"users"},
      *     security={"jwt_auth": ""},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="path",
+     *         description="Page of results to retrieve",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="path",
+     *         description="Number of results to retrieve per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
      *     @OA\Response(
      *         response="200",
-     *         description="Returns the user object with given ID",
+     *         description="Returns the users in the system",
      *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/User")
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="first_page_url", type="string", format="url"),
+     *             @OA\Property(property="from", type="integer"),
+     *             @OA\Property(property="next_page_url", type="string", format="url"),
+     *             @OA\Property(property="path", type="string", format="url"),
+     *             @OA\Property(property="per_page", type="integer"),
+     *             @OA\Property(property="prev_page_url", type="string", format="url"),
+     *             @OA\Property(property="to", type="string", format="int64"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/User")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -30,17 +56,19 @@ class UserController extends Controller
      *     )
      * )
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listUsers()
+    public function listUsers(Request $request)
     {
-        // TODO: This needs to be paginated
-        return response()->json(User::all());
+        $per_page = $request->get('per_page', 15);
+        return response()->json(User::simplePaginate($per_page));
     }
 
     /**
      * @OA\Get(
      *     path="/api/users/{id}",
+     *     summary="Get single user",
      *     description="Returns information about the user identified by their ID",
      *     tags={"users"},
      *     security={"jwt_auth": ""},
@@ -80,6 +108,7 @@ class UserController extends Controller
     /**
      * @OA\Post(
      *     path="/api/users",
+     *     summary="Create new user",
      *     description="Create a new user. It should be noted that any newly created user is NOT an admin.",
      *     tags={"users"},
      *     security={"jwt_auth": ""},
@@ -139,6 +168,7 @@ class UserController extends Controller
     /**
      * @OA\Delete(
      *     path="/api/users/{id}",
+     *     summary="Delete a user",
      *     description="Delete a user with the given ID. This action can only be performed be an admin. Returns no response on a successful delete",
      *     tags={"users"},
      *     security={"jwt_auth": ""},
@@ -182,6 +212,7 @@ class UserController extends Controller
     /**
      * @OA\Put(
      *     path="/api/users/{id}",
+     *     summary="Update a user",
      *     description="Update an existing user based upon their ID",
      *     tags={"users"},
      *     security={"jwt_auth": ""},
@@ -249,6 +280,7 @@ class UserController extends Controller
     /**
      * @OA\Put(
      *     path="/api/users/{id}/admin",
+     *     summary="Change user admin status",
      *     description="Change a users admin status",
      *     tags={"users"},
      *     security={"jwt_auth": ""},
