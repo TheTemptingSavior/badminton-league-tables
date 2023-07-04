@@ -266,7 +266,7 @@ class APITeamsTest extends TestCase
         $result = $this->actingAs($user)
             ->json('PUT', '/api/teams/' . $team->id . '/retire', ['retired' => true])
             ->seeStatusCode(200)
-            ->seeJsonStructure(['id', 'name', 'slug', 'retired_on', 'created_at', 'updated_at']);
+            ->seeJsonStructure(['id', 'name', 'slug', 'created_at', 'updated_at']);
 
         $data = json_decode($result->response->content());
         $this->assertNotNull($data->retired_on);

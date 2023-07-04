@@ -59,7 +59,7 @@ class TeamController extends Controller
         $per_page = $request->get('per_page', 15);
         $data = DB::table('teams')
             ->orderBy('name')
-            ->select(['id', 'name', 'slug', 'retired_on'])
+            ->select(['id', 'name', 'slug'])
             ->simplePaginate($per_page);
         return response()->json($data, 200);
     }
