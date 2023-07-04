@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             "username" => "ethan",
             "password" => Hash::make("cotterell"),
             "admin" => true,
-            "created_at" => date("Y-m-d H:i:s")
+            "created_at" => date("Y-m-d H:i:s"),
         ]);
     }
 }
