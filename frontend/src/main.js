@@ -11,7 +11,15 @@ import store from './store'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios);
+
+// TODO: Somehow needs to be set with an environment variable
 Vue.axios.defaults.baseURL = 'http://localhost';
+Vue.axios.interceptors.request.use(config => {
+  console.log("Making request to: " + config.url);
+  return config;
+}, error => {
+  return Promise.reject(error);
+})
 
 new Vue({
   router,
