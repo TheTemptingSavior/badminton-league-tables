@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ImportData::class,
         \App\Console\Commands\CreateSeasons::class,
         \App\Console\Commands\CreateUser::class,
+        \App\Console\Commands\CheckDatabase::class,
     ];
 
     /**
