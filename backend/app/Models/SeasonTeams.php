@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -33,20 +34,22 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SeasonTeams extends Model
 {
+    use HasFactory;
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected string $table = 'season_teams';
+    protected $table = 'season_teams';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected array $fillable = [
-        'season', 'team',
+    protected $fillable = [
+        'season_id', 'team_id',
     ];
 
     /**
@@ -54,5 +57,5 @@ class SeasonTeams extends Model
      *
      * @var bool
      */
-    public bool $timestamps = true;
+    public $timestamps = true;
 }
