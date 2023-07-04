@@ -26,7 +26,7 @@ else
 fi
 
 # Ensure the database is setup and check for the default user
-php $ARTISAN migrate
+php $ARTISAN migrate --no-interaction
 php $ARTISAN user:make-default
 
 
