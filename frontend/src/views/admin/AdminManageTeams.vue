@@ -42,17 +42,17 @@ export default {
     }
   },
   methods: {
-    retireTeam(teamId) {
-      console.log("Retiring team with ID: " + teamId);
-      Vue.axios.get('/api/teams/' + teamId + '/retire').then((response) => {
-        console.log(response);
-      }).catch((error) => {
-        EventBus.$emit("show-error", "Failed getting list of teams. Try refreshing the page");
-        throw new Error(`API ${error}`);
-      }).finally(() => {
-        // Turn of the loading
-      })
-    }
+    // retireTeam(teamId) {
+    //   console.log("Retiring team with ID: " + teamId);
+    //   Vue.axios.put('/api/teams/' + teamId + '/retire').then((response) => {
+    //     console.log(response);
+    //   }).catch((error) => {
+    //     EventBus.$emit("show-error", "Failed getting list of teams. Try refreshing the page");
+    //     throw new Error(`API ${error}`);
+    //   }).finally(() => {
+    //     // Turn of the loading
+    //   })
+    // }
   },
   created() {
     if (! isLoggedIn(this.$store.getters.user)) {

@@ -93,13 +93,19 @@ export default {
     },
     saveForm() {
       this.isUpdating = true;
-      let data = this.checkboxes.map(function(cb) {
+      let data = {
+        data: this.checkboxes.map(function(cb) {
           return {
             active: cb.active,
             season: cb.sid
           }
-      });
-      Vue.axios.post('/api/teams/' + this.team.id + '/retire', data).then((response) => {
+        })
+      };
+      const headers = {
+        'Content-Type' : 'application/json',
+        'Authorization': 'Bearer ' + this.$store.getters.token
+      }
+      Vue.axios.put('/api/teams/' + this.team.id + '/retire', data, { headers }).then((response) => {
         console.log(response);
       }).catch((error) => {
         console.log(error)
