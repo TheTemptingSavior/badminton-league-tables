@@ -155,6 +155,6 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
         // Get all the seasons available in the league
         $router->get('/all', ['as' => 'scoreboard-get-all', 'uses' => 'ScoreboardController@getAll']);
         // Get a scoreboard from the season slug
-        $router->get('/{slug}', ['as' => 'scoreboard-get', 'uses' => 'ScoreboardController@getScoreboard']);
+        $router->get('/{id}', ['as' => 'scoreboard-get', 'uses' => 'ScoreboardController@getScoreboard']);
     });
 });
