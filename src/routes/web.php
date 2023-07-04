@@ -15,7 +15,20 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where all the routes relating to the API are stored
+|
+*/
+
 $router->group(['prefix' => 'api'], function() use ($router) {
+    $router->get('/', function() use ($router) {
+        return Array("league" => LEAGUE_NAME);
+    });
 
     $router->group(['prefix' => 'users'], function() use ($router) {
         $router->get('/', ['uses' => 'UserController@listUsers']);
