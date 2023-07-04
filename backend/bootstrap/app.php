@@ -78,6 +78,7 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'jsonheader' => App\Http\Middleware\JsonHeaderMiddleware::class,
     'admin' => App\Http\Middleware\AdminOnly::class,
+    'cors' => App\Http\Middleware\CorsMiddleware::class,
 ]);
 
 /*

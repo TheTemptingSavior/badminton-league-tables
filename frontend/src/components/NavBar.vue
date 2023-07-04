@@ -16,21 +16,18 @@
     </nav>
 
     <ul class="sidenav" id="mobile-demo">
-      <li><router-link to="/">Home</router-link></li>
+      <li v-bind:class="{ active: isHome }"><router-link to="/">Home</router-link></li>
+      <li v-bind:class="{ active: isScoreboards }"><router-link to="/scoreboards">Scoreboards</router-link></li>
+      <li v-bind:class="{ active: isTracker }"><router-link to="/tracker">Tracker</router-link></li>
+      <li v-bind:class="{ active: isLogin }"><router-link to="/login">Login</router-link></li>
     </ul>
 
   </div>
 </template>
 
 <script>
-import M from 'materialize-css';
-
 export default {
   name: "NavBar",
-  mounted() {
-    M.AutoInit();
-    console.log(this.$route.name);
-  },
   computed: {
     isHome() {
       return this.$route.name === 'Home';
