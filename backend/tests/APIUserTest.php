@@ -205,7 +205,7 @@ class APIUserTest extends TestCase
     {
         $user = factory('App\Models\User')->state('admin')->create();
         $this->actingAs($user)
-            ->json('DELETE', '/api/user/helloworld')
+            ->json('DELETE', '/api/users/helloworld')
             ->seeStatusCode(404);
     }
 
@@ -283,10 +283,9 @@ class APIUserTest extends TestCase
         $user = factory('App\Models\User')->create();
         $userTwo = factory('App\Models\User')->create();
 
-        // TODO: Should return 400 bad request NOT 422 "unprocessable entity"
         $this->actingAs($user)
             ->json('PUT', '/api/users/' . $user->id, ['username' => $userTwo->username])
-            ->seeStatusCode(400);
+            ->seeStatusCode(409);
     }
 
     /**

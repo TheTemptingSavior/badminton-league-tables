@@ -9,18 +9,18 @@ steps:
   - name: Install
     image: composer
     commands:
-      - cd src/
+      - cd backend/
       - composer install
 
   - name: Linter
     image: php:7.4
     commands:
-      - cd src/
-      - vendor/bin/tlint --quiet
+      - cd backend/
+      - vendor/bin/tlint
 
   - name: Test
     image: php:7.4
     commands:
-      - pecl install xdebug && docker-php-ext-enable xdebug
-      - cd src/
+      - pecl install xdebug --quiet 1> /dev/null 2>&1 && docker-php-ext-enable xdebug
+      - cd backend/
       - vendor/bin/phpunit --configuration phpunit.xml --coverage-html .reports

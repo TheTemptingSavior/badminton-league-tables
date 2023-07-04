@@ -15,7 +15,7 @@ services:
       context: .
     depends_on:
       - backend
-#      - frontend
+      - frontend
     networks:
       - front
     ports:

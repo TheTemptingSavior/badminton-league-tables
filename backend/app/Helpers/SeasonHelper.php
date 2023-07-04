@@ -18,7 +18,6 @@ class SeasonHelper
             ->where('start', '<', $datetime)
             ->where('end', '>', $datetime)
             ->first();
-
-       return $season->id;
+        return ($season !== null) ? $season->id : null;
     }
 }
