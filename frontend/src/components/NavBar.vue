@@ -88,7 +88,19 @@
         <v-list-item-title>Help</v-list-item-title>
       </v-list-item>
     </v-list-item-group>
+
+    <br v-if="isLoggedIn" />
+    <v-divider v-if="isLoggedIn" />
+    <br v-if="isLoggedIn" />
+
+    <v-list-item-group active-class="orange--text text--accent-4">
+      <v-list-item>
+        <v-switch v-model="isDark" label="Dark Mode" v-on:click="toggleDarkMode"></v-switch>
+      </v-list-item>
+    </v-list-item-group>
+
   </v-list>
+  
 </template>
 
 <script>
@@ -118,6 +130,9 @@ export default {
       } else {
         return false;
       }
+    },
+    isDark() {
+      return this.$vuetify.theme.dark;
     }
   },
   methods: {
@@ -127,6 +142,9 @@ export default {
       this.$store.dispatch('logoutUser');
       this.$router.push({ name: 'Home'});
     },
+    toggleDarkMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    }
   },
   created() {
     this.unwatch = this.$store.watch(
