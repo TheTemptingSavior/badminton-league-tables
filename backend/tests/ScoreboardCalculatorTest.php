@@ -15,6 +15,7 @@ class ScoreboardCalculatorTest extends TestCase
         $this->artisan('import');
 
         $season = Season::findOrFail(1, '*');
+        $this->assertEquals('15-16', $season->slug);
         $ret = ScoreboardHelper::calculateScoreboard($season->id);
         $this->assertTrue($ret);
 
@@ -51,6 +52,7 @@ class ScoreboardCalculatorTest extends TestCase
         $this->artisan('import');
 
         $season = Season::findOrFail(2, '*');
+        $this->assertEquals('16-17', $season->slug);
         $ret = ScoreboardHelper::calculateScoreboard($season->id);
         $this->assertTrue($ret);
 
@@ -87,6 +89,7 @@ class ScoreboardCalculatorTest extends TestCase
         $this->artisan('import');
 
         $season = Season::findOrFail(3, '*');
+        $this->assertEquals('17-18', $season->slug);
         $ret = ScoreboardHelper::calculateScoreboard($season->id);
         $this->assertTrue($ret);
 
@@ -122,17 +125,18 @@ class ScoreboardCalculatorTest extends TestCase
         // It is assumed this works
         $this->artisan('import');
 
-        $season = Season::findOrFail(3, '*');
+        $season = Season::findOrFail(4, '*');
+        $this->assertEquals('18-19', $season->slug);
         $ret = ScoreboardHelper::calculateScoreboard($season->id);
         $this->assertTrue($ret);
 
         $correctData = Array(
-            Array("melton-mowbray", 10, 19, 9, 1, 63, 27),
+            Array("melton-mowbray",       10, 19, 9, 1, 63, 27),
             Array("stamford-badminton-a", 10, 18, 8, 2, 68, 22),
-            Array("stamford-badminton-b", 9, 1, 0, 9, 12, 69),
-            Array("stamford-community", 10, 8, 3, 7, 38, 52),
-            Array("rockingham", 8, 6, 2, 6, 26, 46),
-            Array("uppingham", 9, 13, 6, 3, 45, 36)
+            Array("stamford-badminton-b",  9,  1, 0, 9, 12, 69),
+            Array("stamford-community",   10,  8, 3, 7, 38, 52),
+            Array("rockingham",            8,  6, 2, 6, 26, 46),
+            Array("uppingham",             9, 13, 6, 3, 45, 36)
         );
 
         foreach($correctData as $data) {
@@ -158,7 +162,8 @@ class ScoreboardCalculatorTest extends TestCase
         // It is assumed this works
         $this->artisan('import');
 
-        $season = Season::findOrFail(3, '*');
+        $season = Season::findOrFail(5, '*');
+        $this->assertEquals('19-20', $season->slug);
         $ret = ScoreboardHelper::calculateScoreboard($season->id);
         $this->assertTrue($ret);
 
