@@ -119,6 +119,7 @@ export default {
       // TODO: Redirect to the home page
       console.log("User logging out");
       this.$store.dispatch('logoutUser');
+      this.$router.push({ name: 'Home'});
     },
   },
   created() {
