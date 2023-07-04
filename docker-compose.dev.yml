@@ -38,6 +38,7 @@ services:
     volumes:
       - ./backend:/var/www/html/api
       - logs:/var/www/html/api/storage/logs:rw
+      - ./docker/backend/import:/import:ro
 
   frontend:
     build:
@@ -91,8 +92,8 @@ services:
     command: sh -c "cd /var/www/html/api && ./vendor/bin/phpunit"
     environment:
       - DB_CONNECTION=sqlite
-#      - "DB_DATABASE=/database.testing.sqlite"
-      - "DB_DATABASE=:memory:"
+      - "DB_DATABASE=/database.testing.sqlite"
+#      - "DB_DATABASE=:memory:"
       - APP_DEBUG=true
       - APP_ENV=testing
     expose:
