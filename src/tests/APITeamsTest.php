@@ -132,4 +132,65 @@ class APITeamsTest extends TestCase
             ->seeStatusCode(403);
     }
 
+    /**
+     * Retire a team
+     *
+     * @return void
+     */
+    public function testRetireTeam()
+    {
+        $user = factory('App\Models\User')->state('admin')->create();
+        $team = factory('App\Models\Team')->create();
+
+        $result = $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', ['retired' => true])
+            ->seeStatusCode(200)
+            ->seeJsonStructure(['id', 'name', 'slug', 'retired_on', 'created_at', 'updated_at']);
+
+        $data = json_decode($result->response->content());
+        $this->assertNotNull($data->retired_on);
+    }
+
+    /**
+     * Attempt to retire a team without providing authentication
+     *
+     * @return void
+     */
+    public function testRetireTeamNoAuth()
+    {
+        $team = factory('App\Models\Team')->create();
+
+        $this->json('PUT', '/api/teams/'.$team->id.'/retire', ['retired' => true])
+            ->seeStatusCode(401);
+    }
+
+    /**
+     * Attempt to retire a team without being an admin user
+     *
+     * @return void
+     */
+    public function testRetireTeamNoAdmin()
+    {
+        $user = factory('App\Models\User')->create();
+        $team = factory('App\Models\Team')->create();
+
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', ['retired' => true])
+            ->seeStatusCode(403);
+    }
+
+    /**
+     * Attempt to retire a team without providing the proper data
+     *
+     * @return void
+     */
+    public function testRetireTeamBadData()
+    {
+        $user = factory('App\Models\User')->state('admin')->create();
+        $team = factory('App\Models\Team')->create();
+
+        $this->actingAs($user)
+            ->json('PUT', '/api/teams/'.$team->id.'/retire', ['baddata' => true])
+            ->seeStatusCode(400);
+    }
 }
