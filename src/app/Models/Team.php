@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
      * The table associated with the model.
      *
      * @var string
@@ -21,11 +28,4 @@ class Team extends Model
     protected $fillable = [
         'name', 'slug',
     ];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = true;
 }
