@@ -51,15 +51,12 @@
   </v-container>
 </template>
 <script>
-
-import config from "../config";
-
 export default {
   name: 'Home',
   computed: {
     getLeagueName() {
-      return config.LEAGUE_NAME;
+      return process.env.VUE_APP_LEAGUE_NAME;
     }
-  },
+  }
 }
 </script>

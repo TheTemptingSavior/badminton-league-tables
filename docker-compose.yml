@@ -29,6 +29,7 @@ services:
       context: .
       dockerfile: docker/frontend/Dockerfile
     environment:
+      - VUE_APP_LEAGUE_NAME=Rutland and Stamford
       - VUE_APP_API_URL=https://badminton.ethancotterell.co.uk/api
       - NODE_ENV=production
     expose:
@@ -46,7 +47,7 @@ services:
       - redis
       - db
     env_file:
-      - env
+      - .env
     expose:
       - 9000
     networks:
@@ -62,7 +63,7 @@ services:
       dockerfile: docker/backend/Dockerfile
     command: worker
     env_file:
-      - env
+      - .env
     depends_on:
       - redis
       - db
@@ -78,7 +79,7 @@ services:
       dockerfile: docker/backend/Dockerfile
     command: scheduler
     env_file:
-      - env
+      - .env
     depends_on:
       - redis
       - db
@@ -91,7 +92,7 @@ services:
     image: linuxserver/mariadb
     restart: unless-stopped
     env_file:
-      - env
+      - .env
     volumes:
       - db:/config
     networks:

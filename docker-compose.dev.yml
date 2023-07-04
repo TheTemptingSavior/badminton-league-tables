@@ -47,12 +47,18 @@ services:
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile.development
+    environment:
+      - VUE_APP_LEAGUE_NAME=Rutland and Stamford
+      - VUE_APP_API_URL=https://badminton.ethancotterell.co.uk/api
+      - NODE_ENV=production
     ports:
       - "8080:8080"
     volumes:
     - ./frontend/public:/app/public
     - ./frontend/src:/app/src
     - ./frontend/babel.config.js:/app/babel.config.js
+    - ./frontend/package.json:/app/package.json
+    - ./frontend/vue.config.js:/app/vue.config.js
 
   db:
     image: linuxserver/mariadb

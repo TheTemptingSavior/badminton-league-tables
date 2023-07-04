@@ -6,9 +6,9 @@ COPY frontend/package-lock.json /app/package-lock.json
 RUN npm install --silent
 RUN npm install @vue/cli@3.7.0 -g
 COPY frontend/ /app
+COPY .env /app/.env
 RUN npx browserslist@latest --update-db
 
-ENV NODE_ENV=production
 RUN npm run build
 
 # production environment
