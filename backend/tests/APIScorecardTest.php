@@ -70,7 +70,25 @@ class APIScorecardTest extends TestCase
      */
     function testGetAllDifferentPageLimit()
     {
-        // TODO: Implement APIScorecardTest::testGetAllDifferentPageLimit()
+        factory('App\Models\Team', 6)->create();
+        factory('App\Models\Scorecard', 15)->create();
+
+        $response = $this->json('GET', '/api/scorecards?per_page=7')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($response->response->content());
+
+        $this->assertCount(7, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(7, $data->per_page);
+        $this->assertStringEndsWith('/api/scorecards?page=1', $data->first_page_url);
+        $this->assertNotNull($data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/scorecards', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(7, $data->to);
     }
 
     /**
@@ -81,7 +99,25 @@ class APIScorecardTest extends TestCase
      */
     function testGetAllMiddlePage()
     {
-        // TODO: Implement APIScorecardTest::testGetAllMiddlePage()
+        factory('App\Models\Team', 6)->create();
+        factory('App\Models\Scorecard', 15)->create();
+
+        $response = $this->json('GET', '/api/scorecards?per_page=5&page=2')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($response->response->content());
+
+        $this->assertCount(5, $data->data);
+        $this->assertEquals(2, $data->current_page);
+        $this->assertEquals(5, $data->per_page);
+        $this->assertStringEndsWith('/api/scorecards?page=1', $data->first_page_url);
+        $this->assertNotNull($data->next_page_url);
+        $this->assertNotNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/scorecards', $data->path);
+        $this->assertEquals(6, $data->from);
+        $this->assertEquals(10, $data->to);
     }
 
     /**
