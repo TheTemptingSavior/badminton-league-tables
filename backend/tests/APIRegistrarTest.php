@@ -23,13 +23,11 @@ class APIRegistrarTest extends TestCase
     function testCreateRegistrarDatabaseCheck()
     {
         $testEmail = 'test@example.com';
-        $this->json(
-            'POST',
-            '/api/registrar',
-            ['email' => $testEmail]
-        )
-        ->seeStatusCode(201)
-        ->seeJsonStructure(['email', 'token']);
+        $result = $this->json('POST', '/api/registrar', ['email' => $testEmail])
+            ->seeStatusCode(201)
+            ->seeJsonStructure(['email', 'token']);
+        $data = json_decode($result->response->content());
+
 
         $registrar = DB::table('registrars')
             ->orderBy('email', 'desc')
@@ -38,7 +36,9 @@ class APIRegistrarTest extends TestCase
             ->first();
         $this->assertNotNull($registrar);
         $this->assertEquals($registrar->email, $testEmail);
+        $this->assertEquals($registrar->email, $data->email);
         $this->assertNotNull($registrar->token);
+        $this->assertEquals($registrar->token, $data->token);
         $this->assertEquals(strlen($registrar->token), 128);
     }
 
