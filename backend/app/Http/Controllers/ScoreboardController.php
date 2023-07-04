@@ -9,7 +9,7 @@ class ScoreboardController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/scoreboards",
+     *     path="/api/scoreboards/current",
      *     summary="Get current scoreboard",
      *     description="Get the current scoreboard",
      *     tags={"scoreboards"},

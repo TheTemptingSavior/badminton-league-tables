@@ -284,6 +284,42 @@ class TeamController extends Controller
         );
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/teams/{id}/seasons",
+     *     summary="Get the teams activity in previous seasons",
+     *     description="Gets the past list of seasons and whether or not the team was active or inactive in it",
+     *     tags={"teams"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the team to get",
+     *         required=true,
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Seasons and whether the team was active in it",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="active",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Season")
+     *             ),
+     *             @OA\Property(
+     *                 property="notactive",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Season")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request data",
+     *         @OA\JsonContent(ref="#/components/schemas/BadRequestError")
+     *     )
+     * )
+     */
     public function getTeamSeasons(string $id): \Illuminate\Http\JsonResponse
     {
         $team = Team::findOrFail($id);
