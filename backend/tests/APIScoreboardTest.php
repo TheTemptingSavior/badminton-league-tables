@@ -37,8 +37,12 @@ class APIScoreboardTest extends TestCase
             ->json('POST', '/api/scorecards', $scorecard)
             ->seeStatusCode(201);
 
-        // Check the scoreboard for an update
-        // and make sure that it s correct
+        // Update the scoreboard manually as the job is queued but
+        // hasn't been run
+        $ret = ScoreboardHelper::calculateScoreboard($seasonId);
+        $this->assertTrue($ret);
+
+        // The new scoreboard data
         $correctData = Array(
             Array("melton-mowbray", 10, 17, 8, 2, 67, 23),
             Array("stamford-badminton-a", 11, 19, 9, 2, 75, 24),
