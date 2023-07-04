@@ -110,8 +110,34 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->put('/{id}', ['as' => 'team-update', 'uses' => 'TeamController@updateTeam']);
     });
     $router->group(['prefix' => 'teams'], function() use ($router) {
+        // List the teams in the league
         $router->get('/', ['as' => 'team-list', 'uses' => 'TeamController@listTeams']);
+        // Get a specific team
         $router->get('/{id}', ['as' => 'team-detail', 'uses' => 'TeamController@getTeam']);
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | Game Routes
+    |--------------------------------------------------------------------------
+    |
+    | Game management. Allows the use to create, delete and edit scorecards in
+    | the database. Retrieval operations are the only ones supported without
+    | providing an authentication token
+    |
+    */
+    $router->group(['prefix' => 'games'], function() use ($router) {
+        // Get a list of the games
+        $router->get('/', ['as' => 'games-list', 'uses' => 'GamesController@listGames']);
+        // Get information on a specific game
+        $router->get('/{id}', ['as' => 'games-detail', 'uses' => 'GamesController@getGame']);
+    });
+    $router->group(['prefix' => 'games', 'middleware' => 'auth'], function() use ($router) {
+        // Create a score cards
+        $router->post('/', ['as' => 'games-create', 'uses' => 'GamesController@createGame']);
+        // Update a scorecard
+        $router->put('/{id}', ['as' => 'games-update', 'uses' => 'GamesController@updateGame']);
+        // Delete a game
+        $router->delete('/{id}', ['as' => 'games-delete', 'uses' => 'GamesContoller@deleteGame']);
+    });
 });
