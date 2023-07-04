@@ -9,6 +9,39 @@ class ScoreboardController extends Controller
 {
     /**
      * @OA\Get(
+     *     path="/api/scoreboards}",
+     *     summary="Get current scoreboard",
+     *     description="Get the current scoreboard",
+     *     tags={"scoreboards"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Scoreboard data for the given season",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Scoreboard")
+     *         )
+     *     )
+     * )
+     * @param string|null $season
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCurrent()
+    {
+        // TODO: Implement this function
+        $season = DB::table('seasons')
+            ->where('slug', '=', '17-18')
+            ->first();
+
+        $data = DB::table('scoreboards')
+            ->where('season', '=', $season->id)
+            ->orderBy('points', 'DESC')
+            ->get();
+        return response()->json($data, 200);
+
+    }
+
+    /**
+     * @OA\Get(
      *     path="/api/scoreboards/{slug}",
      *     summary="Get a scoreboard",
      *     description="Get a scoreboard for a specific season based on the season slug",
