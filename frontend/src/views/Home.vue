@@ -8,7 +8,7 @@
               Badminton League Tables
             </h1>
             <h5 class="text-h5 pb-5">
-              Rutland and Stamford League
+              {{ getLeagueName }} League
             </h5>
             <v-btn
                 to="/scoreboards"
@@ -52,10 +52,14 @@
 </template>
 <script>
 
+import config from "../config";
+
 export default {
   name: 'Home',
-  components: {
-
-  }
+  computed: {
+    getLeagueName() {
+      return config.LEAGUE_NAME;
+    }
+  },
 }
 </script>
