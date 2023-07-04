@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class APIUserTest extends TestCase
@@ -21,7 +22,7 @@ class APIUserTest extends TestCase
             ->seeStatusCode(200);
 
         $data = $result->response->original;
-        $this->assertCount(1, $data);
+        $this->assertCount(1, $data, 'Incorrect number of users');
     }
 
     /**
@@ -39,7 +40,7 @@ class APIUserTest extends TestCase
             ->seeStatusCode(200);
 
         $data = $result->response->original;
-        $this->assertCount(11, $data);
+        $this->assertCount(11, $data, 'Incorrect number of users');
     }
 
     /**
@@ -150,48 +151,149 @@ class APIUserTest extends TestCase
             ->seeStatusCode(403);
     }
 
+    /**
+     * Delete a user from the database
+     *
+     * @return void
+     */
     public function testDeleteUser()
     {
-        // + Delete a user
+        $user = factory('App\Models\User')->state('admin')->make();
+        $deleteMe = factory('App\Models\User')->make();
+        $uid = $deleteMe->id;
+        $this->actingAs($user)
+            ->json('DELETE', '/api/users/'.$uid)
+            ->seeStatusCode(204);
+
+        $deleted = DB::table('users')
+            ->where('id', $uid)
+            ->get()
+            ->count();
+        $this->assertEquals(0, $deleted);
     }
 
+    /**
+     * Attempt to delete a user without providing authentication
+     *
+     * @return void
+     */
     public function testDeleteUserNoAuth()
     {
-        // - Delete a user without a token
+        $deleteMe = factory('App\Models\User')->make();
+        $this->json('DELETE', 'api/users/'.$deleteMe->id)
+            ->seeStatusCode(401);
     }
 
+    /**
+     * Attempt to delete a user that doesn't exist
+     */
     public function testDeleteUserNonExist()
     {
-        // - Delete a user that doesn't exist
+        $user = factory('App\Models\User')->state('admin')->make();
+        $this->actingAs($user)
+            ->json('DELETE', '/api/users/999')
+            ->seeStatusCode(404);
     }
 
+    /**
+     * Attempt to delete a user with a bad ID
+     *
+     * @return void
+     */
     public function testDeleteUserBadId()
     {
-        // - Delete a user with a bad ID e.g. "helloworld"
+        $user = factory('App\Models\User')->state('admin')->make();
+        $this->actingAs($user)
+            ->json('DELETE', '/api/user/helloworld')
+            ->seeStatusCode(404);
     }
 
+    /**
+     * Attempt to delete a user without admin privileges
+     *
+     * @return void
+     */
+    public function testDeleteUserNonAdmin()
+    {
+        $user = factory('App\Models\User')->make();
+        $deleteMe = factory('App\Models\User')->make();
+        $this->actingAs($user)
+            ->json('DELETE', '/api/users/'.$deleteMe->id)
+            ->seeStatusCode(403);
+    }
+
+    /**
+     * Update a users information
+     *
+     * @return void
+     */
     public function testUpdateUser()
     {
-        // + Update a user account
+        $user = factory('App\Models\User')->state('admin')->make();
+        $result = $this->actingAs($user)
+            ->json('PUT', '/api/users/'.$user->id, ['username' => 'NewUsername'])
+            ->seeStatusCode(200)
+            ->seeJsonContains(["username" => "NewUsername"]);
+        $data = json_decode($result->response->content());
+        $this->assertNotNull($data['updated_on']);
     }
 
+    /**
+     * Attempt to update a different users account
+     *
+     * @return void
+     */
     public function testUpdateOtherUser()
     {
-        // - Update someone elses account
+        $user = factory('App\Models\User')->make();
+        $updateMe = factory('App\Models\User')->make();
+
+        $this->actingAs($user)
+            ->json('PUT', '/api/users/'.$updateMe->id, ['username' => 'NewUsername'])
+            ->seeStatusCode(403);
     }
 
+    /**
+     * Update a different users account by using an admin account
+     *
+     * @return void
+     */
     public function testUpdateOtherUserAsAdmin()
     {
-        // + Update some elses account as an admin
+        $user = factory('App\Models\User')->state('admin')->make();
+        $updateMe = factory('App\Models\User')->make();
+
+        $this->actingAs($user)
+            ->json('PUT', '/api/users/'.$updateMe->id, ['username' => 'NewUsername'])
+            ->seeStatusCode(200)
+            ->seeJsonContains(['username' => 'NewUsername']);
     }
 
+    /**
+     * Attempt to change a users username to one that already
+     * exists in the database
+     *
+     * @return void
+     */
     public function testUpdateUserDuplicateData()
     {
-        // - Update a user with duplicate username
+        $user = factory('App\Models\User')->make();
+        $userTwo = factory('App\Models\User')->make();
+
+        $this->actingAs($user)
+            ->json('PUT', '/api/users/'.$user->id, ['username' => $userTwo->username])
+            ->seeStatusCode(400);
     }
 
+    /**
+     * Attempt to update a user account without providing any
+     * authentication
+     */
     public function testUpdateUserNoAuth()
     {
-        // - Update a user without providing authentication
+        $user = factory('App\Models\User')->make();
+
+        $this->json('PUT', '/api/users/'.$user->id, ['username' => 'NewUsername'])
+            ->seeStatusCode(401);
     }
 }
