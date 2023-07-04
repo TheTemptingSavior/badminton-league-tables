@@ -27,6 +27,7 @@ services:
       - redis
       - db
     environment:
+      - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=leaguetables
@@ -50,7 +51,7 @@ services:
       dockerfile: docker/frontend/Dockerfile.development
     environment:
       - VUE_APP_LEAGUE_NAME=Rutland and Stamford
-      - VUE_APP_API_URL=http://127.0.0.1/api
+      - VUE_APP_API_URL=/
       - NODE_ENV=production
     ports:
       - "127.0.0.1:8080:80"
