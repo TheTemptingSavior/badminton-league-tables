@@ -24,7 +24,6 @@ class ScoreboardController extends Controller
      */
     public function getCurrent()
     {
-        // TODO: Find most recent scoreboard automatically
         $season = DB::table('seasons')
             ->orderBy('start', 'desc')
             ->first();
