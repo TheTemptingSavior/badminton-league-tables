@@ -22,6 +22,7 @@ services:
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
+    command: app
     depends_on:
       - redis
       - db

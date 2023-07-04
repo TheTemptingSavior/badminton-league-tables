@@ -14,3 +14,4 @@ WORKDIR /var/www/html
 EXPOSE 9000
 
 VOLUME /var/ww/html/api/storage/logs
+ENTRYPOINT ["sh", "/var/www/html/api/start.sh"]

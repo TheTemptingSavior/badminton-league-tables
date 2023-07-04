@@ -41,6 +41,7 @@ services:
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
+    command: app
     depends_on:
       - redis
       - db
@@ -78,8 +79,7 @@ services:
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
-    working_dir: /var/www/html/api
-    command: php artisan queue:work --verbose
+    command: worker
     environment:
       - APP_NAME=LeagueTables
       - APP_ENV=prod
@@ -114,7 +114,7 @@ services:
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
-    command: sh /var/www/html/api/scheduler.sh
+    command: scheduler
     environment:
       - APP_NAME=LeagueTables
       - APP_ENV=prod
