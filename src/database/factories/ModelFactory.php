@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\User;
+use App\Models\User;
 use Faker\Generator as Faker;
 
 /*
@@ -16,9 +16,19 @@ use Faker\Generator as Faker;
 |
 */
 
+// Bulk create standard, non-admin, users
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->email,
+        'username' => $faker->userName,
+        'password' => $faker->password,
+    ];
+});
+
+// Bulk create admin users
+$factory->state(User::class, 'admin', function ($faker) {
+    return [
+        'username' => $faker->userName,
+        'password' => $faker->password,
+        'admin' => true,
     ];
 });
