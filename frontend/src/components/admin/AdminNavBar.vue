@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import M from 'materialize-css'
 export default {
   name: "AdminNavBar",
   computed: {
@@ -37,10 +36,6 @@ export default {
     isHelp() {
       return this.$route.name === 'AdminHelp';
     }
-  },
-  created() {
-    let element = document.getElementById('admin-navbar');
-    M.Tabs.init(element);
   }
 }
 </script>

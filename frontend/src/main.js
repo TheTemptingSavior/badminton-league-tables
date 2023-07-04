@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import 'materialize-css/dist/css/materialize.min.css'
-import 'material-design-icons/iconfont/material-icons.css'
+import vuetify from "vuetify";
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
@@ -24,6 +23,7 @@ Vue.axios.interceptors.request.use(config => {
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')
 

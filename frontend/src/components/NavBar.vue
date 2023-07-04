@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import M from 'materialize-css'
 import AdminNavBar from "@/components/admin/AdminNavBar";
 export default {
   name: "NavBar",
@@ -78,22 +77,9 @@ export default {
       // TODO: Redirect to the home page
       console.log("User logging out");
       this.$store.dispatch('logoutUser');
-    },
-    openDropdown() {
-      let element = document.getElementById(this.dropdownName);
-      console.log(element);
-      let instance = M.Dropdown.getInstance(element);
-      console.log(instance);
-      instance.open();
-
     }
   },
   created() {
-    document.addEventListener('DOMContentLoaded', function() {
-      let element = document.getElementById(this.dropdownName);
-      M.Dropdown.init(element);
-      console.log("Initialized dropdown");
-    })
     this.unwatch = this.$store.watch(
         (state, getters) => getters.user,
         (newValue, oldValue) => {
