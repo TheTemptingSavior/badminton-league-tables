@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
     /**
      * List all users that have an account with the site
+     *
+     * TODO: This needs to be paginated
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function listUsers()
@@ -39,6 +43,13 @@ class UserController extends Controller
      */
     public function createUser(Request $request)
     {
+        // Ensure the user attempting to make the account is an admin
+        if (!auth()->user()->admin) {
+            Log::error('User is not an admin');
+            Log::error(auth()->user());
+            return response()->json(['error' => 'Only an admin may create user accounts'], 403);
+        }
+
         $this->validate(
             $request,
             [
