@@ -38,7 +38,7 @@ class CreateSeasons extends Command
 
     /**
      * Execute the console command.
-     * TODO: Run this entire block as a DB transaction to avoid botched creations
+     * TODO: Run the `update-scoreboard` command on the new season
      * @return int Returns 0 on success of 1 otherwise
      */
     public function handle(): int
@@ -58,6 +58,8 @@ class CreateSeasons extends Command
         }
 
         if (! $inSeason) {
+            // Create a new transaction so this is atomic
+            DB::beginTransaction();
             $this->info("Today ({$currentDate}) is not in a season. Creating a new season");
 
             // Before we add the new season, get the latest one
@@ -100,6 +102,9 @@ class CreateSeasons extends Command
                 $st->season_id = $s->id;
                 $st->saveOrFail();
             }
+
+            // Save the transaction
+            DB:commit();
         }
         return 0;
     }
