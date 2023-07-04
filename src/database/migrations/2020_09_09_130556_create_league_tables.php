@@ -26,6 +26,7 @@ class CreateLeagueTables extends Migration
             $table->increments('id');
             $table->dateTime('start');
             $table->dateTime('end');
+            $table->string('slug')->unique();
             $table->timestamps();
         });
 
