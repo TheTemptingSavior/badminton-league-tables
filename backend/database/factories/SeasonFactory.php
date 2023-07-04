@@ -14,11 +14,14 @@ class SeasonFactory extends Factory
 
     public function definition()
     {
-        $seasonDate = $this->faker->dateTimeThisDecade();
-        $dateObject = new DateTime($seasonDate->format('Y-m-d'));
+//        $seasonDate = $this->faker->unique()->dateTime();
+//        $dateObject = new DateTime($seasonDate->format('Y-m-d'));
+//
+//        $startYear = $dateObject->format('Y');
+//        $endYear = $dateObject->modify('+1 year')->format('Y');
 
-        $startYear = $dateObject->format('Y');
-        $endYear = $dateObject->modify('+1 year')->format('Y');
+        $startYear = $this->faker->unique(false)->numberBetween(2000, 2100);
+        $endYear = $startYear + 1;
         $startDate = $startYear.'-09-01';
         $endDate = $endYear.'-08-31';
 

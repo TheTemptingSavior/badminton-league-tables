@@ -2,10 +2,11 @@
 
 use App\Models\Season;
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class APISeasonTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseMigrations, DatabaseTransactions;
 
     /**
      * Create two example seasons that are stored in the database
@@ -40,12 +41,24 @@ class APISeasonTest extends TestCase
      */
     function testListSeasons()
     {
-        Season::factory(3)->create();
+        Season::factory()->count(3)->create();
 
         $result = $this->json('GET', '/api/seasons')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
             ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
 
-        $this->assertCount(3, json_decode($result->response->content()));
+        $this->assertCount(3, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/seasons?page=1', $data->first_page_url);
+        $this->assertNull($data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/seasons', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(3, $data->to);
     }
 
     /**
@@ -56,7 +69,23 @@ class APISeasonTest extends TestCase
      */
     function testListSeasonsPaged()
     {
-        // TODO: Implement APISeasonTest::testListSeasonsPaged
+        Season::factory()->count(20)->create();
+        $result = $this->json('GET', '/api/seasons')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        $this->assertCount(15, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/seasons?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/seasons?page=2', $data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/seasons', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(15, $data->to);
     }
 
     /**
@@ -66,7 +95,23 @@ class APISeasonTest extends TestCase
      */
     function testListSeasonsPageTwo()
     {
-        // TODO: Implement APISeasonTest::testListSeasonsPageTwo
+        Season::factory()->count(40)->create();
+        $result = $this->json('GET', '/api/seasons?page=2')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        $this->assertCount(15, $data->data);
+        $this->assertEquals(2, $data->current_page);
+        $this->assertEquals(15, $data->per_page);
+        $this->assertStringEndsWith('/api/seasons?page=1', $data->first_page_url, "Incorrect first page URL");
+        $this->assertStringEndsWith('/api/seasons?page=3', $data->next_page_url, "Incorrect next page url");
+        $this->assertStringEndsWith('/api/seasons?page=1', $data->prev_page_url, "Incorrect previous page URL");
+        $this->assertStringEndsWith('/api/seasons', $data->path);
+        $this->assertEquals(16, $data->from);
+        $this->assertEquals(30, $data->to);
     }
 
     /**
@@ -77,17 +122,49 @@ class APISeasonTest extends TestCase
      */
     function testListSeasonsPageLimit()
     {
-        // TODO: Implement APISeasonTest::testListSeasonsPageLimit
+        Season::factory()->count(20)->create();
+        $result = $this->json('GET', '/api/seasons?per_page=10')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        $this->assertCount(10, $data->data);
+        $this->assertEquals(1, $data->current_page);
+        $this->assertEquals(10, $data->per_page);
+        $this->assertStringEndsWith('/api/seasons?page=1', $data->first_page_url);
+        $this->assertStringEndsWith('/api/seasons?page=2', $data->next_page_url);
+        $this->assertNull($data->prev_page_url);
+        $this->assertStringEndsWith('/api/seasons', $data->path);
+        $this->assertEquals(1, $data->from);
+        $this->assertEquals(10, $data->to);
     }
 
     /**
-     * Return a lsit of seasons, selecting a page from the middle of the results
+     * Return a list of seasons, selecting a page from the middle of the results
      *
      * @return void
      */
     function testListSeasonsMiddlePage()
     {
-        // TODO: Implement APISeasonTest::testListSeasonsMiddlePage
+        Season::factory()->count(30)->create();
+        $result = $this->json('GET', '/api/seasons?per_page=10&page=2')
+            ->seeJsonStructure(
+                ['current_page', 'first_page_url', 'from', 'next_page_url', 'path', 'per_page', 'prev_page_url', 'to']
+            )
+            ->seeStatusCode(200);
+        $data = json_decode($result->response->content());
+
+        $this->assertCount(10, $data->data);
+        $this->assertEquals(2, $data->current_page);
+        $this->assertEquals(10, $data->per_page);
+        $this->assertStringEndsWith('/api/seasons?page=1', $data->first_page_url, "Incorrect first page URL");
+        $this->assertStringEndsWith('/api/seasons?page=3', $data->next_page_url, "Incorrect next page URL");
+        $this->assertStringEndsWith('/api/seasons?page=1', $data->prev_page_url, "Incorrect previous page URL");
+        $this->assertStringEndsWith('/api/seasons', $data->path);
+        $this->assertEquals(11, $data->from);
+        $this->assertEquals(20, $data->to);
     }
 
     /**

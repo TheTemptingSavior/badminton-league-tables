@@ -83,3 +83,21 @@ services:
       - PMA_ARBITRARY=1
       - PMA_USER=root
       - PMA_PASSWORD=helloworld
+
+  backend-test:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    tty: true
+    stdin_open: true
+    command: sh -c "cd /var/www/html/api && ./vendor/bin/phpunit"
+    environment:
+      - DB_CONNECTION=sqlite
+      - "DB_DATABASE=:memory:"
+      - APP_DEBUG=true
+      - APP_ENV=testing
+    expose:
+      - 9000
+    volumes:
+      - ./backend:/var/www/html/api
+      - logs:/var/www/html/api/storage/logs
