@@ -78,6 +78,8 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
     $router->group(['prefix' => 'seasons'], function() use ($router) {
         // Get all the seasons registered in this league
         $router->get('/', ['as' => 'season-list', 'uses' => 'SeasonController@listSeasons']);
+        //  Get information on the current season
+        $router->get('/current', ['as' => 'season-current', 'uses' => 'SeasonController@currentSeason']);
         // Get information on a specific season
         $router->get('/{id}', ['as' => 'season-detail', 'uses' => 'SeasonController@getSeason']);
         // Get a list of all the games in the season
