@@ -75,7 +75,7 @@ const loadTeams = (context) => {
         return;
     }
     Vue.axios.get('/api/teams').then((response) => {
-        context.commit('SET_TEAMS', response.data);
+        context.commit('SET_TEAMS', response.data.data);
     }).catch((error) => {
         console.log("Create a toast here to show error");
         // M.toast({html: "Could not load team data", classes: "red white-text"})
