@@ -1,5 +1,5 @@
 # frontend
-
+https://dev.to/firstclown/how-to-query-your-api-using-vuex-in-your-vue-application-11c8
 ## Project setup
 ```
 npm install
