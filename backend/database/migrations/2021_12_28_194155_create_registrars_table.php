@@ -12,6 +12,7 @@ class CreateRegistrarsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('email')->unique();
+            $table->text('token')->nullable(false)->unique();
         });
     }
 
