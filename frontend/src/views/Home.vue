@@ -40,14 +40,13 @@
               <div class="col s12 m4">
                 <div class="icon-block">
                   <h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
-                  <h5 class="center">Item No. 3</h5>
+                  <h5 class="center">Team Stats and Graphs</h5>
                   <p class="light">
-                    Just a few words here
+                    Stats about games won and lost across seasons
                   </p>
                 </div>
               </div>
             </div>
-
           </div>
           <br><br>
         </div>
