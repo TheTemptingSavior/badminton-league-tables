@@ -7,22 +7,7 @@ export default {
         expiresIn: null,
         receiveTime: null
     },
-    current: {
-        season: null,
-        teams: null,
-        scoreboard: null,
-        tracker: null
-    },
+    current: null,
     all: {},
     seasons: [],
-    // ---
-    scoreboards: {
-        current: {},
-        all: {}
-    },
-    tracker: {
-        current: {},
-        all: {}
-    },
-    teams: [],
 }
