@@ -8,8 +8,8 @@ COPY frontend /app/
 RUN npm install
 RUN npm run build
 
-# expose 5000 on container
+# expose 8080 on container
 EXPOSE 8080
 
 # start the app
-CMD [ "npm", "run", "serve"]
+CMD [ "npm", "run", "serve" ]
