@@ -100,11 +100,11 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     | appears in previous seasons.
     |
     */
-    $router->group(['prefix' => 'teams', 'middleware' => 'auth'], function() use ($router) {
+    $router->group(['prefix' => 'teams', 'middleware' => ['auth', 'admin']], function() use ($router) {
         // Create a new team
-        $router->post('/', ['as' => 'team-create', 'uses' => 'TeamController@createTeam', 'middleware' => 'admin']);
+        $router->post('/', ['as' => 'team-create', 'uses' => 'TeamController@createTeam']);
         // Retire a team
-        $router->post('/{id}/retire', ['as' => 'team-retire', 'uses' => 'TeamContoller@retireTeam']);
+        $router->put('/{id}/retire', ['as' => 'team-retire', 'uses' => 'TeamController@retireTeam']);
         // Update a teams information
         $router->put('/{id}', ['as' => 'team-update', 'uses' => 'TeamController@updateTeam']);
     });
