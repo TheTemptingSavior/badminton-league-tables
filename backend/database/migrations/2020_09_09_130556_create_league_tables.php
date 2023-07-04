@@ -26,7 +26,6 @@ class CreateLeagueTables extends Migration
         });
 
         // Create a table to keep track of which teams play in each season
-        // TODO: Add a unique constraint on columns `season_id` and `team_id`
         Schema::create('season_teams', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('season_id')->unsigned();
