@@ -33,6 +33,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/auth/login",
+     *     summary="User login",
      *     description="Get a JWT via given credentials",
      *     tags={"auth"},
      *     @OA\RequestBody(
@@ -85,6 +86,7 @@ class AuthController extends Controller
     /**
      * @OA\Get(
      *     path="/api/auth/logout",
+     *     summary="User logout",
      *     description="Adds the users current token to a black list forcing them to re-login to the application",
      *     tags={"auth"},
      *     security={"jwt_auth": ""},
@@ -109,6 +111,7 @@ class AuthController extends Controller
     /**
      * @OA\Get(
      *     path="/api/auth/me",
+     *     summary="Current user info",
      *     tags={"auth"},
      *     description="Get current user details identified by the bearer token used",
      *     security={"jwt_auth": ""},

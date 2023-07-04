@@ -80,6 +80,10 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="game_three_v_three_home_three", type="integer", format="int64"),
  *     @OA\Property(property="game_three_v_three_away_three", type="integer", format="int64"),
  * )
+ * @property string $created_at
+ * @property string $updated_at
+ * @method static findOrFail(string $id)
+ * @method static simplePaginate(integer $per_page)
  */
 class Scorecard extends Model
 {
