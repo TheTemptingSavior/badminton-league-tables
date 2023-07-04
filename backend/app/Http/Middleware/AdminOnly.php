@@ -16,8 +16,11 @@ class AdminOnly
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (auth()->user()->admin !== true) {
-            return response()->json(['error' => 'Forbidden'], 403);
+        if (auth()->user()->admin != true) {
+            return response()->json(
+                ['error' => 'Forbidden', 'message' => 'Must be admin to perform this operation'],
+                403
+            );
         }
 
         return $next($request);

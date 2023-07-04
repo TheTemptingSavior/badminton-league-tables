@@ -43,7 +43,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property string $created_at
  * @property string $updated_at
- * @method static findOrFail(string $id)
+ * @method static findOrFail(string $id, string $column)
  * @method static simplePaginate(integer $per_page)
  */
 class Season extends Model
