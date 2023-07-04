@@ -24,9 +24,6 @@ $router->group(['prefix' => 'api'], function() use ($router) {
                 'active_teams' => $teams
             ], 200);
     });
-    $router->get('/docs', function() use ($router) {
-        // Some way to return the swagger documentation here
-    });
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +61,7 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         // Create a new user
         $router->post('/', ['as' => 'user-create', 'uses' => 'UserController@createUser']);
         // Delete an existing user
-        $router->delete('/{id}', ['as' => 'user-delete', 'uses' => 'UserController@deleteUser']);
+        $router->delete('/{id}', ['as' => 'user-delete', 'uses' => 'UserController@deleteUser', 'middleware' => 'admin']);
         // Update an existing user
         $router->put('/{id}', ['as' => 'user-update', 'uses' => 'UserController@updateUser']);
     });
@@ -127,8 +124,6 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     |
     */
     $router->group(['prefix' => 'games'], function() use ($router) {
-        // Get a list of the games
-        $router->get('/', ['as' => 'games-list', 'uses' => 'GamesController@listGames']);
         // Get information on a specific game
         $router->get('/{id}', ['as' => 'games-detail', 'uses' => 'GamesController@getGame']);
     });
