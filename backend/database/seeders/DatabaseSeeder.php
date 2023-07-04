@@ -1,12 +1,11 @@
 <?php
 
-
-use Illuminate\Database\Seeder;
-use Database\Seeders\UserSeeder;
-use Database\Seeders\TeamSeeder;
+use Database\Seeders\ScorecardSeeder;
 use Database\Seeders\SeasonSeeder;
 use Database\Seeders\SeasonTeamsSeeder;
-use Database\Seeders\ScorecardSeeder;
+use Database\Seeders\TeamSeeder;
+use Database\Seeders\UserSeeder;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {

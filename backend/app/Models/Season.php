@@ -88,7 +88,8 @@ class Season extends Model
      *
      * @var array
      */
-    protected $dates = [
-        'start', 'end'
+    protected $casts = [
+        'start' => 'date', 
+        'end' => 'date',
     ];
 }
