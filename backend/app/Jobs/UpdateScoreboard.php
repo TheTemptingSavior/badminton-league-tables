@@ -19,16 +19,16 @@ class UpdateScoreboard extends Job
 {
     use SerializesModels;
 
-    protected Scorecard $scorecard;
+    protected int $seasonId;
 
     /**
      * Create a new job instance.
      *
-     * @param Scorecard $scorecard
+     * @param int $sid
      */
-    public function __construct(Scorecard $scorecard)
+    public function __construct(int $sid)
     {
-        $this->scorecard = $scorecard;
+        $this->seasonId = $sid;
         Log::debug("New update scoreboard job created.");
     }
 
@@ -39,19 +39,10 @@ class UpdateScoreboard extends Job
      */
     public function handle()
     {
-        // Find the season instance
-        $seasonId = SeasonHelper::getSeasonFromDate($this->scorecard->date_played);
-        if ($seasonId === null) {
-            Log::critical(
-                "Could not find a season for the data '".$this->scorecard->date_played."'. Scorecard ID = ".$this->scorecard->id
-            );
-            return;
-        }
-
         // Not interested in the return value
-        $returnValue = ScoreboardHelper::calculateScoreboard($seasonId);
+        $returnValue = ScoreboardHelper::calculateScoreboard($this->seasonId);
         if (! $returnValue) {
-            Log::critical("Failed to update the scoreboard for season #{$seasonId}");
+            Log::critical("Failed to update the scoreboard for season #{$this->seasonId}");
         }
     }
 }
