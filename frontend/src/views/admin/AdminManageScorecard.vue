@@ -23,7 +23,13 @@
               :headers="table.headers"
               :items="getScorecardList"
               class="elevation-1"
-          ></v-data-table>
+          >
+            <template v-slot:item.actions="{ item }">
+              <v-icon small class="mr-2" @click="editItem(item)">
+                mdi-pencil
+              </v-icon>
+            </template>
+          </v-data-table>
         </div>
       </v-col>
     </v-row>
@@ -78,6 +84,11 @@ export default {
             text: 'Away Points',
             align: 'start',
             value: 'awayPoints'
+          },
+          {
+            text: 'Actions',
+            value: 'actions',
+            sortable: false
           }
         ]
       },
@@ -108,7 +119,7 @@ export default {
           awayTeam: this.$store.state.teams.filter(t => { return t.id === x['away_team']})[0].name,
           datePlayed: x['date_played'],
           homePoints: x['home_points'],
-          awayPoints: x['away_points'],
+          awayPoints: x['away_points']
         }
       })
     }
@@ -124,6 +135,16 @@ export default {
       }).finally(() => {
         this.loading = false;
       })
+    },
+    editItem(item) {
+      // TODO: Redirect to an edit page instead
+      console.log("Open up edit form for scorecard " + item.id);
+      this.$router.push({
+        name: 'AdminEditScorecard',
+        params: {
+          id: item.id
+        }
+      });
     }
   },
   created() {
