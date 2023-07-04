@@ -108,7 +108,7 @@ class SeasonController extends Controller
      */
     public function getSeason(string $id): \Illuminate\Http\JsonResponse
     {
-        $season = Season::findOrFail($id, 'id');
+        $season = Season::findOrFail($id);
         return response()->json($season, 200);
     }
 

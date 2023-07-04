@@ -62,7 +62,7 @@ export default {
       this.error = msg;
     },
     changeSeason(sid) {
-      this.$store.dispatch('loadScoreboard', {
+      this.$store.dispatch('loadOther', {
         sid: sid
       });
     },

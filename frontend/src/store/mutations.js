@@ -13,7 +13,20 @@ const SET_CURRENT = (state, responses) => {
 const SET_CURRENT_LOADED = (state) => {
     state.currentLoaded = true;
 }
+const UNSET_CURRENT_LOADED = (state) => {
+    state.currentLoaded = false;
+}
 
+const CACHE_CURRENT = (state) => {
+    let key;
+    try {
+        key = state.current.season.slug
+    } catch (e) {
+        console.error("Could not cache current object. No season slug found to use as key");
+        return;
+    }
+    state.all[key] = state.current;
+}
 
 /*
  * ------------------------------------------------------
@@ -96,6 +109,8 @@ export default {
     SET_LOADING,
     SET_CURRENT,
     SET_CURRENT_LOADED,
+    UNSET_CURRENT_LOADED,
+    CACHE_CURRENT,
 
     CACHE_SCOREBOARD,
     SET_TEAMS,
