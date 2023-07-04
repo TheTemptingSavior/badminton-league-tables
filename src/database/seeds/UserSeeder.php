@@ -18,7 +18,8 @@ class UserSeeder extends Seeder
         DB::table("users")->insert([
             "username" => "ethan",
             "password" => Hash::make("cotterell"),
-            "admin" => true
+            "admin" => true,
+            "created_at" => date("Y-m-d H:i:s")
         ]);
     }
 }
