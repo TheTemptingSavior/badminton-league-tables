@@ -6,10 +6,8 @@ use App\Helpers\ScoreboardHelper;
 use App\Helpers\SeasonHelper;
 use App\Models\Scorecard;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UpdateScoreboard extends Job implements SelfHandling, ShouldQueue
+class UpdateScoreboard extends Job
 {
     use SerializesModels;
 
