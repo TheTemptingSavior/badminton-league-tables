@@ -128,4 +128,73 @@ class APIScoreboardTest extends TestCase
             $this->assertEquals($data[6], $row->against, "$team->slug has incorrect against value");
         }
     }
+
+    function testUpdatingScorecard()
+    {
+        // Import the existing season data
+        $this->artisan('import');
+        $seasons = Season::all();
+        foreach($seasons as $season) {
+            $ret = ScoreboardHelper::calculateScoreboard($season->id);
+            $this->assertTrue($ret);
+        }
+
+        // Update an existing game
+        $seasonId = 1;
+        $data = Array(
+            'home_team' => 5,
+            'away_team' => 6,
+            'date_played' => '2015-12-10',
+            'home_points' => 1,
+            'away_points' => 8
+        );
+        $scorecard = DB::table('scorecards')
+            ->where('home_team', '=', $data['home_team'])
+            ->where('away_team', '=', $data['away_team'])
+            ->where('date_played', '=', $data['date_played'])
+            ->first();
+        $this->assertNotNull(
+            $scorecard,
+            'Scorecard not found for team #'.$data['home_team'].' vs #'.$data['away_team']
+        );
+
+        // Make an admin user for us
+        $user = User::factory()->admin()->create();
+        $this->actingAs($user)
+            ->json('PUT', '/api/scorecards/'.$scorecard->id, $data)
+            ->seeStatusCode(201);
+
+        // Update the scoreboard manually as the job is queued but
+        // hasn't been run
+
+        $ret = ScoreboardHelper::calculateScoreboard($seasonId);
+        $this->assertTrue($ret);
+
+        // Check the updated scoreboard
+        $correctData = Array(
+            Array("melton-mowbray", 10, 17, 8, 2, 67, 23),
+            Array("stamford-badminton-a", 10, 15, 7, 3, 63, 27),
+            Array("stamford-badminton-b", 10, 10, 3, 7, 40, 50),
+            Array("stamford-community", 10, 8, 4, 6, 29, 61),
+            Array("rockingham", 10, 3, 1, 9, 20, 70),
+            Array("uppingham", 10, 14, 7, 3, 51, 39)
+        );
+
+        foreach($correctData as $data) {
+            $team = DB::table('teams')->where('slug', '=', $data[0])->first();
+            $this->assertNotNull($team, "Could not find team for $data[0]");
+
+            $row = DB::table('scoreboards')
+                ->where('team', '=', $team->id)
+                ->where('season', '=', $seasonId)
+                ->first();
+            $this->assertNotNull($row, "Could not find scoreboard data for $team->slug");
+            $this->assertEquals($data[1], $row->played, "$team->slug has incorrect played value");
+            $this->assertEquals($data[2], $row->points, "$team->slug has incorrect points value");
+            $this->assertEquals($data[3], $row->wins, "$team->slug has incorrect wins value");
+            $this->assertEquals($data[4], $row->losses, "$team->slug has incorrect losses value");
+            $this->assertEquals($data[5], $row->for, "$team->slug has incorrect for value");
+            $this->assertEquals($data[6], $row->against, "$team->slug has incorrect against value");
+        }
+    }
 }
