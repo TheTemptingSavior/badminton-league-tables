@@ -100,7 +100,7 @@ class APIScorecardTest extends TestCase
     function testGetAllMiddlePage()
     {
         factory('App\Models\Team', 6)->create();
-        factory('App\Models\Scorecard', 20)->create();
+        factory('App\Models\Scorecard', 15)->create();
 
         $response = $this->json('GET', '/api/scorecards?per_page=5&page=2')
             ->seeJsonStructure(

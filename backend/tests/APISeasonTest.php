@@ -49,9 +49,52 @@ class APISeasonTest extends TestCase
     }
 
     /**
+     * Test listing seasons that require multiple pages. Get the first page and
+     * assert that the meta data is correct
+     *
+     * @return void
+     */
+    function testListSeasonsPaged()
+    {
+        // TODO: Implement APISeasonTest::testListSeasonsPaged
+    }
+
+    /**
+     * List the available seasons where a second page of results is required
+     *
+     * @return void
+     */
+    function testListSeasonsPageTwo()
+    {
+        // TODO: Implement APISeasonTest::testListSeasonsPageTwo
+    }
+
+    /**
+     * List the seasons in this league and changing the number of season
+     * per page
+     *
+     * @return void
+     */
+    function testListSeasonsPageLimit()
+    {
+        // TODO: Implement APISeasonTest::testListSeasonsPageLimit
+    }
+
+    /**
+     * Return a lsit of seasons, selecting a page from the middle of the results
+     *
+     * @return void
+     */
+    function testListSeasonsMiddlePage()
+    {
+        // TODO: Implement APISeasonTest::testListSeasonsMiddlePage
+    }
+
+    /**
      * Get a specific season from the list
      *
      * @return void
+     * @throws Exception
      */
     function testGetSeason()
     {
