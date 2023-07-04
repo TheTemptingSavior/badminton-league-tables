@@ -20,6 +20,12 @@
         </v-list-item-icon>
         <v-list-item-title>Tracker</v-list-item-title>
       </v-list-item>
+      <v-list-item to="/teams">
+        <v-list-item-icon>
+          <v-icon>mdi-account-group</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Teams</v-list-item-title>
+      </v-list-item>
       <v-list-item to="/admin" v-if="isLoggedIn">
         <v-list-item-icon>
           <v-icon>mdi-shield-account</v-icon>
