@@ -76,9 +76,9 @@ export default {
   methods: {
     changeSeason(sid) {
       console.log("Changing season to " + sid);
-      // this.$store.dispatch('loadTracker', {
-      //   sid: sid
-      // });
+      this.$store.dispatch('loadTracker', {
+        sid: sid
+      });
     }
   },
   created() {

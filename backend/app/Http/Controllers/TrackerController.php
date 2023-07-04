@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Season;
 use Illuminate\Support\Facades\DB;
 
 class TrackerController extends Controller
@@ -43,11 +44,59 @@ class TrackerController extends Controller
      */
     public function getCurrent()
     {
-        // Get the current season
         $season = DB::table('seasons')
             ->orderBy('start', 'desc')
             ->first();
+        $data = $this->getData($season);
 
+        return response()->json($data, 200);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/tracker/{id}",
+     *     summary="Get games played by all teams for the specified season",
+     *     description="Get the games played by a team and the games they have yet to play for a specific season",
+     *     tags={"tracker"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Played games",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", format="int64"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(
+     *                     property="played",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer", format="int64"),
+     *                         @OA\Property(property="name", type="string")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="not_played",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="integer", format="int64"),
+     *                         @OA\Property(property="name", type="string")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function getTracker(string $id)
+    {
+        $season = Season::findOrFail($id);
+        $data = $this->getData($season);
+
+        return response()->json($data, 200);
+    }
+
+    private function getData($season)
+    {
         // Set up our return object
         $data['season'] = [
             'id' => $season->id,
@@ -102,7 +151,7 @@ class TrackerController extends Controller
             }
         }
 
-        return response()->json($data, 200);
+        return $data;
     }
 
     private function getTeamNameById(int $id, Array $teams)

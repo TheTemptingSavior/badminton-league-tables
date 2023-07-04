@@ -101,8 +101,27 @@ const loadCurrentTracker = (context) => {
         console.log("Create a toast here to show error");
         // M.toast({html: "Could not load season data", classes: "red white-text"});
         throw new Error(`API ${error}`);
-    })
+    });
 };
+
+const loadTracker = (context, payload) => {
+    let commit = context.commit;
+    let state = context.state;
+    if (state.tracker.all[payload.sid] !== undefined) {
+        // The tracker is already present
+        commit('SET_CURRENT_TRACKER', state.tracker.all[payload.sid]);
+    } else {
+        // Tracker is not present
+        Vue.axios.get('/api/tracker/' + payload.sid).then((response) => {
+            commit('SET_CURRENT_TRACKER', response.data);
+            commit('CACHE_TRACKER', response.data);
+        }).catch((error) => {
+            console.log("Create a toast here to show error");
+            // M.toast({html: "Could not load season data", classes: "red white-text"});
+            throw new Error(`API ${error}`);
+        });
+    }
+}
 
 export default {
     loadCurrentScoreboard,
@@ -112,4 +131,5 @@ export default {
     loginUser,
     logoutUser,
     loadCurrentTracker,
+    loadTracker,
 }
