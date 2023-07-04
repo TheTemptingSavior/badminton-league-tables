@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * )
  * @property integer $id
  * @property string $email
+ * @property string $token
  * @property string $created_at
  * @property string $updated_at
  * @method static findOrFail(string $id)
@@ -56,6 +57,6 @@ class Registrar extends Model
      * @var array
      */
     protected $fillable = [
-        'eail',
+        'email', 'token'
     ];
 }

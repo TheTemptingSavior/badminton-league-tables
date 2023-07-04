@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class RegistrarController extends Controller
 {
@@ -57,6 +58,7 @@ class RegistrarController extends Controller
         }
         $newRegistrar = new Registrar;
         $newRegistrar->email = $request->email;
+        $newRegistrar->token = Str::random(128);
         $newRegistrar->save();
 
         return response()->json($newRegistrar, 201);

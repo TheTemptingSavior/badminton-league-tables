@@ -15,7 +15,7 @@ class APIRegistrarTest extends TestCase
             ['email' => 'test@example.com']
         )
         ->seeStatusCode(201)
-        ->seeJsonStructure(['email']);
+        ->seeJsonStructure(['email', 'token']);
     }
 
     function testCreateRegistrarDatabaseCheck()
@@ -27,7 +27,7 @@ class APIRegistrarTest extends TestCase
             ['email' => $testEmail]
         )
         ->seeStatusCode(201)
-        ->seeJsonStructure(['email']);
+        ->seeJsonStructure(['email', 'token']);
 
         $registrar = DB::table('registrars')
             ->orderBy('email', 'desc')
@@ -36,6 +36,8 @@ class APIRegistrarTest extends TestCase
             ->first();
         $this->assertNotNull($registrar);
         $this->assertEquals($registrar->email, $testEmail);
+        $this->assertNotNull($registrar->token);
+        $this->assertEquals(strlen($registrar->token), 128);
     }
 
     function testCreateRegistrarDuplicateEmail()
