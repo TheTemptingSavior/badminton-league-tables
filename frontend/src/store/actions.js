@@ -90,7 +90,7 @@ const loadTeams = (context) => {
  */
 const loadSeasons = (context) => {
     Vue.axios.get('/api/seasons').then((response) => {
-        context.commit('SET_SEASONS', response.data);
+        context.commit('SET_SEASONS', response.data.data);
     }).catch((error) => {
         console.log("Create a toast here to show error");
         // M.toast({html: "Could not load season data", classes: "red white-text"});
