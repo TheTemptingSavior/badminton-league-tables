@@ -11,9 +11,20 @@
 
 // Removed temporarily so error messages are shown correctly in browser
 //$router->group(['prefix' => 'api', 'middleware' => 'jsonheader'], function() use ($router) {
+use Illuminate\Support\Facades\DB;
+
 $router->group(['prefix' => 'api'], function() use ($router) {
     $router->get('/', function() use ($router) {
-        return Array("league" => LEAGUE_NAME);
+        // TODO: This query doesn't return the correct number of teams
+        $teams = DB::table('teams')
+            ->whereNotNull('retired_on')
+            ->select("*")
+            ->count("*");
+        return response()->json(
+            [
+                'league' => LEAGUE_NAME,
+                'active_teams' => $teams
+            ], 200);
     });
 
     /*
@@ -75,4 +86,31 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         // Get the teams playing in the season
         $router->get('/{id}/teams', ['as' => 'season-teams', 'uses' => 'SeasonController@getTeams']);
     });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Team Routes
+    |--------------------------------------------------------------------------
+    |
+    | Team management routes including inspecting team information, viewing
+    | team stats, creating new teams and 'retiring' teams. Teams cannot be
+    | deleted due to them being too integral to database consistency. Therefore
+    | a retired team is one that no longer appears in new seasons but still
+    | appears in previous seasons.
+    |
+    */
+    $router->group(['prefix' => 'teams', 'middleware' => 'auth'], function() use ($router) {
+        // Create a new team
+        $router->post('/', ['as' => 'team-create', 'uses' => 'TeamController@createTeam']);
+//        // Retire a team
+//        $router->post('/{id}/retire', ['as' => 'team-retire', 'uses' => 'TeamContoller@retireTeam']);
+//        // Update a teams information
+//        $router->put('/{id}', ['as' => 'team-update', 'uses' => 'TeamController@retireTeam']);
+    });
+    $router->group(['prefix' => 'teams'], function() use ($router) {
+        $router->get('/', ['as' => 'team-list', 'uses' => 'TeamController@listTeams']);
+        $router->get('/{id}', ['as' => 'team-detail', 'uses' => 'TeamController@getTeam']);
+    });
+
 });
