@@ -3,6 +3,14 @@
 Provides a way for badminton leagues to manage the league scoreboard with constant updates. The system provides a 
 certain level of data integrity and has the ability to warn users about incomplete scorecards or incorrect information.
 
+## ToDo
+- Add a management page to the admin area
+  - Trigger a manual "UpdateScoreboard" job
+  - Trigger a manual "UpdateScoreboards" job
+  - Manually create users
+- Send out emails to registered users
+  - Allow users to register for the purposes of receiving emails
+
 ## Running
 1. Clone the repository
 2. Environment file

@@ -16,7 +16,7 @@ class APIScoreboardTest extends TestCase
     function testCreateNewScorecard()
     {
         // Import the existing season data
-        $this->artisan('import');
+        $this->importData();
         $seasons = Season::all();
         foreach($seasons as $season) {
             $ret = ScoreboardHelper::calculateScoreboard($season->id);
@@ -76,7 +76,8 @@ class APIScoreboardTest extends TestCase
     function testDeletingScorecard()
     {
         // Import the existing season data
-        $this->artisan('import');
+        $this->importData();
+
         $seasons = Season::all();
         foreach($seasons as $season) {
             $ret = ScoreboardHelper::calculateScoreboard($season->id);
@@ -135,7 +136,7 @@ class APIScoreboardTest extends TestCase
     function testUpdatingScorecard()
     {
         // Import the existing season data
-        $this->artisan('import');
+        $this->importData();
         $seasons = Season::all();
         foreach($seasons as $season) {
             $ret = ScoreboardHelper::calculateScoreboard($season->id);

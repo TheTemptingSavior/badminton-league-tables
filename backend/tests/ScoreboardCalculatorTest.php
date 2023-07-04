@@ -12,7 +12,7 @@ class ScoreboardCalculatorTest extends TestCase
     function testSeason2015_2016()
     {
         // It is assumed this works
-        $this->artisan('import');
+        $this->importData();
 
         $season = Season::findOrFail(1, '*');
         $this->assertEquals('15-16', $season->slug);
@@ -49,7 +49,7 @@ class ScoreboardCalculatorTest extends TestCase
     function testSeason2016_2017()
     {
         // It is assumed this works
-        $this->artisan('import');
+        $this->importData();
 
         $season = Season::findOrFail(2, '*');
         $this->assertEquals('16-17', $season->slug);
@@ -86,7 +86,7 @@ class ScoreboardCalculatorTest extends TestCase
     function testSeason2017_2018()
     {
         // It is assumed this works
-        $this->artisan('import');
+        $this->importData();
 
         $season = Season::findOrFail(3, '*');
         $this->assertEquals('17-18', $season->slug);
@@ -123,7 +123,7 @@ class ScoreboardCalculatorTest extends TestCase
     function testSeason2018_2019()
     {
         // It is assumed this works
-        $this->artisan('import');
+        $this->importData();
 
         $season = Season::findOrFail(4, '*');
         $this->assertEquals('18-19', $season->slug);
@@ -160,7 +160,7 @@ class ScoreboardCalculatorTest extends TestCase
     function testSeason2019_2020()
     {
         // It is assumed this works
-        $this->artisan('import');
+        $this->importData();
 
         $season = Season::findOrFail(5, '*');
         $this->assertEquals('19-20', $season->slug);
@@ -199,7 +199,7 @@ class ScoreboardCalculatorTest extends TestCase
     function testSeason2020_2021()
     {
         // It is assumed this works
-        $this->artisan('import');
+        $this->importData();
 
         $season = Season::findOrFail(6, '*');
         $this->assertEquals('20-21', $season->slug);

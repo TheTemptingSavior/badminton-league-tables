@@ -43,6 +43,25 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
 
     /*
     |--------------------------------------------------------------------------
+    | Registrar Routes
+    |--------------------------------------------------------------------------
+    |
+    | Routes to do with registering new users that will receive updates for 
+    | events happening in this application
+    |
+    */
+    $router->group(['prefix' => 'registrar'], function() use ($router) {
+        $router->post('/', ['as' => 'registrar-create', 'uses' => 'RegistrarController@createRegistrar']);
+    });
+    $router->group(['prefix' => 'registrar', 'middleware' => ['auth']], function() use ($router) {
+        $router->get('/', ['as' => 'registrar-list', 'uses' => 'RegistrarController@listRegistrar']);
+    });
+    $router->group(['prefix' => 'registrar'], function() use ($router) {
+        $router->get('/', ['as' => 'registrar-delete', 'uses' => 'RegistrarController@deleteRegistrar']);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
     | User Routes
     |--------------------------------------------------------------------------
     |

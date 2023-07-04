@@ -65,6 +65,7 @@ $app->configure('const');
 $app->configure('auth');
 $app->configure('cors');
 $app->configure('database');
+$app->configure('mail');
 $app->configure('logging');
 
 /*
