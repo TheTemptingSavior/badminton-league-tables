@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\MakeDefaultUser;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -18,6 +19,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ImportData::class,
         \App\Console\Commands\CreateSeasons::class,
         \App\Console\Commands\CreateUser::class,
+        \App\Console\Commands\MakeDefaultUser::class,
         \App\Console\Commands\CheckDatabase::class,
     ];
 

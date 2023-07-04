@@ -34,6 +34,8 @@ services:
       - DB_PASSWORD=helloworld
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - ADMIN_USERNAME=ethan
+      - ADMIN_PASSWORD=cotterell
     expose:
       - 9000
     volumes:
