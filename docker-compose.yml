@@ -29,8 +29,6 @@ services:
       context: .
       dockerfile: docker/frontend/Dockerfile
     environment:
-      - VUE_APP_LEAGUE_NAME=Rutland and Stamford
-      - VUE_APP_API_URL=https://badminton.ethancotterell.co.uk/api
       - NODE_ENV=production
     expose:
       - 80
