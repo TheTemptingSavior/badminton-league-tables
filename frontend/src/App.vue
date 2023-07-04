@@ -6,7 +6,7 @@
     </v-navigation-drawer>
 
     <!-- Top bar -->
-    <v-app-bar app color="blue" dark>
+    <v-app-bar app color="primary" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-toolbar-title>League Tables</v-toolbar-title>
     </v-app-bar>
