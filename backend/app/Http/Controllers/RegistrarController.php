@@ -53,7 +53,7 @@ class RegistrarController extends Controller
             } else {
                 $code = 400;
             }
-            return response()->json($validator->errors(), $code);
+            return response()->json(['errors' => $validator->errors()], $code);
         }
         $newRegistrar = new Registrar;
         $newRegistrar->email = $request->email;
