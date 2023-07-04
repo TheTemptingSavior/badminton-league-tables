@@ -1,5 +1,19 @@
 <template>
   <v-container id="admin-new-scorecard">
+    <v-dialog v-model="popup.showing" width="500">
+      <v-card>
+        <v-card-title class="headline grey lighten-2">{{ popup.title }}</v-card-title>
+        <v-card-text>
+          <br />
+          {{ popup.content }}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <!-- TODO: This doesnt seem to close the popup -->
+          <v-btn text @close="popup.showing = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <h3 class="accent--text text-center text-h3">Edit Scorecard</h3>
     <v-divider />
     <v-form v-model="valid">
@@ -539,11 +553,17 @@
         </v-container>
       </fieldset>
     </v-form>
+    <br />
+    <v-row justify="center">
+      <v-btn color="primary" x-large elevation="3" v-on:click="updateScorecard">Update</v-btn>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import Vue from 'vue'
+import {transformScorecard} from "../../helpers";
+
 export default {
   name: "AdminEditScorecard",
   props: {
@@ -554,6 +574,11 @@ export default {
       loading: true,
       currentModal: "",
       valid: true,
+      popup: {
+        showing: false,
+        title: "",
+        content: "",
+      },
       dialogs: {
         dialog1v1: false,
         dialog1v2: false,
@@ -615,9 +640,25 @@ export default {
     getTeams() {
       return this.$store.getters.allTeams;
     },
+  },
+  methods: {
     updateScorecard() {
-      // TODO: Implement this update API call
-      return;
+      // TODO: Requires feedback to the user for if this works
+      const headers = {
+        'Content-Type' : 'application/json',
+        'Authorization': 'Bearer ' + this.$store.getters.token
+      }
+      Vue.axios.put('/api/scorecards/' + this.id, transformScorecard(this.id, this.scorecard), { headers }).then((response) => {
+        this.popup.showing = true;
+        this.popup.title = "Successfully Updated"
+        if (response.data.warnings !== undefined && response.data.warnings !== null) {
+          this.popup.content = response.data.warnings;
+        } else {
+          this.popup.content = "Updated successfully with no errors or warnings";
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
     }
   },
   created() {
