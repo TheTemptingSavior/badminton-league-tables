@@ -26,3 +26,8 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+/*
+ * https://dev.to/viniciuskneves/watch-for-vuex-state-changes-2mgj
+ * https://stackoverflow.com/questions/40564071/how-do-i-break-up-my-vuex-file
+ */

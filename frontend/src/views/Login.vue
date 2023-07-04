@@ -53,7 +53,7 @@ export default {
         username: this.state.username, password: this.state.password
       }).then((response) => {
         if (response.data.token) {
-          this.$store.dispatch('setToken', response.data);
+          this.$store.dispatch('loginUser', response.data);
           this.$router.push('/admin')
         }
       }).catch((error) => {
