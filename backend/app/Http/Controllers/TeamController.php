@@ -295,6 +295,7 @@ class TeamController extends Controller
         $allSeasons = DB::table('seasons')
             ->get()
             ->toArray();
+
         $data = Array(
             'active' => Array(),
             'notactive' => Array()
