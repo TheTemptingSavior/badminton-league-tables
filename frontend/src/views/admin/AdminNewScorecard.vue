@@ -1,5 +1,29 @@
 <template>
   <v-container id="admin-new-scorecard">
+    <v-dialog v-model="popup.showing" width="500">
+      <v-card>
+        <v-card-title v-if="popup.success" class="headline success lighten">{{ popup.title }}</v-card-title>
+        <v-card-title v-else class="headline error lighten">{{ popup.title }}</v-card-title>
+
+        <v-card-text v-if="popup.success">
+          <br />
+          {{ popup.content }}
+        </v-card-text>
+        <v-card-text v-else>
+          <v-list-item v-for="e in popup.content" v-bind:key="e">
+            <v-list-item-content>
+              {{ e }}
+            </v-list-item-content>
+          </v-list-item>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions>
+          <v-spacer />
+          <!-- TODO: This doesnt seem to close the popup -->
+          <v-btn text @click="popup.showing = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <h3 class="accent--text text-center text-h3">New Scorecard</h3>
     <v-divider />
     <v-form v-model="valid">
@@ -538,11 +562,18 @@
         </v-container>
       </fieldset>
     </v-form>
+    <br />
+    <v-row justify="center">
+      <v-btn color="primary" x-large elevation="3" v-on:click="saveScorecard">Update</v-btn>
+    </v-row>
   </v-container>
 
 </template>
 
 <script>
+import Vue from 'vue'
+import {transformScorecard} from "../../helpers";
+
 export default {
   name: "AdminNewScorecard",
   components: {},
@@ -550,6 +581,12 @@ export default {
     return {
       currentModal: "",
       valid: true,
+      popup: {
+        showing: false,
+        title: "",
+        content: "",
+        success: true
+      },
       dialogs: {
         dialog1v1: false,
         dialog1v2: false,
@@ -609,8 +646,60 @@ export default {
   },
   methods: {
     saveScorecard() {
-      // TODO: Implement the create scorecard post to the server
-      return;
+      const headers = {
+        'Content-Type' : 'application/json',
+        'Authorization': 'Bearer ' + this.$store.getters.token
+      }
+      Vue.axios.post('/api/scorecards', transformScorecard(null, this.scorecard), { headers }).then((response) => {
+        console.log(response);
+        this.popup.title = "Successfully Created Scorecard";
+        this.popup.content = (response.data.warnings == null ? ["Scorecard created successfully"] : response.data.warnings)
+        this.popup.success = true;
+        this.resetScorecard();
+      }).catch((error) => {
+        console.log(error);
+        this.popup.title = "Failed Creating Scorecard"
+        this.popup.content = error.response.data.errors;
+        this.popup.success = false;
+      }).finally(() => {
+        this.popup.showing = true;
+      });
+    },
+    resetScorecard() {
+      this.scorecard = {
+        homeTeam: null,
+        awayTeam: null,
+        datePlayed: null,
+        homePoints: null,
+        awayPoints: null,
+        homePlayers: {
+          player1: null,
+          player2: null,
+          player3: null,
+          player4: null,
+          player5: null,
+          player6: null,
+        },
+        awayPlayers: {
+          player1: null,
+          player2: null,
+          player3: null,
+          player4: null,
+          player5: null,
+          player6: null,
+        },
+        games: {
+          game1: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,},
+          game2: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,},
+          game3: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,},
+          game4: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,},
+          game5: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,},
+          game6: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,},
+          game7: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,},
+          game8: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,},
+          game9: {home1: null, away1: null, home2: null, away2: null, home3: null, away3: null,}
+        }
+      }
     }
   },
   computed: {

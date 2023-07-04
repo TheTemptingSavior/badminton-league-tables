@@ -155,7 +155,7 @@ class ScorecardController extends Controller
     {
         $validator = Validator::make($request->all(), Scorecard::getValidationRules());
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(["errors" => $validator->errors()], 400);
         }
 
         // Before running any validations against the data
