@@ -71,6 +71,28 @@ class APISeasonTest extends TestCase
     }
 
     /**
+     * Attempt to retrieve a season that doesn't exist
+     *
+     * @return void
+     */
+    public function testGetSeasonNonExist()
+    {
+        $this->json('GET', '/api/seasons/999')
+            ->seeStatusCode(404);
+    }
+
+    /**
+     * Attempt to get a season with a bad ID
+     *
+     * @return  void
+     */
+    public function testGetSeasonBadId()
+    {
+        $this->json('GET', '/api/seasons/helloworld')
+            ->seeStatusCode(404);
+    }
+
+    /**
      * Retrieve a season object from its slug
      *
      * @return void
