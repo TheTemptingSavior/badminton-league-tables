@@ -1,7 +1,10 @@
 <?php
 
 use App\Helpers\ScoreboardHelper;
+use App\Models\Scorecard;
 use App\Models\Season;
+use App\Models\SeasonTeams;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
@@ -196,5 +199,60 @@ class APIScoreboardTest extends TestCase
             $this->assertEquals($data[5], $row->for, "$team->slug has incorrect for value");
             $this->assertEquals($data[6], $row->against, "$team->slug has incorrect against value");
         }
+    }
+
+    function testPartialScoreboard()
+    {
+        // Create the season
+        $season = Season::factory()->dates('2010-09-01', '2011-08-31')->create();
+
+        // Create the teams
+        $team1 = Team::factory()->create();
+        $team2 = Team::factory()->create();
+        $team3 = Team::factory()->create();
+        $team4 = Team::factory()->create();
+
+        // Add the teams to the season
+        SeasonTeams::factory()->season($season->id)->team($team1->id)->create();
+        SeasonTeams::factory()->season($season->id)->team($team2->id)->create();
+        SeasonTeams::factory()->season($season->id)->team($team3->id)->create();
+        SeasonTeams::factory()->season($season->id)->team($team4->id)->create();
+
+        // Create some scorecards (missing out team 3)
+        Scorecard::factory()->setHomeTeam($team1)->setAwayTeam($team2)->setDatePlayed('2010-10-01')->create();
+        Scorecard::factory()->setHomeTeam($team2)->setAwayTeam($team1)->setDatePlayed('2010-11-01')->create();
+        Scorecard::factory()->setHomeTeam($team1)->setAwayTeam($team4)->setDatePlayed('2010-10-01')->create();
+
+        // Check the scoreboard calculator worked
+        $ret = ScoreboardHelper::calculateScoreboard($season->id);
+        $this->assertTrue($ret);
+
+        // Ensure we have all 4 teams in the scoreboard
+        $scoreboard = DB::table('scoreboards')->where('season', '=', $season->id)->get();
+        $this->assertEquals(4, $scoreboard->count(), 'Not enough teams in the scoreboard');
+        $this->assertNotNull(
+            DB::table('scoreboards')
+                ->where('season', '=', $season->id)
+                ->where('team', '=', $team1->id)
+                ->first()
+        );
+        $this->assertNotNull(
+            DB::table('scoreboards')
+                ->where('season', '=', $season->id)
+                ->where('team', '=', $team2->id)
+                ->first()
+        );
+        $this->assertNotNull(
+            DB::table('scoreboards')
+                ->where('season', '=', $season->id)
+                ->where('team', '=', $team3->id)
+                ->first()
+        );
+        $this->assertNotNull(
+            DB::table('scoreboards')
+                ->where('season', '=', $season->id)
+                ->where('team', '=', $team4->id)
+                ->first()
+        );
     }
 }
