@@ -4,6 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     title="Scorecard",
+ *     @OA\Property(
+ *         property="id",
+ *         type="numeric",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="home_team",
+ *         type="numeric",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="away_team",
+ *         type="numeric",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="date_played",
+ *         type="string",
+ *         format="datetime"
+ *     ),
+ *     @OA\Property(
+ *         property="home_points",
+ *         type="numeric",
+ *         format="int64"
+ *     ),
+ *     @OA\Property(
+ *         property="away_points",
+ *         type="numeric",
+ *         format="int64"
+ *     )
+ * )
+ */
 class Scorecard extends Model
 {
     protected static $EMPTY_SCORECARD = [
