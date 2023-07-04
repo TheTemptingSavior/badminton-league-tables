@@ -1,40 +1,34 @@
 <template>
   <div class="scoreboards">
+    <SeasonModal id="seasons-modal" />
     <div class="container">
-      <h2 class="title orange-text center">Current Scoreboard</h2>
+      <h2 class="title orange-text center">
+        Current Scoreboard
+        <br />
+      </h2>
+      <div class="container center-align">
+        <a v-on="launchModal()" class="btn waves-effect waves-light">More Seasons</a>
+        &nbsp;
+        <a class="btn waves-effect waves-light">Refresh</a>
+      </div>
       <hr />
-      <table class="striped responsive-table">
-        <thead>
-          <tr>
-            <th>Team</th>
-            <th>Played</th>
-            <th>Points</th>
-            <th>Wins</th>
-            <th>Losses</th>
-            <th>For</th>
-            <th>Against</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="row in currentScoreboard" :key="row.id">
-            <td>{{ row.name }}</td>
-            <td>{{ row.played }}</td>
-            <td>{{ row.points }}</td>
-            <td>{{ row.wins }}</td>
-            <td>{{ row.losses }}</td>
-            <td>{{ row.for }}</td>
-            <td>{{ row.against }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <ScoreboardTable :data=currentScoreboard :error=error />
       <h6 v-if="error !== null" class="red-text center">{{ error }}</h6>
     </div>
+    <br />
+    <br />
+
   </div>
 </template>
 
 <script>
+import ScoreboardTable from "@/components/ScoreboardTable";
+import SeasonModal from "@/components/SeasonModal";
+import M from 'materialize-css'
+
 export default {
   name: "Scoreboards",
+  components: {SeasonModal, ScoreboardTable},
   data() {
       return {
         error: null
@@ -58,6 +52,12 @@ export default {
   methods: {
     setError(msg) {
       this.error = msg;
+    },
+    launchModal() {
+      M.AutoInit();
+      let instance = document.getElementById('#seasons-modal');
+      console.log(instance);
+      // M.Modal.getInstance(instance).open();
     }
   },
   created() {
