@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Login from "../views/Login";
-import Scoreboards from "@/components/Scoreboards";
+
+import AdminHome from "@/views/admin/AdminHome";
+import Home from '@/views/Home.vue'
+import Login from "@/views/Login";
+import Scoreboards from "@/views/Scoreboards";
 
 Vue.use(VueRouter)
 
@@ -30,6 +32,11 @@ const routes = [
     meta: {
       title: 'Scoreboards'
     }
+  },
+  {
+    path: '/admin',
+    name: 'AdminHome',
+    component: AdminHome
   }
 ]
 
