@@ -28,6 +28,9 @@ services:
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile
+    environment:
+      - VUE_APP_API_URL=https://badminton.ethancotterell.co.uk/api
+      - NODE_ENV=production
     expose:
       - 80
     networks:
@@ -42,13 +45,26 @@ services:
       - redis
       - db
     environment:
+      - APP_NAME=LeagueTables
+      - APP_ENV=prod
+      - APP_KEY=helloworld
+      - APP_DEBUG=false
+      - APP_URL=https://badminton.ethancotterell.co.uk
+      - APP_TIMEZONE=UTC
+      - DB_CONNECTION=mysql
+      - CACHE_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - QUEUE_DRIVER=redis
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=leaguetables
       - DB_USERNAME=leaguetables
       - DB_PASSWORD=helloworld
+      - REDIS_CLIENT=predis
+      - REDIS_URL=redis://redis:6379
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - JWT_SECRET=pXj0Wh0QIz09mfaMAfUjSnELPDHhaDn4R4jN3fuuvCynDY3XiaMSh6BqbgP8CRCL
     expose:
       - 9000
     networks:
@@ -65,13 +81,26 @@ services:
     working_dir: /var/www/html/api
     command: php artisan queue:work --verbose
     environment:
+      - APP_NAME=LeagueTables
+      - APP_ENV=prod
+      - APP_KEY=helloworld
+      - APP_DEBUG=false
+      - APP_URL=https://badminton.ethancotterell.co.uk
+      - APP_TIMEZONE=UTC
+      - DB_CONNECTION=mysql
+      - CACHE_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - QUEUE_DRIVER=redis
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=leaguetables
       - DB_USERNAME=leaguetables
       - DB_PASSWORD=helloworld
+      - REDIS_CLIENT=predis
+      - REDIS_URL=redis://redis:6379
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - JWT_SECRET=pXj0Wh0QIz09mfaMAfUjSnELPDHhaDn4R4jN3fuuvCynDY3XiaMSh6BqbgP8CRCL
     depends_on:
       - redis
       - db
@@ -87,13 +116,26 @@ services:
       dockerfile: docker/backend/Dockerfile
     command: sh /var/www/html/api/scheduler.sh
     environment:
+      - APP_NAME=LeagueTables
+      - APP_ENV=prod
+      - APP_KEY=helloworld
+      - APP_DEBUG=false
+      - APP_URL=https://badminton.ethancotterell.co.uk
+      - APP_TIMEZONE=UTC
+      - DB_CONNECTION=mysql
+      - CACHE_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - QUEUE_DRIVER=redis
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=leaguetables
       - DB_USERNAME=leaguetables
       - DB_PASSWORD=helloworld
+      - REDIS_CLIENT=predis
+      - REDIS_URL=redis://redis:6379
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - JWT_SECRET=pXj0Wh0QIz09mfaMAfUjSnELPDHhaDn4R4jN3fuuvCynDY3XiaMSh6BqbgP8CRCL
     depends_on:
       - redis
       - db
