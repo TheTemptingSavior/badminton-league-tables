@@ -36,7 +36,10 @@ $factory->state(User::class, 'admin', function ($faker) {
     ];
 });
 
+// TODO: Pick a random date and convert it to a valid season
 $factory->define(Season::class, function (Faker $faker) {
+    $season_date = $faker->dateTimeThisDecade;
+
     return [
         'start' => $faker->dateTimeThisCentury(),
         'end' => $faker->dateTimeThisCentury(),
