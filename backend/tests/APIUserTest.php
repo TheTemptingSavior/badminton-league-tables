@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
@@ -14,7 +15,7 @@ class APIUserTest extends TestCase
      */
     function testListUsers()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
 
         $result = $this->actingAs($user)
             ->json('GET', '/api/users')
@@ -31,8 +32,8 @@ class APIUserTest extends TestCase
      */
     function testListUsersMany()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        factory('App\Models\User', 10)->create();
+        $user = User::factory()->admin()->create();
+        User::factory()->count(10)->create();
 
         $result = $this->actingAs($user)
             ->json('GET', '/api/users')
@@ -103,7 +104,7 @@ class APIUserTest extends TestCase
      */
     function testGetUser()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
 
         $this->actingAs($user)
             ->json('GET', '/api/users/' . $user->id)
@@ -119,7 +120,7 @@ class APIUserTest extends TestCase
      */
     function testGetUserNotExist()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
         $this->actingAs($user)
             ->json('GET', '/api/users/' . ($user->id+1))
             ->seeStatusCode(404);
@@ -133,7 +134,7 @@ class APIUserTest extends TestCase
      */
     function testGetUserBadId()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
         $this->actingAs($user)
             ->json('GET', '/api/users/helloworld')
             ->seeStatusCode(404);
@@ -147,7 +148,7 @@ class APIUserTest extends TestCase
      */
     function testGetUserNoAuth()
     {
-        $user = factory('App\Models\User')->make();
+        $user = User::factory()->make();
 
         $this->json('GET', '/api/users/' . $user->id)
             ->seeStatusCode(401);
@@ -160,7 +161,7 @@ class APIUserTest extends TestCase
      */
     function testCreateUser()
     {
-        $user = factory('App\Models\User')->state('admin')->make();
+        $user = User::factory()->admin()->make();
         $this->actingAs($user)
             ->json('POST', '/api/users', ['username' => 'test', 'password' => 'test'])
             ->seeStatusCode(201)
@@ -187,7 +188,7 @@ class APIUserTest extends TestCase
      */
     function testCreateUserNoAdmin()
     {
-        $user = factory('App\Models\User')->make();
+        $user = User::factory()->make();
         $this->actingAs($user)
             ->json('POST', '/api/users', ['username' => 'test', 'password' => 'test'])
             ->seeStatusCode(403);
@@ -200,8 +201,8 @@ class APIUserTest extends TestCase
      */
     function testDeleteUser()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $deleteMe = factory('App\Models\User')->create();
+        $user = User::factory('App\Models\User')->admin()->create();
+        $deleteMe = User::factory('App\Models\User')->create();
         $uid = $deleteMe->id;
 
         $this->actingAs($user)
@@ -222,7 +223,7 @@ class APIUserTest extends TestCase
      */
     function testDeleteUserNoAuth()
     {
-        $deleteMe = factory('App\Models\User')->create();
+        $deleteMe = User::factory()->create();
         $this->json('DELETE', 'api/users/' . $deleteMe->id)
             ->seeStatusCode(401);
     }
@@ -232,7 +233,7 @@ class APIUserTest extends TestCase
      */
     function testDeleteUserNonExist()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
         $this->actingAs($user)
             ->json('DELETE', '/api/users/999')
             ->seeStatusCode(404);
@@ -245,7 +246,7 @@ class APIUserTest extends TestCase
      */
     function testDeleteUserBadId()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
         $this->actingAs($user)
             ->json('DELETE', '/api/users/helloworld')
             ->seeStatusCode(404);
@@ -258,8 +259,8 @@ class APIUserTest extends TestCase
      */
     function testDeleteUserNonAdmin()
     {
-        $user = factory('App\Models\User')->create();
-        $deleteMe = factory('App\Models\User')->create();
+        $user = User::factory()->create();
+        $deleteMe = User::factory()->create();
         $this->actingAs($user)
             ->json('DELETE', '/api/users/' . $deleteMe->id)
             ->seeStatusCode(403);
@@ -271,7 +272,7 @@ class APIUserTest extends TestCase
      */
     function testUpdateUser()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
 
         $result = $this->actingAs($user)
             ->json('PUT', '/api/users/' . $user->id, ['username' => 'NewUsername'])
@@ -289,8 +290,8 @@ class APIUserTest extends TestCase
      */
     function testUpdateOtherUser()
     {
-        $user = factory('App\Models\User')->create();
-        $updateMe = factory('App\Models\User')->create();
+        $user = User::factory()->create();
+        $updateMe = User::factory()->create();
 
         $this->actingAs($user)
             ->json('PUT', '/api/users/' . $updateMe->id, ['username' => 'NewUsername'])
@@ -304,8 +305,8 @@ class APIUserTest extends TestCase
      */
     function testUpdateOtherUserAsAdmin()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $updateMe = factory('App\Models\User')->create();
+        $user = User::factory()->admin()->create();
+        $updateMe = User::factory()->create();
 
         $this->actingAs($user)
             ->json('PUT', '/api/users/' . $updateMe->id, ['username' => 'NewUsername'])
@@ -321,8 +322,8 @@ class APIUserTest extends TestCase
      */
     function testUpdateUserDuplicateData()
     {
-        $user = factory('App\Models\User')->create();
-        $userTwo = factory('App\Models\User')->create();
+        $user = User::factory()->create();
+        $userTwo = User::factory()->create();
 
         $this->actingAs($user)
             ->json('PUT', '/api/users/' . $user->id, ['username' => $userTwo->username])
@@ -335,7 +336,7 @@ class APIUserTest extends TestCase
      */
     function testUpdateUserNoAuth()
     {
-        $user = factory('App\Models\User')->create();
+        $user = User::factory()->create();
 
         $this->json('PUT', '/api/users/' . $user->id, ['username' => 'NewUsername'])
             ->seeStatusCode(401);

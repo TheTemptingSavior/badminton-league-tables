@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Season;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class DatabaseFactoryTest extends TestCase
@@ -15,7 +16,7 @@ class DatabaseFactoryTest extends TestCase
     function testSeasonGenerate()
     {
         for($i = 0; $i < 10; $i++) {
-            $season = factory('App\Models\Season', 1)->make()->first();
+            $season = Season::factory()->make();
             $startDate = new DateTime($season->start);
             $endDate = new DateTime($season->end);
             $startYear = intval($startDate->format('Y'));

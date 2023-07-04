@@ -1,12 +1,14 @@
 <?php
 
+use App\Models\Scorecard;
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class APIScorecardTest extends TestCase
 {
     use DatabaseMigrations;
-
     /**
      * List all the scorecards in the system
      *
@@ -14,8 +16,8 @@ class APIScorecardTest extends TestCase
      */
     function testGetAll()
     {
-        factory('App\Models\Team', 6)->create();
-        factory('App\Models\Scorecard', 5)->create();
+        Team::factory()->count(6)->create();
+        Scorecard::factory()->count(5)->create();
 
         $response = $this->json('GET', '/api/scorecards')
             ->seeJsonStructure(
@@ -42,8 +44,8 @@ class APIScorecardTest extends TestCase
      */
     function testGetAllPageTwo()
     {
-        factory('App\Models\Team', 6)->create();
-        factory('App\Models\Scorecard', 20)->create();
+        Team::factory()->count(6)->create();
+        Scorecard::factory()->count(20)->create();
 
         $response = $this->json('GET', '/api/scorecards')
             ->seeJsonStructure(
@@ -70,8 +72,8 @@ class APIScorecardTest extends TestCase
      */
     function testGetAllDifferentPageLimit()
     {
-        factory('App\Models\Team', 6)->create();
-        factory('App\Models\Scorecard', 20)->create();
+        Team::factory()->count(6)->create();
+        Scorecard::factory()->count(15)->create();
 
         $response = $this->json('GET', '/api/scorecards?per_page=7')
             ->seeJsonStructure(
@@ -99,8 +101,8 @@ class APIScorecardTest extends TestCase
      */
     function testGetAllMiddlePage()
     {
-        factory('App\Models\Team', 6)->create();
-        factory('App\Models\Scorecard', 15)->create();
+        Team::factory()->count(6)->create();
+        Scorecard::factory()->count(15)->create();
 
         $response = $this->json('GET', '/api/scorecards?per_page=5&page=2')
             ->seeJsonStructure(
@@ -128,8 +130,8 @@ class APIScorecardTest extends TestCase
     function testGetGame()
     {
         // Create 6 teams for the game to choose from
-        factory('App\Models\Team', 6)->create();
-        $scorecard = factory('App\Models\Scorecard')->create();
+        Team::factory()->count(6)->create();
+        $scorecard = Scorecard::factory()->create();
 
         $this->json('GET', '/api/scorecards/' . $scorecard->id)
             ->seeStatusCode(200)
@@ -165,9 +167,9 @@ class APIScorecardTest extends TestCase
      */
     function testCreateGame()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $homeTeam = factory('App\Models\Team')->create();
-        $awayTeam = factory('App\Models\Team')->create();
+        $user = User::factory()->admin()->create();
+        $homeTeam = Team::factory()->create();
+        $awayTeam = Team::factory()->create();
         // Create a season for the scorecard to go in
         $season = new \App\Models\Season;
         $season->start = '2018-09-01';
@@ -208,8 +210,8 @@ class APIScorecardTest extends TestCase
      */
     function testCreateGamePartialOptionalData()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        factory('App\Models\Team', 6)->create();
+        $user = User::factory()->admin()->create();
+        Team::factory()->count(6)->create();
         $season = new \App\Models\Season;
         $season->start = '2018-09-01';
         $season->end = '2019-08-31';
@@ -217,7 +219,7 @@ class APIScorecardTest extends TestCase
         $season->save();
 
         // Make a scorecard but do not persist it to the database
-        $gameData = factory('App\Models\Scorecard')->make();
+        $gameData = Scorecard::factory()->make();
         $gameData->date_played = '2018-11-11';
 
         $result = $this->actingAs($user)
@@ -237,14 +239,14 @@ class APIScorecardTest extends TestCase
      */
     function testCreateGameBadDate()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        factory('App\Models\Team', 6)->create();
+        $user = User::factory()->admin()->create();
+        Team::factory()->count(6)->create();
 
         // Make a scorecard but do not persist it to the database
-        // The randomly generated date has no season in the database
-        $gameData = factory('App\Models\Scorecard')->make();
+        $gameData = Scorecard::factory()->make()->toArray();
+        $gameData['date_played'] = "2100-04-10";
         $this->actingAs($user)
-            ->json('POST', '/api/scorecards', $gameData->toArray())
+            ->json('POST', '/api/scorecards', $gameData)
             ->seeStatusCode(400);
     }
 
@@ -256,9 +258,9 @@ class APIScorecardTest extends TestCase
      */
     function testCreateGameBadTeamId()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $homeTeam = factory('App\Models\Team')->create();
-        factory('App\Models\Team', 5)->create();
+        $user = User::factory()->admin()->create();
+        $homeTeam = Team::factory()->create();
+        Team::factory()->count(5)->create();
         $season = new \App\Models\Season;
         $season->start = '2018-09-01';
         $season->end = '2019-08-31';
@@ -285,9 +287,9 @@ class APIScorecardTest extends TestCase
      */
     function testCreateGameBadPoints()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $homeTeam = factory('App\Models\Team')->create();
-        $awayTeam = factory('App\Models\Team')->create();
+        $user = User::factory()->admin()->create();
+        $homeTeam = Team::factory()->create();
+        $awayTeam = Team::factory()->create();
         $season = new \App\Models\Season;
         $season->start = '2018-09-01';
         $season->end = '2019-08-31';
@@ -314,9 +316,9 @@ class APIScorecardTest extends TestCase
      */
     function testCreateGameBadPointsNegative()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $homeTeam = factory('App\Models\Team')->create();
-        $awayTeam = factory('App\Models\Team')->create();
+        $user = User::factory()->admin()->create();
+        $homeTeam = Team::factory()->create();
+        $awayTeam = Team::factory()->create();
         $season = new \App\Models\Season;
         $season->start = '2018-09-01';
         $season->end = '2019-08-31';
@@ -342,8 +344,8 @@ class APIScorecardTest extends TestCase
      */
     function testCreateGameNoAuth()
     {
-        factory('App\Models\Team', 6)->create();
-        $scorecard = factory('App\Models\Scorecard')->create();
+        Team::factory()->count(6)->create();
+        $scorecard = Scorecard::factory()->create();
 
         $this->json('POST', '/api/scorecards', $scorecard->toArray())
             ->seeStatusCode(401);
@@ -357,10 +359,10 @@ class APIScorecardTest extends TestCase
      */
     function testCreateGameNoAdmin()
     {
-        $user = factory('App\Models\User')->create();
+        $user = User::factory()->create();
 
-        factory('App\Models\Team', 6)->create();
-        $scorecard = factory('App\Models\Scorecard')->create();
+        Team::factory()->count(6)->create();
+        $scorecard = Scorecard::factory()->create();
 
         $this->actingAs($user)
             ->json('POST', '/api/scorecards', $scorecard->toArray())
@@ -374,9 +376,9 @@ class APIScorecardTest extends TestCase
      */
     function testDeleteScorecard()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        factory('App\Models\Team', 6)->create();
-        $scorecard = factory('App\Models\Scorecard')->create();
+        $user = User::factory()->admin()->create();
+        Team::factory()->count(6)->create();
+        $scorecard = Scorecard::factory()->create();
 
         $this->actingAs($user)
             ->json('DELETE', '/api/scorecards/'.$scorecard->id)
@@ -392,9 +394,8 @@ class APIScorecardTest extends TestCase
      */
     function testDeleteScorecardBadId()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        factory('App\Models\Team', 6)->create();
-        $scorecard = factory('App\Models\Scorecard')->create();
+        $user = User::factory()->admin()->create();
+        Team::factory()->count(6)->create();
 
         $this->actingAs($user)
             ->json('DELETE', '/api/scorecards/helloworld')
@@ -409,9 +410,8 @@ class APIScorecardTest extends TestCase
      */
     function testDeleteScorecardNoExist()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        factory('App\Models\Team', 6)->create();
-        $scorecard = factory('App\Models\Scorecard')->create();
+        $user = User::factory()->admin()->create();
+        Team::factory()->count(6)->create();
 
         $this->actingAs($user)
             ->json('DELETE', '/api/scorecards/999')
@@ -426,8 +426,8 @@ class APIScorecardTest extends TestCase
      */
     function testDeleteScorecardNoAuth()
     {
-        factory('App\Models\Team', 6)->create();
-        $scorecard = factory('App\Models\Scorecard')->create();
+        Team::factory()->count(6)->create();
+        $scorecard = Scorecard::factory()->create();
 
         $this->json('DELETE', '/api/scorecards/'.$scorecard->id)
             ->seeStatusCode(401);
@@ -441,9 +441,9 @@ class APIScorecardTest extends TestCase
      */
     function testDeleteScorecardNoAdmin()
     {
-        $user = factory('App\Models\User')->create();
-        factory('App\Models\Team', 6)->create();
-        $scorecard = factory('App\Models\Scorecard')->create();
+        $user = User::factory()->create();
+        Team::factory()->count(6)->create();
+        $scorecard = Scorecard::factory()->create();
 
         $this->actingAs($user)
             ->json('DELETE', '/api/scorecards/'.$scorecard->id)

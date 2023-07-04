@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Team;
+use App\Models\User;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class APITeamsTest extends TestCase
@@ -13,7 +15,7 @@ class APITeamsTest extends TestCase
      */
     function testListTeams()
     {
-        factory('App\Models\Team', 10)->create();
+        Team::factory(10)->create();
 
         $result = $this->json('GET', '/api/teams')
             ->seeStatusCode(200)
@@ -72,7 +74,7 @@ class APITeamsTest extends TestCase
      */
     function testGetTeam()
     {
-        $team = factory('App\Models\Team')->create();
+        $team = Team::factory()->create();
         $this->json('GET', '/api/teams/' . $team->id)
             ->seeStatusCode(200)
             ->seeJsonStructure(['id', 'name', 'slug'])
@@ -109,7 +111,7 @@ class APITeamsTest extends TestCase
      */
     function testCreateTeam()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
         $result = $this->actingAs($user)
             ->json('POST', '/api/teams', ['name' => 'Hello World', 'slug' => 'hello-world'])
             ->seeStatusCode(201)
@@ -126,7 +128,7 @@ class APITeamsTest extends TestCase
      */
     function testCreateTeamBadData()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
+        $user = User::factory()->admin()->create();
         $this->actingAs($user)
             ->json('POST', '/api/teams', ['slug' => 'helloworld'])
             ->seeStatusCode(400);
@@ -139,8 +141,8 @@ class APITeamsTest extends TestCase
      */
     function testCreateTeamNonUnique()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $team = factory('App\Models\Team')->create();
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
 
         $this->actingAs($user)
             ->json('POST', '/api/teams', ['name' => $team->name])
@@ -166,7 +168,7 @@ class APITeamsTest extends TestCase
      */
     function testCreateTeamNonAdmin()
     {
-        $user = factory('App\Models\User')->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)
             ->json('POST', '/api/teams', ['name' => 'World Hello'])
@@ -180,8 +182,8 @@ class APITeamsTest extends TestCase
      */
     function testRetireTeam()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $team = factory('App\Models\Team')->create();
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
 
         $result = $this->actingAs($user)
             ->json('PUT', '/api/teams/' . $team->id . '/retire', ['retired' => true])
@@ -199,7 +201,7 @@ class APITeamsTest extends TestCase
      */
     function testRetireTeamNoAuth()
     {
-        $team = factory('App\Models\Team')->create();
+        $team = Team::factory()->create();
 
         $this->json('PUT', '/api/teams/' . $team->id . '/retire', ['retired' => true])
             ->seeStatusCode(401);
@@ -212,8 +214,8 @@ class APITeamsTest extends TestCase
      */
     function testRetireTeamNoAdmin()
     {
-        $user = factory('App\Models\User')->create();
-        $team = factory('App\Models\Team')->create();
+        $user = User::factory()->create();
+        $team = Team::factory()->create();
 
         $this->actingAs($user)
             ->json('PUT', '/api/teams/' . $team->id . '/retire', ['retired' => true])
@@ -227,8 +229,8 @@ class APITeamsTest extends TestCase
      */
     function testRetireTeamBadData()
     {
-        $user = factory('App\Models\User')->state('admin')->create();
-        $team = factory('App\Models\Team')->create();
+        $user = User::factory()->admin()->create();
+        $team = Team::factory()->create();
 
         $this->actingAs($user)
             ->json('PUT', '/api/teams/' . $team->id . '/retire', ['baddata' => true])
