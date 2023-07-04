@@ -55,7 +55,7 @@ class RegistrarController extends Controller
             }
             return response()->json($validator->errors(), $code);
         }
-        $newRegistrar = new Registrar();
+        $newRegistrar = new Registrar;
         $newRegistrar->email = $request->email;
         $newRegistrar->save();
 
