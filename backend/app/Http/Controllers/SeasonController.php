@@ -215,10 +215,13 @@ class SeasonController extends Controller
      */
     public function getFromSlug(string $slug): \Illuminate\Http\JsonResponse
     {
-        // TODO: Create catch for graceful 404 return if this fails
         $season = DB::table('seasons')
             ->where('slug', '=', $slug)
             ->first();
+
+        if ($season == NULL) {
+            return response()->json(['error' => 'No season found with slug \''.$slug.'\''], 404);
+        }
 
         return response()->json($season, 200);
     }
@@ -265,10 +268,7 @@ class SeasonController extends Controller
      */
     public function getScorecards(string $id): \Illuminate\Http\JsonResponse
     {
-        // TODO: Create a catch if this fails to return 404
-        $season = DB::table('seasons')
-            ->where('id', '=', $id)
-            ->first();
+        $season = Season::findOrFail($id);
 
         $games = DB::table('scorecards')
             ->whereBetween('date_played', [$season->start, $season->end])
