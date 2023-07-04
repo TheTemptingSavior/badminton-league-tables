@@ -9,17 +9,14 @@ class ScoreboardController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/scoreboards}",
+     *     path="/api/scoreboards",
      *     summary="Get current scoreboard",
      *     description="Get the current scoreboard",
      *     tags={"scoreboards"},
      *     @OA\Response(
      *         response="200",
-     *         description="Scoreboard data for the given season",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Scoreboard")
-     *         )
+     *         description="Scoreboard data for the current season",
+     *         @OA\JsonContent(ref="#/components/schemas/Scoreboard")
      *     )
      * )
      * @param string|null $season
@@ -29,7 +26,7 @@ class ScoreboardController extends Controller
     {
         // TODO: Find most recent scoreboard automatically
         $season = DB::table('seasons')
-            ->where('slug', '=', '17-18')
+            ->orderBy('start', 'desc')
             ->first();
 
         $data = DB::table('scoreboards')
@@ -37,7 +34,14 @@ class ScoreboardController extends Controller
             ->orderBy('points', 'DESC')
             ->orderBy('wins', 'DESC')
             ->get();
-        return response()->json($data, 200);
+        return response()->json(
+            [
+                'season' => $season->id,
+                'slug' => $season->slug,
+                'data' => $data
+            ],
+            200
+        );
 
     }
 
@@ -57,10 +61,7 @@ class ScoreboardController extends Controller
      *     @OA\Response(
      *         response="200",
      *         description="Scoreboard data for the given season",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Scoreboard")
-     *         )
+     *         @OA\JsonContent(ref="#/components/schemas/Scoreboard")
      *     ),
      *     @OA\Response(
      *         response="404",
@@ -93,8 +94,11 @@ class ScoreboardController extends Controller
      *     tags={"scoreboards"},
      *     @OA\Response(
      *         response="200",
-     *         description="List of available seasons",
-     *         @OA\JsonContent(type="array", @OA\Items(type="string"))
+     *         description="List of available scoreboards",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Scoreboard")
+     *         )
      *     )
      * )
      * @return \Illuminate\Http\JsonResponse
