@@ -613,7 +613,7 @@ export default {
   },
   computed: {
     getTeams() {
-      return this.$store.state.teams;
+      return this.$store.getters.allTeams;
     }
   },
   created() {
