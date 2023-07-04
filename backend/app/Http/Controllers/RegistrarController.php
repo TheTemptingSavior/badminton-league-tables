@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Registrar;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -78,6 +77,8 @@ class RegistrarController extends Controller
         if ($deleteToken != null) {
             return response()->json(['error' => 'No token was specified'], 400);
         }
+        $registrar = DB::table('registrars')
+            ->where('token', '=', $deleteToken);
     }
 
     /**
@@ -132,12 +133,6 @@ class RegistrarController extends Controller
      */
     public function listRegistrar(Request $request): \Illuminate\Http\JsonResponse
     {
-        // Ensure the user attempting to make the account is an admin
-        if (! auth()->user()->admin) {
-            Log::error('User is not an admin', ["user" => auth()->user()]);
-            return response()->json(['error' => 'Only an admin may create user accounts'], 403);
-        }
-
         $per_page = $request->get('per_page', 15);
         return response()->json(Registrar::simplePaginate($per_page));
     }

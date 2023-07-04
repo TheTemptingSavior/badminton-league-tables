@@ -52,12 +52,10 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
     */
     $router->group(['prefix' => 'registrar'], function() use ($router) {
         $router->post('/', ['as' => 'registrar-create', 'uses' => 'RegistrarController@createRegistrar']);
+        $router->delete('/', ['as' => 'registrar-delete', 'uses' => 'RegistrarController@deleteRegistrar']);
     });
-    $router->group(['prefix' => 'registrar', 'middleware' => ['auth']], function() use ($router) {
+    $router->group(['prefix' => 'registrar', 'middleware' => ['auth', 'admin']], function() use ($router) {
         $router->get('/', ['as' => 'registrar-list', 'uses' => 'RegistrarController@listRegistrar']);
-    });
-    $router->group(['prefix' => 'registrar'], function() use ($router) {
-        $router->get('/', ['as' => 'registrar-delete', 'uses' => 'RegistrarController@deleteRegistrar']);
     });
 
     /*
