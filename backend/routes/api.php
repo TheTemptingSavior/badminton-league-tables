@@ -153,7 +153,7 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
     */
     $router->group(['prefix' => 'scoreboards'], function() use ($router) {
         // Get the current scoreboard
-        $router->get('/', ['as' => 'scoreboard-current', 'uses' => 'ScoreboardController@getCurrent']);
+        $router->get('/current', ['as' => 'scoreboard-current', 'uses' => 'ScoreboardController@getCurrent']);
         // Get all the seasons available in the league
         $router->get('/all', ['as' => 'scoreboard-get-all', 'uses' => 'ScoreboardController@getAll']);
         // Get a scoreboard from the season slug
@@ -170,7 +170,7 @@ $router->group(['prefix' => 'api', 'middleware' => ['jsonheader', 'cors']], func
     */
     $router->group(['prefix' => 'tracker'], function() use ($router) {
         // Get the current tracker board
-        $router->get('/', ['as' => 'tracker-current', 'uses' => 'TrackerController@getCurrent']);
+        $router->get('/current', ['as' => 'tracker-current', 'uses' => 'TrackerController@getCurrent']);
         // Get a tracker board for a specific season
         $router->get('/{id}', ['as' => 'tracker-get', 'uses' => 'TrackerController@getTracker']);
     });

@@ -1,12 +1,18 @@
 export default {
     loading: false,
+    currentLoaded: false,
     user: {
         token: null,
         username: null,
         expiresIn: null,
         receiveTime: null
     },
-    current: null,
+    current: {
+        season: null,
+        teams: null,
+        scoreboard: null,
+        tracker: null
+    },
     all: {},
     seasons: [],
     // ---
