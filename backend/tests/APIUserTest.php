@@ -36,7 +36,7 @@ class APIUserTest extends TestCase
 
         $this->actingAs($user)
             ->json('GET', '/api/users')
-            ->seeStatusCode(200);
+            ->seeStatusCode(403);
     }
 
     /**
@@ -217,6 +217,7 @@ class APIUserTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)
+            ->json('GET', '/api/users/'.$user->id)
             ->seeStatusCode(403);
     }
 

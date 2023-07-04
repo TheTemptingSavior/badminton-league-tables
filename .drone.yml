@@ -1,13 +1,37 @@
 kind: pipeline
 name: default
 
-environment:
-  APP_ENV: "local"
-  APP_KEY: helloworlddlrowolleh
-  DB_CONNECTION: ":memory:"
-  JWT_SECRET: "pXj0Wh0QIz09mfaMAfUjSnELPDHhaDn4R4jN3fuuvCynDY3XiaMSh6BqbgP8CRCL"
+volumes:
+  - name: import
+    temp: {}
+  - name: logs
+    temp: {}
+
+services:
+  - name: cache
+    image: redis
+  - name: db
+    image: linuxserver/mariadb
+    environment:
+      PUID: 1000
+      PGID: 1000
+      MYSQL_ROOT_PASSWORD: helloworld
+      TZ: Europe/London
+      MYSQL_DATABASE: leaguetables
+      MYSQL_USER: leaguetables
+      MYSQL_PASSWORD: helloworld
 
 steps:
+  - name: Setup
+    image: alpine
+    commands:
+      - cp -avr docker/backend/import/* /import
+      - echo "Waiting for services to come up"
+      - sleep 10
+    volumes:
+      - name: import
+        path: /import
+
   - name: Install
     image: composer
     commands:
@@ -25,4 +49,37 @@ steps:
     commands:
       - pecl install xdebug --quiet 1> /dev/null 2>&1 && docker-php-ext-enable xdebug
       - cd backend/
-      - vendor/bin/phpunit --configuration phpunit.xml --coverage-html .reports
+      - vendor/bin/phpunit --configuration phpunit.xml
+    environment:
+      APP_ENV: "local"
+      APP_KEY: helloworlddlrowolleh
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: leaguetables
+      DB_USERNAME: leaguetables
+      DB_PASSWORD: helloworld
+      CACHE_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      QUEUE_DRIVER: redis
+      REDIS_CLIENT: predis
+      REDIS_URL: redis://cache:6379
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+      JWT_SECRET: "pXj0Wh0QIz09mfaMAfUjSnELPDHhaDn4R4jN3fuuvCynDY3XiaMSh6BqbgP8CRCL"
+    volumes:
+      - name: import
+        path: /import
+      - name: logs
+        path: /drone/src/backend/storage/logs
+
+# We only want to dump the logs if the tests failed
+  - name: Cleanup
+    image: alpine
+    when:
+      status:
+        - failure
+    commands:
+      - cat /logs/*
+    volumes:
+      - name: logs
+        path: /logs
