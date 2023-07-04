@@ -3,29 +3,12 @@ import Vuex from 'vuex'
 import actions from "@/store/actions";
 import mutations from "@/store/mutations";
 import getters from "@/store/getters";
+import state from "@/store/state"
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-    loading: false,
-    user: {
-      token: null,
-      username: null,
-      expiresIn: null,
-      receiveTime: null
-    },
-    scoreboards: {
-      current: {},
-      all: {}
-    },
-    tracker: {
-      current: {},
-      all: {}
-    },
-    teams: [],
-    seasons: []
-  },
+  state,
   mutations,
   actions,
   getters
