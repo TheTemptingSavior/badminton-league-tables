@@ -63,9 +63,10 @@ class APISeasonTest extends TestCase
             ->seeJsonStructure(['id', 'start', 'end', 'slug']);
 
         $data = json_decode($result->response->content());
+        $d = new DateTime('2017-09-01');
         $this->assertEquals(
-            strtotime("2017-09-1"),
-            $data->start
+            $d->getTimestamp(),
+            (new DateTime($data->start))->getTimestamp()
         );
     }
 
