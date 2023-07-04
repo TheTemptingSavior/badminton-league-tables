@@ -20,7 +20,7 @@ class SeasonFactory extends Factory
 //        $startYear = $dateObject->format('Y');
 //        $endYear = $dateObject->modify('+1 year')->format('Y');
 
-        $startYear = $this->faker->unique(false)->numberBetween(2000, 2100);
+        $startYear = $this->faker->unique()->numberBetween(2001, 2100);
         $endYear = $startYear + 1;
         $startDate = $startYear.'-09-01';
         $endDate = $endYear.'-08-31';

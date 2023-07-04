@@ -3,10 +3,9 @@
 use App\Models\Season;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
-
 class APISeasonTest extends TestCase
 {
-    use DatabaseMigrations, DatabaseTransactions;
+    use DatabaseMigrations;
 
     /**
      * Create two example seasons that are stored in the database
