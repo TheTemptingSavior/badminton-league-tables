@@ -27,7 +27,7 @@ class TeamController extends Controller
      * )
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listTeams()
+    public function listTeams(): \Illuminate\Http\JsonResponse
     {
         return response()->json(Team::all());
     }
@@ -56,10 +56,10 @@ class TeamController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
      *     )
      * )
-     * @param string $id
+     * @param string $id ID of the team to retrieve
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getTeam(string $id)
+    public function getTeam(string $id): \Illuminate\Http\JsonResponse
     {
         $team = Team::findOrFail($id);
         return response()->json($team, 200);
@@ -103,11 +103,10 @@ class TeamController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
      *     )
      * )
-     * @param Request $request
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function createTeam(Request $request)
+    public function createTeam(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), ['name' => 'required|unique:teams']);
         if ($validator->fails()) {
@@ -158,12 +157,11 @@ class TeamController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/Team")
      *     )
      * )
-     * @param string $id
-     * @param Request $request
+     * @param string $id ID of the team to retire
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function retireTeam(string $id, Request $request)
+    public function retireTeam(string $id, Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), ['retired' => 'required|boolean']);
         if ($validator->fails()) {
@@ -228,12 +226,12 @@ class TeamController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/ConflictError")
      *     )
      * )
-     * @param string $id
-     * @param Request $request
+     * @param string $id ID of the team to update
+     * @param Request $request Lumen request object
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function updateTeam(string $id, Request $request)
+    public function updateTeam(string $id, Request $request): \Illuminate\Http\JsonResponse
     {
         $this->validate($request, ['name' => 'unique:teams']);
 
@@ -241,12 +239,15 @@ class TeamController extends Controller
 
         if ($request->name) {
             $team->name = $request->name;
-            $team->slug = str_slug($request->name, "-");
+            $team->slug = GenericHelper::slugify($request->name);
             $team->save();
 
             return response()->json($team, 200);
         }
 
-        return response()->json(['error' => 'Team name must be present in request and unique'], 400);
+        return response()->json(
+            ['error' => 'Team name must be present in request and unique'],
+            400
+        );
     }
 }

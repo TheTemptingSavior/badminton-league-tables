@@ -14,14 +14,14 @@ class UpdateScoreboard extends Command
      *
      * @var string
      */
-    protected $signature = 'manual:update-scoreboard {season : Slug of the season to update}';
+    protected string $signature = 'manual:update-scoreboard {season : Slug of the season to update}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Updates the scoreboard for a specific season';
+    protected string $description = 'Updates the scoreboard for a specific season';
 
     /**
      * Create a new command instance.
@@ -36,9 +36,9 @@ class UpdateScoreboard extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int Returns 0 on success of 1 otherwise
      */
-    public function handle()
+    public function handle(): int
     {
         $this->info('Beginning update scoreboard for season ' . $this->argument('season'));
         $season = DB::table('seasons')

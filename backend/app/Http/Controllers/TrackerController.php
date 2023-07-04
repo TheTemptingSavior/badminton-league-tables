@@ -42,7 +42,7 @@ class TrackerController extends Controller
      *     )
      * )
      */
-    public function getCurrent()
+    public function getCurrent(): \Illuminate\Http\JsonResponse
     {
         $season = DB::table('seasons')
             ->orderBy('start', 'desc')
@@ -86,12 +86,12 @@ class TrackerController extends Controller
      *         )
      *     )
      * )
-     * @param string $id
+     * @param string $id ID of the season to find a tracker for
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getTracker(string $id)
+    public function getTracker(string $id): \Illuminate\Http\JsonResponse
     {
-        $season = Season::findOrFail($id);
+        $season = Season::findOrFail($id, 'id');
         $data = $this->getData($season);
 
         return response()->json($data, 200);
@@ -99,10 +99,10 @@ class TrackerController extends Controller
 
     /**
      * Gets the tracker data for the given season
-     * @param $season Season object
-     * @return mixed Array of season data
+     * @param $season Season Season to get the data for
+     * @return mixed Array of season data (array of arrays)
      */
-    private function getData($season)
+    private function getData($season): mixed
     {
         // Set up our return object
         $data['season'] = [
@@ -120,6 +120,7 @@ class TrackerController extends Controller
             ->select('teams.id', 'teams.name')
             ->get()
             ->toArray();
+
         foreach($teams as $team) {
             $data['data'][$team->id] = [
                 'id' => $team->id,
@@ -131,7 +132,7 @@ class TrackerController extends Controller
         $allTeamIds = array_keys($data['data']);
 
         foreach($teams as $team) {
-            // List of played gamed
+            // List of played games
             $data['data'][$team->id]['played'] = DB::table('scorecards')
                 ->whereBetween('date_played', [$season->start, $season->end])
                 ->where('home_team', '=', $team->id)
@@ -141,11 +142,14 @@ class TrackerController extends Controller
                 ->toArray();
 
             $playedTeamIds = array_column($data['data'][$team->id]['played'], 'id');
-            $notPlayedGames = array_filter(array_diff($allTeamIds, $playedTeamIds), function($id) use ($team) {
-                return $team->id !== $id;
-            });
+            $notPlayedGames = array_filter(
+                array_diff($allTeamIds, $playedTeamIds),
+                function($id) use ($team) {
+                    return $team->id !== $id;
+                }
+            );
 
-            // TODO: Remove the constant database calls here
+            // TODO: Remove the constant database calls here for efficiency (cache it earlier on)
             $data['data'][$team->id]['not_played'] = [];
             foreach ($notPlayedGames as $notPlayedGame) {
                 array_push(
@@ -167,7 +171,7 @@ class TrackerController extends Controller
      * @param array $teams List of all the teams
      * @return string Team name
      */
-    private function getTeamNameById(int $id, Array $teams)
+    private function getTeamNameById(int $id, Array $teams): string
     {
         foreach ($teams as $team) {
             if ($team->id === $id) {

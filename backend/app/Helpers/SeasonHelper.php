@@ -12,12 +12,12 @@ class SeasonHelper
      * @param string $datetime Date in the format of 'Y-m-d'
      * @return int ID of the season
      */
-    public static function getSeasonFromDate(string $datetime)
+    public static function getSeasonFromDate(string $datetime): int
     {
         $season = DB::table('seasons')
             ->where('start', '<', $datetime)
             ->where('end', '>', $datetime)
             ->first();
-        return ($season !== null) ? $season->id : null;
+        return ($season !== null) ? $season->id : -1;
     }
 }

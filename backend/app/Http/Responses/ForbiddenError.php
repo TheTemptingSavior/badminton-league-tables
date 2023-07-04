@@ -16,5 +16,5 @@ class ForbiddenError
      * @OA\Property()
      * @var string
      */
-    public $message;
+    public string $message;
 }

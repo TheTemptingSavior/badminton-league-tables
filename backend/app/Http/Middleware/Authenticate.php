@@ -12,7 +12,7 @@ class Authenticate
      *
      * @var \Illuminate\Contracts\Auth\Factory
      */
-    protected $auth;
+    protected Auth $auth;
 
     /**
      * Create a new middleware instance.
@@ -28,12 +28,12 @@ class Authenticate
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string|null  $guard
-     * @return mixed
+     * @param  \Illuminate\Http\Request  $request Lumen request object
+     * @param  \Closure  $next Next middleware to run
+     * @param  string|null  $guard Any guard conditions
+     * @return mixed Returns the next middleware in the chain
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next, $guard = null): mixed
     {
         if ($this->auth->guard($guard)->guest()) {
             return response()->json(['message' => 'Unauthorized'], 401);
