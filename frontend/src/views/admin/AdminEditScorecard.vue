@@ -614,6 +614,10 @@ export default {
   computed: {
     getTeams() {
       return this.$store.getters.allTeams;
+    },
+    updateScorecard() {
+      // TODO: Implement this update API call
+      return;
     }
   },
   created() {

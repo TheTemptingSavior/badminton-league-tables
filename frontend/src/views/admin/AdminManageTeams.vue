@@ -31,6 +31,7 @@
 import Vue from "vue";
 import TeamEditor from "../../components/admin/TeamEditor";
 import {EventBus} from "../../plugins/event-bus";
+import {isLoggedIn} from "../../helpers";
 
 export default {
   name: "AdminManageTeams",
@@ -54,6 +55,9 @@ export default {
     }
   },
   created() {
+    if (! isLoggedIn(this.$store.getters.user)) {
+      this.$router.push('/login');
+    }
     this.$store.dispatch('loadTeams');
     this.$store.dispatch('loadCurrent');
   }
