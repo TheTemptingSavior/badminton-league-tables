@@ -10,6 +10,13 @@ const allTeams = state => {
         return state.teams;
     }
 }
+const getTeam = (state) => (index) => {
+    if (state.teams === null) {
+        return {};
+    } else {
+        return state.teams[index];
+    }
+}
 
 const user = state => state.user;
 const token = state => state.user.token;
@@ -22,6 +29,7 @@ export default {
     getTracker,
 
     allTeams,
+    getTeam,
 
     user,
     token,
