@@ -2,6 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Models\Season;
+use App\Models\Team;
 use App\Models\User;
 use Faker\Generator as Faker;
 
@@ -30,5 +32,13 @@ $factory->state(User::class, 'admin', function ($faker) {
         'username' => $faker->userName,
         'password' => $faker->password,
         'admin' => true,
+    ];
+});
+
+$factory->define(Season::class, function (Faker $faker) {
+    return [
+        'start' => $faker->dateTimeThisCentury(),
+        'end' => $faker->dateTimeThisCentury(),
+        'slug' => $faker->slug
     ];
 });
